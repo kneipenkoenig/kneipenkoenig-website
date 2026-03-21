@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin – Der Kneipenkönig</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0a0a0f;
+    --bg2:      #10101a;
+    --bg3:      #17172a;
+    --surface:  #1c1c2e;
+    --border:   rgba(255,255,255,0.08);
+    --blue:     #38b6ff;
+    --blue-dim: rgba(56,182,255,0.12);
+    --green:    #34d399;
+    --red:      #f87171;
+    --yellow:   #eab308;
+    --text:     #f0f0f5;
+    --muted:    rgba(240,240,245,0.45);
+    --radius:   14px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Open Sans', sans-serif;
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
+
+  /* ── NAV ── */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 60px;
+  }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.03em; }
+  .nav-logo span { color: var(--blue); }
+  .nav-badge {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--blue-dim); color: var(--blue);
+    border: 1px solid rgba(56,182,255,0.25); border-radius: 6px; padding: 3px 8px;
+  }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .token-indicator {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.75rem; color: var(--muted); cursor: pointer;
+  }
+  .token-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
+  .token-dot.ok { background: var(--green); }
+
+  /* ── LAYOUT ── */
+  .layout { display: flex; min-height: calc(100vh - 60px); }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 220px; flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 24px 12px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .sidebar-label {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); padding: 0 12px; margin: 16px 0 6px;
+  }
+  .sidebar-label:first-child { margin-top: 0; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    cursor: pointer; color: var(--muted);
+    font-size: 0.88rem; font-weight: 600;
+    transition: background 0.15s, color 0.15s;
+    border: none; background: none; width: 100%; text-align: left;
+  }
+  .nav-item:hover { background: var(--surface); color: var(--text); }
+  .nav-item.active { background: var(--blue-dim); color: var(--blue); }
+  .nav-item svg { flex-shrink: 0; opacity: 0.7; }
+  .nav-item.active svg { opacity: 1; }
+
+  /* ── MAIN ── */
+  .main { flex: 1; padding: 32px; overflow: auto; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── PAGE HEADER ── */
+  .page-header { margin-bottom: 28px; }
+  .page-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--text); }
+  .page-sub { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 18px; border-radius: 10px;
+    font-family: 'Open Sans', sans-serif; font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; border: none; transition: opacity 0.15s, transform 0.1s;
+    text-decoration: none;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--blue); color: #000; }
+  .btn-ghost { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+  .btn-danger { background: rgba(248,113,113,0.12); color: var(--red); border: 1px solid rgba(248,113,113,0.25); }
+  .btn-sm { padding: 6px 12px; font-size: 0.78rem; border-radius: 8px; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── FORM ── */
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .form-input, .form-textarea, .form-select {
+    width: 100%; background: var(--bg2);
+    border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); font-family: 'Open Sans', sans-serif;
+    font-size: 0.88rem; padding: 10px 14px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--blue); }
+  .form-textarea { resize: vertical; min-height: 90px; }
+  .form-select { appearance: none; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+    padding: 13px 20px; border-radius: 12px;
+    font-size: 0.85rem; font-weight: 600;
+    transform: translateY(80px); opacity: 0;
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.35s;
+    pointer-events: none;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.ok  { background: rgba(52,211,153,0.15); border: 1px solid rgba(52,211,153,0.3); color: var(--green); }
+  #toast.err { background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.3); color: var(--red); }
+
+  /* ── MODAL ── */
+  .modal-backdrop {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  .modal-backdrop.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 20px; width: 100%; max-width: 580px;
+    max-height: 90vh; overflow-y: auto;
+    padding: 32px; transform: translateY(20px);
+    transition: transform 0.25s cubic-bezier(0.16,1,0.3,1);
+  }
+  .modal-backdrop.open .modal { transform: translateY(0); }
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; margin-bottom: 24px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+
+  /* ── TOKEN SETUP ── */
+  .token-screen {
+    max-width: 480px; margin: 80px auto; text-align: center;
+  }
+  .token-screen h1 { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; margin-bottom: 8px; }
+  .token-screen p { color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
+  .token-screen .form-input { text-align: left; margin-bottom: 12px; }
+
+  /* ── TESTIMONIALS LIST ── */
+  .t-grid { display: grid; gap: 14px; }
+  .t-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px;
+    display: grid; grid-template-columns: 52px 1fr auto;
+    gap: 16px; align-items: start;
+  }
+  .t-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), #1a6fa8);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: #000;
+    overflow: hidden; flex-shrink: 0;
+  }
+  .t-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .t-name { font-weight: 700; font-size: 0.95rem; }
+  .t-role { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
+  .t-text { color: var(--muted); font-size: 0.82rem; margin-top: 6px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .t-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .t-stats { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .t-stat-chip {
+    background: var(--blue-dim); color: var(--blue);
+    border: 1px solid rgba(56,182,255,0.2); border-radius: 6px;
+    padding: 2px 8px; font-size: 0.72rem; font-weight: 700;
+  }
+
+  /* ── ADD BUTTON ROW ── */
+  .action-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+
+  /* ── STAT EDITOR ── */
+  .stats-editor { display: flex; flex-direction: column; gap: 8px; }
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; }
+  .btn-icon {
+    width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--muted); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .btn-icon:hover { color: var(--red); border-color: rgba(248,113,113,0.3); }
+
+  /* ── PHOTO UPLOAD ── */
+  .upload-zone {
+    border: 2px dashed var(--border); border-radius: 12px;
+    padding: 24px; text-align: center; cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--blue); background: var(--blue-dim); }
+  .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .upload-zone-text { color: var(--muted); font-size: 0.82rem; }
+  .upload-preview {
+    display: flex; align-items: center; gap: 12px; margin-top: 10px;
+    padding: 10px 14px; background: var(--bg2); border-radius: 10px;
+  }
+  .upload-preview img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; }
+  .upload-preview-name { font-size: 0.82rem; color: var(--muted); flex: 1; }
+
+  /* ── GALLERY ── */
+  .gallery-tabs { display: flex; gap: 6px; margin-bottom: 24px; }
+  .gallery-tab {
+    padding: 8px 20px; border-radius: 10px; cursor: pointer;
+    font-size: 0.85rem; font-weight: 700;
+    border: 1px solid var(--border); background: none; color: var(--muted);
+    transition: all 0.15s;
+  }
+  .gallery-tab.active { background: var(--blue-dim); color: var(--blue); border-color: rgba(56,182,255,0.3); }
+
+  .drop-zone {
+    border: 2px dashed var(--border); border-radius: 14px;
+    padding: 36px; text-align: center; cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative; margin-bottom: 24px;
+  }
+  .drop-zone:hover, .drop-zone.drag { border-color: var(--blue); background: var(--blue-dim); }
+  .drop-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .drop-zone-icon { color: var(--blue); margin-bottom: 10px; }
+  .drop-zone-text { font-size: 0.88rem; color: var(--muted); }
+  .drop-zone-text strong { color: var(--text); }
+
+  .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+  .gallery-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .gallery-item img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+  .gallery-item-body { padding: 10px; }
+  .caption-input {
+    width: 100%; background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-family: 'Open Sans', sans-serif;
+    font-size: 0.78rem; padding: 6px 10px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .caption-input:focus { border-color: var(--blue); }
+  .gallery-item-actions { display: flex; gap: 6px; margin-top: 8px; }
+
+  /* ── SPINNER ── */
+  .spinner {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: currentColor; border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    text-align: center; padding: 60px 20px;
+    color: var(--muted); font-size: 0.88rem;
+  }
+  .empty svg { margin-bottom: 14px; opacity: 0.3; }
+
+  /* ── SAVE BAR ── */
+  .save-bar {
+    position: sticky; bottom: 0;
+    background: rgba(10,10,15,0.95); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 14px 32px; margin: 24px -32px -32px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+  }
+  .save-bar-text { font-size: 0.82rem; color: var(--muted); }
+
+  .progress-bar {
+    height: 3px; background: var(--blue-dim); border-radius: 2px;
+    margin-top: 8px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--blue); border-radius: 2px;
+    transition: width 0.3s;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="nav-logo">DER <span>KNEIPENKÖNIG</span></div>
+    <div class="nav-badge">Admin</div>
+  </div>
+  <div class="nav-right">
+    <div class="token-indicator" onclick="showTokenDialog()">
+      <div class="token-dot" id="tokenDot"></div>
+      <span id="tokenStatus">Kein Token</span>
+    </div>
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-label">Inhalte</div>
+    <button class="nav-item active" onclick="showPage('testimonials', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Testimonials
+    </button>
+    <button class="nav-item" onclick="showPage('galerie', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Galerien
+    </button>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ══ TESTIMONIALS ══ -->
+    <div class="page active" id="page-testimonials">
+      <div class="page-header">
+        <div class="page-title">Testimonials</div>
+        <div class="page-sub">Kundenstimmen bearbeiten und neue hinzufügen</div>
+      </div>
+      <div class="action-row">
+        <span id="t-count" style="color:var(--muted);font-size:0.85rem;"></span>
+        <button class="btn btn-primary" onclick="openTestimonialModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Neue Stimme
+        </button>
+      </div>
+      <div class="t-grid" id="tList">
+        <div class="empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <div>Lade Testimonials…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ GALERIE ══ -->
+    <div class="page" id="page-galerie">
+      <div class="page-header">
+        <div class="page-title">Galerien</div>
+        <div class="page-sub">Bilder hochladen und Captions bearbeiten</div>
+      </div>
+      <div class="gallery-tabs">
+        <button class="gallery-tab active" onclick="switchGallery('live', this)">🎤 Live</button>
+        <button class="gallery-tab" onclick="switchGallery('indie', this)">🎲 Indie</button>
+        <button class="gallery-tab" onclick="switchGallery('bingo', this)">🎱 Bingo</button>
+      </div>
+
+      <!-- Upload Drop Zone -->
+      <div class="drop-zone" id="dropZone">
+        <input type="file" accept="image/*" multiple onchange="handleGalleryUpload(this.files)" />
+        <div class="drop-zone-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div class="drop-zone-text"><strong>Bilder hier ablegen</strong> oder klicken zum Auswählen</div>
+        <div class="drop-zone-text" style="margin-top:4px;font-size:0.75rem;">JPG, PNG, WEBP — werden automatisch komprimiert</div>
+      </div>
+      <div id="uploadProgress" style="display:none; margin-bottom:16px;">
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:4px;" id="uploadProgressText"></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+
+      <div class="gallery-grid" id="galleryGrid">
+        <div class="empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <div>Lade Galerie…</div>
+        </div>
+      </div>
+
+      <div class="save-bar" id="gallerySaveBar" style="display:none;">
+        <span class="save-bar-text">Captions werden nicht automatisch gespeichert</span>
+        <button class="btn btn-primary" onclick="saveGalleryCaptions()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Captions speichern
+        </button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- TESTIMONIAL MODAL -->
+<div class="modal-backdrop" id="tModal">
+  <div class="modal">
+    <div class="modal-title" id="tModalTitle">Neue Stimme</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Name *</label>
+        <input class="form-input" id="tName" placeholder="Max Mustermann" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rolle / Ort *</label>
+        <input class="form-input" id="tRolle" placeholder="Stammgast, Datteln" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Zitat *</label>
+      <textarea class="form-textarea" id="tText" placeholder="Was sagt die Person über den Kneipenkönig?"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Foto</label>
+      <div class="upload-zone" id="tUploadZone">
+        <input type="file" accept="image/*" onchange="handleTestimonialPhoto(this)" />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--blue);margin-bottom:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <div class="upload-zone-text">Foto hochladen (optional)</div>
+      </div>
+      <div class="upload-preview" id="tPhotoPreview" style="display:none;">
+        <img id="tPhotoThumb" src="" alt="" />
+        <span class="upload-preview-name" id="tPhotoName"></span>
+        <button class="btn-icon" onclick="clearPhoto()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Stats <span style="color:var(--muted);font-weight:400;">(max. 3)</span></label>
+      <div class="stats-editor" id="statsEditor"></div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="addStatRow()">+ Stat hinzufügen</button>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('tModal')">Abbrechen</button>
+      <button class="btn btn-primary" id="tSaveBtn" onclick="saveTestimonial()">
+        <span id="tSaveBtnText">Speichern</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOKEN MODAL -->
+<div class="modal-backdrop" id="tokenModal">
+  <div class="modal" style="max-width:460px;">
+    <div class="modal-title">GitHub Token einrichten</div>
+    <p style="color:var(--muted);font-size:0.85rem;line-height:1.6;margin-bottom:20px;">
+      Du brauchst einen GitHub Personal Access Token mit <strong style="color:var(--text);">repo</strong>-Berechtigung.<br>
+      Erstelle einen unter: GitHub → Settings → Developer settings → Personal access tokens
+    </p>
+    <div class="form-group">
+      <label class="form-label">Token</label>
+      <input class="form-input" id="tokenInput" type="password" placeholder="github_pat_..." />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('tokenModal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveToken()">Token speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════
+const REPO  = 'kneipenkoenig/kneipenkoenig-website';
+const BRANCH = 'main';
+
+// ═══════════════════════════════════════════════════
+// GITHUB API
+// ═══════════════════════════════════════════════════
+function getToken() { return localStorage.getItem('gh_token') || ''; }
+
+async function ghGet(path) {
+  const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}?ref=${BRANCH}`, {
+    headers: { Authorization: `Bearer ${getToken()}`, Accept: 'application/vnd.github+json' }
+  });
+  if (!r.ok) throw new Error(`GET ${path} → ${r.status}`);
+  return r.json();
+}
+
+async function ghPut(path, content, message, sha) {
+  const body = { message, content: btoa(unescape(encodeURIComponent(content))), branch: BRANCH };
+  if (sha) body.sha = sha;
+  const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${getToken()}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
+  return r.json();
+}
+
+async function ghPutBinary(path, base64content, message, sha) {
+  const body = { message, content: base64content, branch: BRANCH };
+  if (sha) body.sha = sha;
+  const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${getToken()}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
+  return r.json();
+}
+
+async function ghDelete(path, message, sha) {
+  const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${getToken()}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, sha, branch: BRANCH })
+  });
+  if (!r.ok) throw new Error(`DELETE ${path} → ${r.status}`);
+}
+
+async function getSha(path) {
+  try { const d = await ghGet(path); return d.sha; } catch { return null; }
+}
+
+// ═══════════════════════════════════════════════════
+// TOKEN
+// ═══════════════════════════════════════════════════
+function updateTokenUI() {
+  const t = getToken();
+  const dot = document.getElementById('tokenDot');
+  const status = document.getElementById('tokenStatus');
+  if (t) { dot.classList.add('ok'); status.textContent = 'Verbunden'; }
+  else    { dot.classList.remove('ok'); status.textContent = 'Kein Token'; }
+}
+
+function showTokenDialog() { openModal('tokenModal'); }
+
+function saveToken() {
+  const v = document.getElementById('tokenInput').value.trim();
+  if (!v) return;
+  localStorage.setItem('gh_token', v);
+  updateTokenUI();
+  closeModal('tokenModal');
+  toast('Token gespeichert!', 'ok');
+  loadAll();
+}
+
+// ═══════════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════════
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-backdrop').forEach(b => {
+  b.addEventListener('click', e => { if (e.target === b) b.classList.remove('open'); });
+});
+
+// ═══════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════
+let toastTimer;
+function toast(msg, type = 'ok') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = `show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════════════════════
+// IMAGE COMPRESSION (Canvas)
+// ═══════════════════════════════════════════════════
+function compressImage(file, maxW = 1200, quality = 0.82) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const ratio = Math.min(maxW / img.width, 1);
+      const w = Math.round(img.width * ratio);
+      const h = Math.round(img.height * ratio);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(blob => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]); // base64
+        reader.readAsDataURL(blob);
+      }, 'image/jpeg', quality);
+    };
+    img.src = url;
+  });
+}
+
+function slugify(name) {
+  return name.toLowerCase()
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+    .replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+}
+
+// ═══════════════════════════════════════════════════
+// ══ TESTIMONIALS ══
+// ═══════════════════════════════════════════════════
+let testimonials = [];      // [{...data, _filename, _sha}]
+let editingIndex = null;
+let pendingPhoto = null;    // {file, base64, name}
+
+async function loadTestimonials() {
+  if (!getToken()) return;
+  try {
+    const files = await ghGet('testimonials');
+    const jsonFiles = files.filter(f => f.name.endsWith('.json'));
+    const items = await Promise.all(jsonFiles.map(async f => {
+      const d = await ghGet(f.path);
+      const content = JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
+      return { ...content, _filename: f.name, _sha: d.sha };
+    }));
+    testimonials = items;
+    renderTestimonials();
+  } catch(e) {
+    toast('Fehler beim Laden: ' + e.message, 'err');
+  }
+}
+
+function renderTestimonials() {
+  const list = document.getElementById('tList');
+  document.getElementById('t-count').textContent = `${testimonials.length} Stimme${testimonials.length !== 1 ? 'n' : ''}`;
+
+  if (!testimonials.length) {
+    list.innerHTML = `<div class="empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div>Noch keine Testimonials</div></div>`;
+    return;
+  }
+
+  list.innerHTML = testimonials.map((t, i) => {
+    const initials = t.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const fotoHtml = t.foto
+      ? `<img src="https://raw.githubusercontent.com/${REPO}/${BRANCH}/testimonials/fotos/${t.foto}" alt="" />`
+      : initials;
+    const stats = (t.stats||[]).map(s => `<span class="t-stat-chip">${s.wert} ${s.label}</span>`).join('');
+    return `
+      <div class="t-card">
+        <div class="t-avatar">${fotoHtml}</div>
+        <div>
+          <div class="t-name">${t.name}</div>
+          <div class="t-role">${t.rolle}</div>
+          <div class="t-text">${t.text}</div>
+          ${stats ? `<div class="t-stats">${stats}</div>` : ''}
+        </div>
+        <div class="t-actions">
+          <button class="btn btn-ghost btn-sm" onclick="openTestimonialModal(${i})">Bearbeiten</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteTestimonial(${i})">Löschen</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function openTestimonialModal(idx) {
+  editingIndex = idx ?? null;
+  pendingPhoto = null;
+  const t = idx != null ? testimonials[idx] : null;
+
+  document.getElementById('tModalTitle').textContent = t ? 'Stimme bearbeiten' : 'Neue Stimme';
+  document.getElementById('tName').value  = t?.name  || '';
+  document.getElementById('tRolle').value = t?.rolle || '';
+  document.getElementById('tText').value  = t?.text  || '';
+
+  // Stats
+  const stats = t?.stats || [];
+  document.getElementById('statsEditor').innerHTML = '';
+  stats.forEach(s => addStatRow(s.wert, s.label));
+
+  // Photo
+  clearPhoto();
+  if (t?.foto) {
+    document.getElementById('tPhotoPreview').style.display = 'flex';
+    document.getElementById('tPhotoThumb').src = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/testimonials/fotos/${t.foto}`;
+    document.getElementById('tPhotoName').textContent = t.foto;
+    document.getElementById('tUploadZone').style.display = 'none';
+  }
+
+  openModal('tModal');
+}
+
+function addStatRow(wert = '', label = '') {
+  const editor = document.getElementById('statsEditor');
+  const row = document.createElement('div');
+  row.className = 'stat-row';
+  row.innerHTML = `
+    <input class="form-input stat-wert" placeholder="Wert (z.B. 12×)" value="${wert}" />
+    <input class="form-input stat-label" placeholder="Label (z.B. Teilgenommen)" value="${label}" />
+    <button class="btn-icon" onclick="this.parentElement.remove()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>`;
+  editor.appendChild(row);
+}
+
+function handleTestimonialPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  document.getElementById('tPhotoThumb').src = url;
+  document.getElementById('tPhotoName').textContent = file.name;
+  document.getElementById('tPhotoPreview').style.display = 'flex';
+  document.getElementById('tUploadZone').style.display = 'none';
+  pendingPhoto = { file, name: file.name };
+}
+
+function clearPhoto() {
+  pendingPhoto = null;
+  document.getElementById('tPhotoPreview').style.display = 'none';
+  document.getElementById('tUploadZone').style.display = 'block';
+  document.getElementById('tPhotoThumb').src = '';
+}
+
+async function saveTestimonial() {
+  const name  = document.getElementById('tName').value.trim();
+  const rolle = document.getElementById('tRolle').value.trim();
+  const text  = document.getElementById('tText').value.trim();
+  if (!name || !rolle || !text) { toast('Name, Rolle und Zitat sind Pflicht', 'err'); return; }
+
+  const stats = [...document.querySelectorAll('#statsEditor .stat-row')].map(r => ({
+    wert:  r.querySelector('.stat-wert').value.trim(),
+    label: r.querySelector('.stat-label').value.trim()
+  })).filter(s => s.wert && s.label);
+
+  const btn = document.getElementById('tSaveBtn');
+  btn.disabled = true;
+  document.getElementById('tSaveBtnText').innerHTML = '<span class="spinner"></span>';
+
+  try {
+    // Upload photo if new
+    let fotoName = editingIndex != null ? testimonials[editingIndex].foto : undefined;
+    if (pendingPhoto) {
+      const ext = pendingPhoto.name.split('.').pop().toLowerCase();
+      fotoName = `${slugify(name)}.${ext === 'jpeg' ? 'jpg' : ext}`;
+      const b64 = await compressImage(pendingPhoto.file, 400, 0.85);
+      const sha = await getSha(`testimonials/fotos/${fotoName}`);
+      await ghPutBinary(`testimonials/fotos/${fotoName}`, b64, `Foto: ${name}`, sha);
+    }
+
+    const data = { name, rolle, text, ...(fotoName ? { foto: fotoName } : {}), stats };
+    const filename = editingIndex != null
+      ? testimonials[editingIndex]._filename
+      : `${slugify(name)}.json`;
+    const sha = editingIndex != null ? testimonials[editingIndex]._sha : null;
+
+    await ghPut(
+      `testimonials/${filename}`,
+      JSON.stringify(data, null, 2),
+      `Testimonial: ${name}`,
+      sha
+    );
+
+    // Update testimonials.json
+    const updated = [...testimonials];
+    if (editingIndex != null) {
+      updated[editingIndex] = { ...data, _filename: filename };
+    } else {
+      updated.push({ ...data, _filename: filename });
+    }
+    const cleanData = updated.map(({ _filename, _sha, ...rest }) => rest);
+    const tJsonSha = await getSha('testimonials.json');
+    await ghPut('testimonials.json', JSON.stringify(cleanData, null, 2), 'Auto: testimonials.json aktualisiert', tJsonSha);
+
+    toast('Gespeichert! ✓', 'ok');
+    closeModal('tModal');
+    await loadTestimonials();
+  } catch(e) {
+    toast('Fehler: ' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+    document.getElementById('tSaveBtnText').textContent = 'Speichern';
+  }
+}
+
+async function deleteTestimonial(idx) {
+  const t = testimonials[idx];
+  if (!confirm(`"${t.name}" wirklich löschen?`)) return;
+  try {
+    await ghDelete(`testimonials/${t._filename}`, `Testimonial gelöscht: ${t.name}`, t._sha);
+
+    // Update testimonials.json
+    const updated = testimonials.filter((_, i) => i !== idx).map(({ _filename, _sha, ...rest }) => rest);
+    const sha = await getSha('testimonials.json');
+    await ghPut('testimonials.json', JSON.stringify(updated, null, 2), 'Auto: testimonials.json aktualisiert', sha);
+
+    toast(`${t.name} gelöscht`, 'ok');
+    await loadTestimonials();
+  } catch(e) {
+    toast('Fehler: ' + e.message, 'err');
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// ══ GALLERY ══
+// ═══════════════════════════════════════════════════
+let currentGallery = 'live';
+let galleryData = {};   // { live: [{src,caption},...], indie: [...], bingo: [...] }
+let galleryJsonSha = {};
+
+const GALLERY_MAP = {
+  live:  { json: 'galerie-live.json',  folder: 'images/live' },
+  indie: { json: 'galerie-indie.json', folder: 'images/indie' },
+  bingo: { json: 'galerie-bingo.json', folder: 'images/bingo' },
+};
+
+async function loadGallery(name) {
+  if (!getToken()) return;
+  const { json } = GALLERY_MAP[name];
+  try {
+    const d = await ghGet(json);
+    galleryJsonSha[name] = d.sha;
+    galleryData[name] = JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
+  } catch {
+    galleryData[name] = [];
+    galleryJsonSha[name] = null;
+  }
+  if (currentGallery === name) renderGallery();
+}
+
+function switchGallery(name, btn) {
+  currentGallery = name;
+  document.querySelectorAll('.gallery-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (!galleryData[name]) {
+    document.getElementById('galleryGrid').innerHTML = `<div class="empty"><div>Lade…</div></div>`;
+    loadGallery(name);
+  } else {
+    renderGallery();
+  }
+}
+
+function renderGallery() {
+  const grid = document.getElementById('galleryGrid');
+  const data = galleryData[currentGallery] || [];
+  document.getElementById('gallerySaveBar').style.display = data.length ? 'flex' : 'none';
+
+  if (!data.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><div>Keine Bilder – lade welche hoch!</div></div>`;
+    return;
+  }
+
+  grid.innerHTML = data.map((item, i) => `
+    <div class="gallery-item" data-idx="${i}">
+      <img src="https://raw.githubusercontent.com/${REPO}/${BRANCH}/${item.src}" alt="" loading="lazy" />
+      <div class="gallery-item-body">
+        <input class="caption-input" value="${(item.caption||'').replace(/"/g,'&quot;')}" placeholder="Caption…" data-idx="${i}" onchange="updateCaption(${i}, this.value)" />
+        <div class="gallery-item-actions">
+          <button class="btn btn-danger btn-sm" style="flex:1;" onclick="deleteGalleryImage(${i})">Löschen</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function updateCaption(idx, val) {
+  if (galleryData[currentGallery]) galleryData[currentGallery][idx].caption = val;
+}
+
+async function handleGalleryUpload(files) {
+  if (!files.length) return;
+  if (!getToken()) { toast('Bitte erst Token einrichten', 'err'); return; }
+
+  const prog = document.getElementById('uploadProgress');
+  const progText = document.getElementById('uploadProgressText');
+  const fill = document.getElementById('progressFill');
+  prog.style.display = 'block';
+
+  const folder = GALLERY_MAP[currentGallery].folder;
+  const total = files.length;
+  let done = 0;
+
+  for (const file of files) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    const base = slugify(file.name.replace(/\.[^.]+$/, ''));
+    const filename = `${base}-${Date.now()}.${ext === 'jpeg' ? 'jpg' : ext}`;
+    const remotePath = `${folder}/${filename}`;
+
+    progText.textContent = `Lade hoch: ${filename} (${done+1}/${total})`;
+    fill.style.width = `${(done / total) * 100}%`;
+
+    try {
+      const b64 = await compressImage(file, 1400, 0.78);
+      await ghPutBinary(remotePath, b64, `Galerie: ${filename} hinzugefügt`);
+
+      if (!galleryData[currentGallery]) galleryData[currentGallery] = [];
+      galleryData[currentGallery].push({ src: remotePath, caption: '' });
+    } catch(e) {
+      toast(`Fehler bei ${filename}: ${e.message}`, 'err');
+    }
+    done++;
+    fill.style.width = `${(done / total) * 100}%`;
+  }
+
+  // Save JSON
+  await saveGalleryCaptions(true);
+  prog.style.display = 'none';
+  toast(`${done} Bild${done !== 1 ? 'er' : ''} hochgeladen ✓`, 'ok');
+  renderGallery();
+}
+
+async function saveGalleryCaptions(silent = false) {
+  const { json } = GALLERY_MAP[currentGallery];
+  try {
+    const sha = galleryJsonSha[currentGallery] || await getSha(json);
+    const res = await ghPut(json, JSON.stringify(galleryData[currentGallery] || [], null, 2), `Galerie-${currentGallery}: Captions aktualisiert`, sha);
+    galleryJsonSha[currentGallery] = res.content.sha;
+    if (!silent) toast('Captions gespeichert ✓', 'ok');
+  } catch(e) {
+    toast('Fehler: ' + e.message, 'err');
+  }
+}
+
+async function deleteGalleryImage(idx) {
+  const item = galleryData[currentGallery][idx];
+  if (!confirm(`Bild löschen?\n${item.src}`)) return;
+  try {
+    const sha = await getSha(item.src);
+    if (sha) await ghDelete(item.src, `Galerie: ${item.src} gelöscht`, sha);
+    galleryData[currentGallery].splice(idx, 1);
+    await saveGalleryCaptions(true);
+    toast('Bild gelöscht ✓', 'ok');
+    renderGallery();
+  } catch(e) {
+    toast('Fehler: ' + e.message, 'err');
+  }
+}
+
+// Drag & Drop
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('drag');
+  handleGalleryUpload(e.dataTransfer.files);
+});
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+function loadAll() {
+  loadTestimonials();
+  loadGallery('live');
+}
+
+updateTokenUI();
+if (!getToken()) {
+  setTimeout(() => openModal('tokenModal'), 400);
+} else {
+  loadAll();
+}
+</script>
+</body>
+</html>
