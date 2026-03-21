@@ -16,37 +16,64 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Galerie JSONs generieren
+      - name: Neue Bilder in JSONs eintragen (ohne bestehende Captions zu überschreiben)
         run: |
-          generate_json() {
+          update_json() {
             DIR="$1"
             OUT="$2"
-            echo "[" > "$OUT"
-            first=true
+
+            # Bestehende JSON einlesen (als Referenz für bereits eingetragene Bilder)
+            existing=""
+            [ -f "$OUT" ] && existing=$(cat "$OUT")
+
+            tmp_new="[]"
             for f in $(ls "$DIR"/*.jpg "$DIR"/*.jpeg "$DIR"/*.png "$DIR"/*.webp "$DIR"/*.gif "$DIR"/*.avif 2>/dev/null | sort); do
               [ -f "$f" ] || continue
-              filename=$(basename "$f")
-              title="${filename%.*}"
-              title="${title//-/ }"
-              title="${title//_/ }"
-              if [ "$first" = true ]; then
-                first=false
-              else
-                echo "  ," >> "$OUT"
+              # Nur eintragen wenn noch nicht in JSON vorhanden
+              if ! echo "$existing" | grep -qF "\"$f\""; then
+                filename=$(basename "$f")
+                title="${filename%.*}"
+                title="${title//-/ }"
+                title="${title//_/ }"
+                tmp_new=$(echo "$tmp_new" | python3 -c "
+          import json, sys
+          arr = json.load(sys.stdin)
+          arr.append({'src': '$f', 'title': '$title'})
+          print(json.dumps(arr))
+          ")
               fi
-              echo "  {\"src\": \"$f\", \"title\": \"$title\"}" >> "$OUT"
             done
-            echo "]" >> "$OUT"
+
+            # Neue Einträge an bestehende JSON anhängen
+            if [ "$tmp_new" != "[]" ]; then
+              if [ -f "$OUT" ] && [ "$(cat $OUT | tr -d '[:space:]')" != "[]" ]; then
+                python3 -c "
+          import json
+          existing = json.load(open('$OUT'))
+          new_entries = $tmp_new
+          existing.extend(new_entries)
+          print(json.dumps(existing, ensure_ascii=False, indent=2))
+          " > "${OUT}.tmp" && mv "${OUT}.tmp" "$OUT"
+              else
+                echo "$tmp_new" | python3 -c "
+          import json, sys
+          print(json.dumps(json.load(sys.stdin), ensure_ascii=False, indent=2))
+          " > "$OUT"
+              fi
+              echo "Neue Bilder zu $OUT hinzugefügt"
+            else
+              echo "Keine neuen Bilder für $OUT"
+            fi
           }
 
-          generate_json "images/indie" "galerie-indie.json"
-          generate_json "images/live"  "galerie-live.json"
-          generate_json "images/bingo" "galerie-bingo.json"
+          update_json "images/indie" "galerie-indie.json"
+          update_json "images/live"  "galerie-live.json"
+          update_json "images/bingo" "galerie-bingo.json"
 
       - name: JSONs committen
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add galerie-indie.json galerie-live.json galerie-bingo.json
-          git diff --staged --quiet || git commit -m "Auto: Galerien aktualisiert"
+          git diff --staged --quiet || git commit -m "Auto: Neue Bilder zu Galerien hinzugefügt"
           git push
