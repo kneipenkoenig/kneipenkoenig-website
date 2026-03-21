@@ -1,0 +1,43 @@
+name: Update Testimonials JSON
+
+on:
+  push:
+    paths:
+      - 'testimonials/*.json'
+      - 'testimonials/fotos/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Combine testimonial JSONs into testimonials.json
+        run: |
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+          const dir = 'testimonials';
+
+          const files = fs.readdirSync(dir)
+            .filter(f => f.endsWith('.json'))
+            .sort();
+
+          const entries = files.map(f => {
+            const raw = fs.readFileSync(path.join(dir, f), 'utf8');
+            return JSON.parse(raw);
+          });
+
+          fs.writeFileSync('testimonials.json', JSON.stringify(entries, null, 2));
+          console.log('Wrote', entries.length, 'testimonials');
+          "
+
+      - name: Commit testimonials.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add testimonials.json
+          git diff --cached --quiet || git commit -m "Auto: testimonials.json aktualisiert"
+          git push

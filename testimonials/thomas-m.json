@@ -1,0 +1,11 @@
+{
+  "name": "Thomas M.",
+  "rolle": "Teamleiter, Coesfeld",
+  "text": "Wir haben den Kneipenkönig für unseren Firmenevent gebucht – absolut professionell und trotzdem wahnsinnig lustig. Das Team redet heute noch davon!",
+  "foto": "thomas-m.jpg",
+  "stats": [
+    { "wert": "28",   "label": "Teilnehmer" },
+    { "wert": "4.9★", "label": "Bewertung" },
+    { "wert": "3×",   "label": "Gebucht" }
+  ]
+}

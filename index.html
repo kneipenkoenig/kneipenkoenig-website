@@ -2288,50 +2288,30 @@
     loadTicketTailorEvents();
 
     // ── Testimonials Carousel ─────────────────────────────────
-    const TESTIMONIALS = [
-      {
-        initials: 'SK',
-        name: 'Sarah K.',
-        role: 'Stammgast, Datteln',
-        text: '„Jeder Abend mit dem Kneipenkönig ist ein Highlight! Die Fragen sind knackig, die Moderation energiegeladen – man merkt, dass hier jemand mit echter Leidenschaft dabei ist."',
-        stats: [{ value: '12×', label: 'Teilgenommen' }, { value: '1×', label: 'Gewonnen 🏆' }, { value: '100%', label: 'Wiederkommen' }]
-      },
-      {
-        initials: 'TM',
-        name: 'Thomas M.',
-        role: 'Teamleiter, Coesfeld',
-        text: '„Wir haben den Kneipenkönig für unseren Firmenevent gebucht – absolut professionell und trotzdem wahnsinnig lustig. Das Team redet heute noch davon!"',
-        stats: [{ value: '28', label: 'Teilnehmer' }, { value: '4.9★', label: 'Bewertung' }, { value: '3×', label: 'Gebucht' }]
-      },
-      {
-        initials: 'AW',
-        name: 'Anna W.',
-        role: 'Wirtin, Haltern am See',
-        text: '„Seit wir den Kneipenkönig bei uns haben, ist der Quiz-Abend ausgebucht. Die Gäste kommen regelmäßig wieder und konsumieren deutlich mehr. Klare Empfehlung!"',
-        stats: [{ value: '+40%', label: 'Umsatz abends' }, { value: '31', label: 'Teams' }, { value: 'Immer', label: 'Ausverkauft' }]
-      },
-      {
-        initials: 'MH',
-        name: 'Markus H.',
-        role: 'Geburtstagskind, Reken',
-        text: '„Meine Geburtstagsfeier war unvergesslich! Der Kneipenkönig hat alles individuell angepasst – unsere Freunde hatten den besten Abend seit Jahren."',
-        stats: [{ value: '40', label: 'Gäste' }, { value: '5★', label: 'Bewertung' }, { value: '1', label: 'Toller Abend' }]
-      }
-    ];
-
-    const track = document.getElementById('testimonialsTrack');
-    const dotsEl = document.getElementById('testimonialsDots');
+    const track   = document.getElementById('testimonialsTrack');
+    const dotsEl  = document.getElementById('testimonialsDots');
     const prevBtn = document.getElementById('testimonialsPrev');
     const nextBtn = document.getElementById('testimonialsNext');
+    let testimonials = [];
     let currentSlide = 0;
     let autoTimer;
 
+    function initials(name) {
+      return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    }
     function starSVG() {
       return `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
     }
 
+    function avatarHtml(t) {
+      if (t.foto) {
+        return `<img src="testimonials/fotos/${t.foto}" alt="${t.name}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.outerHTML='<div class=\\'testimonial-avatar\\'>${initials(t.name)}</div>'" />`;
+      }
+      return `<div class="testimonial-avatar">${initials(t.name)}</div>`;
+    }
+
     function buildSlides() {
-      track.innerHTML = TESTIMONIALS.map(t => `
+      track.innerHTML = testimonials.map(t => `
         <div class="testimonial-card">
           <div class="testimonial-inner">
             <div class="testimonial-quote-icon">
@@ -2339,23 +2319,23 @@
             </div>
             <div>
               <div class="testimonial-stars">${Array(5).fill(starSVG()).join('')}</div>
-              <p class="testimonial-text">${t.text}</p>
+              <p class="testimonial-text">„${t.text}"</p>
               <div class="testimonial-author">
-                <div class="testimonial-avatar">${t.initials}</div>
+                ${avatarHtml(t)}
                 <div>
                   <div class="testimonial-name">${t.name}</div>
-                  <div class="testimonial-role">${t.role}</div>
+                  <div class="testimonial-role">${t.rolle}</div>
                 </div>
               </div>
             </div>
             <div class="testimonial-stats">
-              ${t.stats.map(s => `<div class="testimonial-stat"><div class="testimonial-stat-value">${s.value}</div><div class="testimonial-stat-label">${s.label}</div></div>`).join('')}
+              ${(t.stats || []).map(s => `<div class="testimonial-stat"><div class="testimonial-stat-value">${s.wert}</div><div class="testimonial-stat-label">${s.label}</div></div>`).join('')}
             </div>
           </div>
         </div>
       `).join('');
 
-      dotsEl.innerHTML = TESTIMONIALS.map((_, i) =>
+      dotsEl.innerHTML = testimonials.map((_, i) =>
         `<div class="testimonials-dot${i === 0 ? ' active' : ''}" data-i="${i}" role="button" aria-label="Bewertung ${i+1}"></div>`
       ).join('');
 
@@ -2365,7 +2345,7 @@
     }
 
     function goTo(i) {
-      currentSlide = (i + TESTIMONIALS.length) % TESTIMONIALS.length;
+      currentSlide = (i + testimonials.length) % testimonials.length;
       track.style.transform = `translateX(-${currentSlide * 100}%)`;
       dotsEl.querySelectorAll('.testimonials-dot').forEach((d, idx) =>
         d.classList.toggle('active', idx === currentSlide)
@@ -2378,10 +2358,18 @@
       autoTimer = setInterval(() => goTo(currentSlide + 1), 6000);
     }
 
-    buildSlides();
-    prevBtn.addEventListener('click', () => goTo(currentSlide - 1));
-    nextBtn.addEventListener('click', () => goTo(currentSlide + 1));
-    resetTimer();
+    fetch('testimonials.json')
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        testimonials = data;
+        buildSlides();
+        prevBtn.addEventListener('click', () => goTo(currentSlide - 1));
+        nextBtn.addEventListener('click', () => goTo(currentSlide + 1));
+        resetTimer();
+      })
+      .catch(() => {
+        document.querySelector('.testimonials-section').style.display = 'none';
+      });
 
     // ── Dark mode toggle ─────────────────────────────────────
     const htmlEl      = document.documentElement;

@@ -1,0 +1,11 @@
+{
+  "name": "Sarah K.",
+  "rolle": "Stammgast, Datteln",
+  "text": "Jeder Abend mit dem Kneipenkönig ist ein Highlight! Die Fragen sind knackig, die Moderation energiegeladen – man merkt, dass hier jemand mit echter Leidenschaft dabei ist.",
+  "foto": "sarah-k.jpg",
+  "stats": [
+    { "wert": "12×", "label": "Teilgenommen" },
+    { "wert": "1×",  "label": "Gewonnen 🏆" },
+    { "wert": "100%","label": "Wiederkommen" }
+  ]
+}

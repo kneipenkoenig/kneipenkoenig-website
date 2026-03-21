@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Anna W.",
+    "rolle": "Wirtin, Haltern am See",
+    "text": "Seit wir den Kneipenkönig bei uns haben, ist der Quiz-Abend ausgebucht. Die Gäste kommen regelmäßig wieder und konsumieren deutlich mehr. Klare Empfehlung!",
+    "foto": "anna-w.jpg",
+    "stats": [
+      {
+        "wert": "+40%",
+        "label": "Umsatz abends"
+      },
+      {
+        "wert": "31",
+        "label": "Teams"
+      },
+      {
+        "wert": "Immer",
+        "label": "Ausverkauft"
+      }
+    ]
+  },
+  {
+    "name": "Markus H.",
+    "rolle": "Geburtstagskind, Reken",
+    "text": "Meine Geburtstagsfeier war unvergesslich! Der Kneipenkönig hat alles individuell angepasst – unsere Freunde hatten den besten Abend seit Jahren.",
+    "foto": "markus-h.jpg",
+    "stats": [
+      {
+        "wert": "40",
+        "label": "Gäste"
+      },
+      {
+        "wert": "5★",
+        "label": "Bewertung"
+      },
+      {
+        "wert": "1",
+        "label": "Toller Abend"
+      }
+    ]
+  },
+  {
+    "name": "Sarah K.",
+    "rolle": "Stammgast, Datteln",
+    "text": "Jeder Abend mit dem Kneipenkönig ist ein Highlight! Die Fragen sind knackig, die Moderation energiegeladen – man merkt, dass hier jemand mit echter Leidenschaft dabei ist.",
+    "foto": "sarah-k.jpg",
+    "stats": [
+      {
+        "wert": "12×",
+        "label": "Teilgenommen"
+      },
+      {
+        "wert": "1×",
+        "label": "Gewonnen 🏆"
+      },
+      {
+        "wert": "100%",
+        "label": "Wiederkommen"
+      }
+    ]
+  },
+  {
+    "name": "Thomas M.",
+    "rolle": "Teamleiter, Coesfeld",
+    "text": "Wir haben den Kneipenkönig für unseren Firmenevent gebucht – absolut professionell und trotzdem wahnsinnig lustig. Das Team redet heute noch davon!",
+    "foto": "thomas-m.jpg",
+    "stats": [
+      {
+        "wert": "28",
+        "label": "Teilnehmer"
+      },
+      {
+        "wert": "4.9★",
+        "label": "Bewertung"
+      },
+      {
+        "wert": "3×",
+        "label": "Gebucht"
+      }
+    ]
+  }
+]

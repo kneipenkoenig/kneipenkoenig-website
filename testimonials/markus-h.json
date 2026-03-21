@@ -1,0 +1,11 @@
+{
+  "name": "Markus H.",
+  "rolle": "Geburtstagskind, Reken",
+  "text": "Meine Geburtstagsfeier war unvergesslich! Der Kneipenkönig hat alles individuell angepasst – unsere Freunde hatten den besten Abend seit Jahren.",
+  "foto": "markus-h.jpg",
+  "stats": [
+    { "wert": "40",  "label": "Gäste" },
+    { "wert": "5★",  "label": "Bewertung" },
+    { "wert": "1",   "label": "Toller Abend" }
+  ]
+}
