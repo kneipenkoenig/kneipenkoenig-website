@@ -927,9 +927,16 @@ async function saveTestimonial() {
     const tJsonSha = await getSha('testimonials.json');
     await ghPut('testimonials.json', JSON.stringify(cleanData, null, 2), 'Auto: testimonials.json aktualisiert', tJsonSha);
 
+    // Lokale Liste sofort aktualisieren (kein GitHub API Cache-Problem)
+    const newEntry = { ...data, _filename: filename };
+    if (editingIndex != null) {
+      testimonials[editingIndex] = newEntry;
+    } else {
+      testimonials.push(newEntry);
+    }
+    renderTestimonials();
     toast('Gespeichert! ✓', 'ok');
     closeModal('tModal');
-    await loadTestimonials();
   } catch(e) {
     toast('Fehler: ' + e.message, 'err');
   } finally {
