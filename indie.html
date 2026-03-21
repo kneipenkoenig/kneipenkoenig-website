@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Kneipenkönig Indie – Das Teamevent für deine Firma, deinen Verein oder deine Feier. Maßgeschneidertes Quiz für jede Location." />
+  <title>Kneipenkönig Indie – Das Teamevent für euch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue: #38b6ff;
+      --blue-glow: rgba(56,182,255,0.25);
+      --border-blue: rgba(56,182,255,0.35);
+      --text-primary: #fff;
+      --text-secondary: rgba(255,255,255,0.55);
+      --text-muted: rgba(255,255,255,0.35);
+      --surface: rgba(255,255,255,0.05);
+      --border: rgba(255,255,255,0.09);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      font-family: 'Open Sans', sans-serif;
+      color: var(--text-primary);
+      background: #000;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: url('hero-bg.jpg') center center / cover no-repeat;
+      z-index: -2;
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: -1;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 18px 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
+    .crown { color: var(--blue); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 0.88rem; font-weight: 500; color: var(--text-secondary); transition: color 0.2s; }
+    .nav-links a:hover { color: #fff; }
+    .nav-cta { padding: 9px 20px; background: var(--blue); color: #000; border-radius: 8px; font-size: 0.85rem; font-weight: 700; transition: background 0.2s; }
+    .nav-cta:hover { background: #7dd3fc; }
+    @media (max-width: 768px) { .nav-links, .nav-cta { display: none; } }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 5%; }
+    section { padding: 90px 0; }
+    .section-label { display: block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 5vw, 3.8rem); line-height: 1; letter-spacing: 0.02em; margin-bottom: 18px; }
+    .section-desc { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.7; max-width: 580px; }
+
+    /* HERO */
+    .hero {
+      min-height: 70vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 140px 5% 80px;
+      text-align: center; position: relative;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%); }
+    .hero-content { position: relative; z-index: 1; max-width: 800px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border: 1px solid var(--border-blue); border-radius: 100px;
+      font-size: 0.78rem; font-weight: 600; color: var(--blue);
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 24px;
+      background: rgba(56,182,255,0.07);
+    }
+    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.5rem, 9vw, 7rem); line-height: 0.95; color: #fff; margin-bottom: 24px; }
+    .hero-title em { color: var(--blue); font-style: normal; }
+    .hero-sub { font-size: clamp(1rem, 2.5vw, 1.2rem); color: var(--text-secondary); max-width: 580px; margin: 0 auto 36px; line-height: 1.7; }
+    .hero-cta { display: inline-block; padding: 14px 36px; background: var(--blue); color: #000; border-radius: 10px; font-weight: 700; font-size: 0.95rem; transition: background 0.2s, transform 0.2s; }
+    .hero-cta:hover { background: #7dd3fc; transform: translateY(-2px); }
+
+    /* INTRO */
+    .intro { background: rgba(0,0,0,0.5); }
+    .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+    .intro-text p { color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px; }
+    .intro-highlights { display: flex; flex-direction: column; gap: 16px; }
+    .highlight {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      display: flex; gap: 18px; align-items: flex-start;
+    }
+    .highlight-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .highlight h4 { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+    .highlight p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin: 0; }
+
+    /* ANLÄSSE */
+    .anlaesse { background: rgba(0,0,0,0.35); }
+    .anlaesse-header { margin-bottom: 48px; }
+    .anlaesse-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .anlass {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 22px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .anlass:hover { border-color: var(--border-blue); }
+    .anlass-icon { font-size: 2.2rem; margin-bottom: 12px; }
+    .anlass-name { font-weight: 600; font-size: 0.92rem; }
+
+    /* KATEGORIEN */
+    .kategorien-section { background: rgba(0,0,0,0.5); }
+    .kat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-top: 48px; }
+    .kat { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 12px; }
+    .kat-icon { font-size: 1.6rem; }
+    .kat-name { font-weight: 600; font-size: 0.88rem; }
+
+    /* ABLAUF */
+    .ablauf { background: rgba(0,0,0,0.35); }
+    .ablauf-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 56px; }
+    .step { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px 22px; }
+    .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--blue); opacity: 0.3; line-height: 1; margin-bottom: 10px; }
+    .step h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.03em; margin-bottom: 8px; }
+    .step p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; }
+
+    /* CTA */
+    .cta-section { background: rgba(0,0,0,0.6); text-align: center; padding: 100px 5%; }
+    .cta-section .section-title { margin-bottom: 16px; }
+    .cta-section .section-desc { margin: 0 auto 40px; }
+    .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { display: inline-block; padding: 14px 36px; background: var(--blue); color: #000; border-radius: 10px; font-weight: 700; font-size: 0.95rem; transition: background 0.2s, transform 0.2s; }
+    .btn-primary:hover { background: #7dd3fc; transform: translateY(-2px); }
+    .btn-outline { display: inline-block; padding: 14px 36px; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 10px; font-weight: 600; font-size: 0.95rem; transition: border-color 0.2s, background 0.2s; }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.06); }
+
+    .footer { background: rgba(0,0,0,0.85); border-top: 1px solid var(--border); padding: 32px 5%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; display: flex; align-items: center; gap: 8px; }
+    .footer-copy { font-size: 0.82rem; color: var(--text-muted); }
+    .footer-back { font-size: 0.85rem; color: var(--blue); }
+    .footer-back:hover { text-decoration: underline; }
+
+    @media (max-width: 900px) { .ablauf-steps { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 768px) { .intro-grid { grid-template-columns: 1fr; } .ablauf-steps { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-logo"><span class="crown">♛</span> Kneipenkönig</a>
+    <ul class="nav-links">
+      <li><a href="index.html#formate">Formate</a></li>
+      <li><a href="index.html#events">Events</a></li>
+      <li><a href="index.html#buchung">Buchung</a></li>
+    </ul>
+    <a href="index.html#buchung" class="nav-cta">Jetzt anfragen</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">✦ Privat-Event</div>
+      <h1 class="hero-title">Kneipenkönig<br><em>Indie</em></h1>
+      <p class="hero-sub">Der Kneipenkönig als Teamevent für deine Firma, deinen Verein oder deine Feier. Wir kommen zu dir – maßgeschneidert, unvergesslich.</p>
+      <a href="index.html#buchung" class="hero-cta">Jetzt anfragen</a>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section class="intro">
+    <div class="container">
+      <div class="intro-grid">
+        <div class="intro-text">
+          <span class="section-label">Das Konzept</span>
+          <h2 class="section-title">Quiz für euch – an eurem Ort</h2>
+          <p>Schluss mit langweiligen Firmenfeiern! Der Kneipenkönig Indie bringt das komplette Quiz-Erlebnis direkt zu euch – egal ob Firmenfeier, Betriebsfest, Geburtstag oder Weihnachtsfeier.</p>
+          <p>Wir teilen alle Teilnehmer per Zufall in Rateteams ein, um den Teamgeist zu stärken. So lernt ihr euch neu kennen und jeder punktet mit seinem eigenen Wissensschatz.</p>
+          <p>Von der Planung bis zur Durchführung kümmern wir uns um alles – ihr müsst euch um nichts kümmern außer ums Mitspielen.</p>
+        </div>
+        <div class="intro-highlights">
+          <div class="highlight">
+            <div class="highlight-icon">🎯</div>
+            <div>
+              <h4>Individuell auf euch zugeschnitten</h4>
+              <p>Eigene Fragen zu eurem Unternehmen, eurer Geschichte oder euren Mitarbeitern möglich.</p>
+            </div>
+          </div>
+          <div class="highlight">
+            <div class="highlight-icon">📍</div>
+            <div>
+              <h4>Wir kommen zu euch</h4>
+              <p>Eure Location, euer Termin. Wir bringen alles mit – Buzzer, Tablets und Moderation.</p>
+            </div>
+          </div>
+          <div class="highlight">
+            <div class="highlight-icon">👥</div>
+            <div>
+              <h4>Ab 10 Personen buchbar</h4>
+              <p>Ideal für kleinere Teams bis hin zu großen Betriebsfeiern mit hunderten Personen.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANLÄSSE -->
+  <section class="anlaesse">
+    <div class="container">
+      <div class="anlaesse-header">
+        <span class="section-label">Passend für</span>
+        <h2 class="section-title">Jeder Anlass</h2>
+      </div>
+      <div class="anlaesse-grid">
+        <div class="anlass"><div class="anlass-icon">🏢</div><div class="anlass-name">Firmenfeiern</div></div>
+        <div class="anlass"><div class="anlass-icon">🎄</div><div class="anlass-name">Weihnachtsfeiern</div></div>
+        <div class="anlass"><div class="anlass-icon">🎂</div><div class="anlass-name">Geburtstage</div></div>
+        <div class="anlass"><div class="anlass-icon">🤝</div><div class="anlass-name">Teambuilding</div></div>
+        <div class="anlass"><div class="anlass-icon">🎓</div><div class="anlass-name">Schulveranstaltungen</div></div>
+        <div class="anlass"><div class="anlass-icon">⚽</div><div class="anlass-name">Vereinsfeste</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KATEGORIEN -->
+  <section class="kategorien-section">
+    <div class="container">
+      <span class="section-label">Wissensgebiete</span>
+      <h2 class="section-title">Was wird gefragt?</h2>
+      <div class="kat-grid">
+        <div class="kat"><div class="kat-icon">🌍</div><div class="kat-name">Allgemeinwissen</div></div>
+        <div class="kat"><div class="kat-icon">🗳️</div><div class="kat-name">Politik</div></div>
+        <div class="kat"><div class="kat-icon">⚽</div><div class="kat-name">Sport</div></div>
+        <div class="kat"><div class="kat-icon">🎵</div><div class="kat-name">Musik</div></div>
+        <div class="kat"><div class="kat-icon">🖼️</div><div class="kat-name">Bilderrätsel</div></div>
+        <div class="kat"><div class="kat-icon">🏢</div><div class="kat-name">Firmenspezifisch</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABLAUF -->
+  <section class="ablauf">
+    <div class="container">
+      <span class="section-label">So läuft's</span>
+      <h2 class="section-title">Von der Anfrage bis zur Feier</h2>
+      <div class="ablauf-steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Anfrage stellen</h3>
+          <p>Schreib uns mit Datum, Location und Teilnehmerzahl. Wir melden uns schnellstmöglich zurück.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Konzept abstimmen</h3>
+          <p>Wir besprechen gemeinsam Themen, individuelle Fragen und den genauen Ablauf des Abends.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Wir kommen zu euch</h3>
+          <p>Unser Team erscheint pünktlich mit allem Equipment. Ihr müsst euch um nichts kümmern.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h3>Quizabend & Spaß</h3>
+          <p>Euer Moderator führt durch den Abend – mit Witz, Spannung und unvergesslichen Momenten.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <span class="section-label">Kontakt</span>
+      <h2 class="section-title">Interesse geweckt?</h2>
+      <p class="section-desc">Schreib uns einfach – wir erstellen euch ein individuelles Angebot für euren Anlass.</p>
+      <div class="cta-buttons">
+        <a href="index.html#buchung" class="btn-primary">Jetzt anfragen</a>
+        <a href="index.html" class="btn-outline">← Zurück zur Startseite</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-logo"><span class="crown">♛</span> Kneipenkönig</div>
+    <span class="footer-copy">© 2026 Der Kneipenkönig – Lettevents</span>
+    <a href="index.html" class="footer-back">← Startseite</a>
+  </footer>
+
+</body>
+</html>
