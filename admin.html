@@ -916,18 +916,7 @@ async function saveTestimonial() {
       sha
     );
 
-    // Update testimonials.json
-    const updated = [...testimonials];
-    if (editingIndex != null) {
-      updated[editingIndex] = { ...data, _filename: filename };
-    } else {
-      updated.push({ ...data, _filename: filename });
-    }
-    const cleanData = updated.map(({ _filename, _sha, ...rest }) => rest);
-    const tJsonSha = await getSha('testimonials.json');
-    await ghPut('testimonials.json', JSON.stringify(cleanData, null, 2), 'Auto: testimonials.json aktualisiert', tJsonSha);
-
-    // Lokale Liste sofort aktualisieren (kein GitHub API Cache-Problem)
+    // Lokale Liste sofort aktualisieren – testimonials.json übernimmt der GitHub Action
     const newEntry = { ...data, _filename: filename };
     if (editingIndex != null) {
       testimonials[editingIndex] = newEntry;
@@ -935,7 +924,7 @@ async function saveTestimonial() {
       testimonials.push(newEntry);
     }
     renderTestimonials();
-    toast('Gespeichert! ✓', 'ok');
+    toast('Gespeichert! ✓ (Website aktualisiert sich in ~1 Min.)', 'ok');
     closeModal('tModal');
   } catch(e) {
     toast('Fehler: ' + e.message, 'err');
@@ -949,15 +938,13 @@ async function deleteTestimonial(idx) {
   const t = testimonials[idx];
   if (!confirm(`"${t.name}" wirklich löschen?`)) return;
   try {
-    await ghDelete(`testimonials/${t._filename}`, `Testimonial gelöscht: ${t.name}`, t._sha);
+    const freshSha = await getSha(`testimonials/${t._filename}`);
+    await ghDelete(`testimonials/${t._filename}`, `Testimonial gelöscht: ${t.name}`, freshSha);
 
-    // Update testimonials.json
-    const updated = testimonials.filter((_, i) => i !== idx).map(({ _filename, _sha, ...rest }) => rest);
-    const sha = await getSha('testimonials.json');
-    await ghPut('testimonials.json', JSON.stringify(updated, null, 2), 'Auto: testimonials.json aktualisiert', sha);
-
-    toast(`${t.name} gelöscht`, 'ok');
-    await loadTestimonials();
+    // Lokale Liste aktualisieren – testimonials.json übernimmt der GitHub Action
+    testimonials.splice(idx, 1);
+    renderTestimonials();
+    toast(`${t.name} gelöscht (Website aktualisiert sich in ~1 Min.)`, 'ok');
   } catch(e) {
     toast('Fehler: ' + e.message, 'err');
   }
