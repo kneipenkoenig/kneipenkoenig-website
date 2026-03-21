@@ -566,25 +566,26 @@ const msalConfig = {
   cache: { cacheLocation: 'sessionStorage' }
 };
 const msalInstance = new msal.PublicClientApplication(msalConfig);
-let initPromise = null;
 
-async function initMsal() {
-  await msalInstance.initialize();
-  const resp = await msalInstance.handleRedirectPromise();
-  const account = resp?.account || msalInstance.getAllAccounts()[0];
-  if (account) {
-    msalInstance.setActiveAccount(account);
-    showAdminUI(account);
-  } else {
+function initMsal() {
+  // MSAL v2: kein initialize() nötig, direkt handleRedirectPromise aufrufen
+  msalInstance.handleRedirectPromise().then(resp => {
+    const account = resp?.account || msalInstance.getAllAccounts()[0];
+    if (account) {
+      msalInstance.setActiveAccount(account);
+      showAdminUI(account);
+    } else {
+      document.getElementById('authScreen').style.display = 'flex';
+    }
+  }).catch(() => {
     document.getElementById('authScreen').style.display = 'flex';
-  }
+  });
 }
 
 async function msLogin() {
   const errEl = document.getElementById('authError');
   errEl.style.display = 'none';
   try {
-    await initPromise; // warten bis MSAL bereit ist
     const resp = await msalInstance.loginPopup({ scopes: ['User.Read'] });
     msalInstance.setActiveAccount(resp.account);
     showAdminUI(resp.account);
@@ -1089,19 +1090,7 @@ function loadAll() {
   loadGallery('live');
 }
 
-initPromise = initMsal();
-initPromise.catch(e => {
-  // Falls CLIENT_ID noch nicht gesetzt ist, direkt Admin zeigen (Entwicklungsmodus)
-  if (CLIENT_ID === 'DEINE_CLIENT_ID') {
-    document.getElementById('authScreen').style.display = 'none';
-    updateTokenUI();
-    if (!getToken()) setTimeout(() => openModal('tokenModal'), 400);
-    else loadAll();
-  } else {
-    document.getElementById('authError').style.display = 'block';
-    document.getElementById('authError').textContent = 'MSAL Fehler: ' + e.message;
-  }
-});
+initMsal();
 </script>
 </body>
 </html>
