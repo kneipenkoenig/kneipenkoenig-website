@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Admin – Der Kneipenkönig</title>
+<script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
 <style>
@@ -303,6 +304,41 @@
   }
   .save-bar-text { font-size: 0.82rem; color: var(--muted); }
 
+  /* ── AUTH SCREEN ── */
+  #authScreen {
+    position: fixed; inset: 0; z-index: 999;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 0;
+  }
+  .auth-box {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 24px; padding: 48px 40px; width: 100%; max-width: 400px;
+    text-align: center;
+  }
+  .auth-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; margin-bottom: 4px; }
+  .auth-logo span { color: var(--blue); }
+  .auth-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 32px; }
+  .btn-microsoft {
+    display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+    width: 100%; padding: 13px 24px; border-radius: 12px;
+    background: #2f2f2f; border: 1px solid rgba(255,255,255,0.12);
+    color: #fff; font-family: 'Open Sans', sans-serif; font-size: 0.92rem; font-weight: 700;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .btn-microsoft:hover { background: #3a3a3a; }
+  .auth-user {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 14px; border-radius: 10px;
+    background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2);
+    font-size: 0.82rem; color: var(--green);
+  }
+  .auth-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--blue); display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem; color: #000; flex-shrink: 0;
+  }
+
   .progress-bar {
     height: 3px; background: var(--blue-dim); border-radius: 2px;
     margin-top: 8px; overflow: hidden;
@@ -315,6 +351,24 @@
 </head>
 <body>
 
+<!-- AUTH SCREEN -->
+<div id="authScreen">
+  <div class="auth-box">
+    <div class="auth-logo">DER <span>KNEIPENKÖNIG</span></div>
+    <div class="auth-sub">Admin-Bereich – Bitte mit Microsoft anmelden</div>
+    <button class="btn-microsoft" onclick="msLogin()">
+      <svg width="20" height="20" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="10" height="10" fill="#f25022"/>
+        <rect x="12" y="1" width="10" height="10" fill="#7fba00"/>
+        <rect x="1" y="12" width="10" height="10" fill="#00a4ef"/>
+        <rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
+      </svg>
+      Mit Microsoft anmelden
+    </button>
+    <div id="authError" style="margin-top:14px;font-size:0.78rem;color:var(--red);display:none;"></div>
+  </div>
+</div>
+
 <!-- NAV -->
 <nav class="nav">
   <div style="display:flex;align-items:center;gap:12px;">
@@ -322,10 +376,15 @@
     <div class="nav-badge">Admin</div>
   </div>
   <div class="nav-right">
+    <div id="navUser" class="auth-user" style="display:none;">
+      <div class="auth-avatar" id="navInitials"></div>
+      <span id="navName"></span>
+    </div>
     <div class="token-indicator" onclick="showTokenDialog()">
       <div class="token-dot" id="tokenDot"></div>
       <span id="tokenStatus">Kein Token</span>
     </div>
+    <button class="btn btn-ghost btn-sm" onclick="msLogout()" style="display:none;" id="logoutBtn">Abmelden</button>
   </div>
 </nav>
 
@@ -488,10 +547,68 @@
 
 <script>
 // ═══════════════════════════════════════════════════
-// CONFIG
+// CONFIG – passe CLIENT_ID und TENANT_ID an!
 // ═══════════════════════════════════════════════════
-const REPO  = 'kneipenkoenig/kneipenkoenig-website';
-const BRANCH = 'main';
+const REPO     = 'kneipenkoenig/kneipenkoenig-website';
+const BRANCH   = 'main';
+const CLIENT_ID = 'DEINE_CLIENT_ID';   // Azure App Registration → Application (client) ID
+const TENANT_ID = 'DEINE_TENANT_ID';  // Azure → Tenant ID  (oder 'common' für alle MS-Konten)
+
+// ═══════════════════════════════════════════════════
+// MSAL – Microsoft Authentication
+// ═══════════════════════════════════════════════════
+const msalConfig = {
+  auth: {
+    clientId:   CLIENT_ID,
+    authority:  `https://login.microsoftonline.com/${TENANT_ID}`,
+    redirectUri: window.location.href.split('?')[0].split('#')[0],
+  },
+  cache: { cacheLocation: 'sessionStorage' }
+};
+const msalInstance = new msal.PublicClientApplication(msalConfig);
+let msalReady = false;
+
+async function initMsal() {
+  await msalInstance.initialize();
+  const resp = await msalInstance.handleRedirectPromise();
+  msalReady = true;
+  const account = resp?.account || msalInstance.getAllAccounts()[0];
+  if (account) {
+    msalInstance.setActiveAccount(account);
+    showAdminUI(account);
+  } else {
+    document.getElementById('authScreen').style.display = 'flex';
+  }
+}
+
+async function msLogin() {
+  try {
+    const resp = await msalInstance.loginPopup({ scopes: ['User.Read'] });
+    msalInstance.setActiveAccount(resp.account);
+    showAdminUI(resp.account);
+  } catch(e) {
+    const el = document.getElementById('authError');
+    el.style.display = 'block';
+    el.textContent = 'Anmeldung fehlgeschlagen: ' + e.message;
+  }
+}
+
+function msLogout() {
+  msalInstance.logoutPopup();
+}
+
+function showAdminUI(account) {
+  document.getElementById('authScreen').style.display = 'none';
+  const name = account.name || account.username;
+  const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('navInitials').textContent = initials;
+  document.getElementById('navName').textContent = name;
+  document.getElementById('navUser').style.display = 'flex';
+  document.getElementById('logoutBtn').style.display = 'inline-flex';
+  updateTokenUI();
+  if (!getToken()) setTimeout(() => openModal('tokenModal'), 400);
+  else loadAll();
+}
 
 // ═══════════════════════════════════════════════════
 // GITHUB API
@@ -971,12 +1088,18 @@ function loadAll() {
   loadGallery('live');
 }
 
-updateTokenUI();
-if (!getToken()) {
-  setTimeout(() => openModal('tokenModal'), 400);
-} else {
-  loadAll();
-}
+initMsal().catch(e => {
+  // Falls CLIENT_ID noch nicht gesetzt ist, direkt Admin zeigen (Entwicklungsmodus)
+  if (CLIENT_ID === 'DEINE_CLIENT_ID') {
+    document.getElementById('authScreen').style.display = 'none';
+    updateTokenUI();
+    if (!getToken()) setTimeout(() => openModal('tokenModal'), 400);
+    else loadAll();
+  } else {
+    document.getElementById('authError').style.display = 'block';
+    document.getElementById('authError').textContent = 'MSAL Fehler: ' + e.message;
+  }
+});
 </script>
 </body>
 </html>
