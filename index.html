@@ -1555,8 +1555,8 @@
       .nav-links, .nav-cta { display: none; }
       .nav-toggle { display: flex; }
       .hero-stats { gap: 24px; }
-      .event-card { grid-template-columns: auto 1fr; }
-      .event-meta { display: none; }
+      .event-card { grid-template-columns: auto 1fr auto; }
+      .event-time { display: none; }
       .events-past-grid { grid-template-columns: 1fr 1fr; }
       .bingo-inner { padding: 36px 24px; }
       .indie-occasions { grid-template-columns: 1fr; }
@@ -1745,6 +1745,16 @@
 
       <div id="eventsContainer" role="list" aria-live="polite" aria-label="Kommende Events"></div>
       <div id="eventsError" class="events-error" style="display:none"></div>
+
+      <div style="text-align:center; margin-top:28px;">
+        <a href="https://www.tickettailor.com/events/lettevents" target="_blank" rel="noopener noreferrer"
+           style="display:inline-flex; align-items:center; gap:8px; padding:13px 28px; border:1px solid rgba(255,255,255,0.18); border-radius:10px; font-size:0.9rem; font-weight:600; color:#fff; transition:border-color 0.2s, background 0.2s;"
+           onmouseover="this.style.borderColor='#38b6ff';this.style.color='#38b6ff';"
+           onmouseout="this.style.borderColor='rgba(255,255,255,0.18)';this.style.color='#fff';">
+          Alle Termine auf Ticket Tailor ansehen
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+      </div>
 
       <div class="events-past-title reveal">Vergangene Events</div>
       <div class="events-past-grid">
@@ -2027,8 +2037,6 @@
       { name:"Kneipenkönig LIVE – Haus Zumbült Lette",    url:"https://www.tickettailor.com/checkout/view-event/id/6993152/chk/e920/", date:"2026-04-16", time:"19:00", venue:"Haus Zumbült, Lette",    available:false },
       { name:"Kneipenkönig LIVE – Brauhaus Coesfeld",     url:"https://www.tickettailor.com/checkout/view-event/id/7643452/chk/b126/", date:"2026-04-20", time:"19:00", venue:"Brauhaus, Coesfeld",      available:false },
       { name:"Kneipenkönig LIVE – Zum Moetken Reken",     url:"https://www.tickettailor.com/checkout/view-event/id/6986647/chk/2c28/", date:"2026-04-24", time:"19:00", venue:"Zum Moetken, Reken",      available:false },
-      { name:"Kneipenkönig LIVE – Manhattan Marl",        url:"https://www.tickettailor.com/checkout/view-event/id/6928927/chk/0347/", date:"2026-05-07", time:"19:00", venue:"Manhattan, Marl",          available:false },
-      { name:"Kneipenkönig LIVE – Gasthof Küpper Dingden",url:"https://www.tickettailor.com/checkout/view-event/id/6928897/chk/77d9/", date:"2026-05-18", time:"19:00", venue:"Gasthof Küpper, Dingden",  available:false },
     ];
 
     // ── Event-Rendering ───────────────────────────────────────
@@ -2113,7 +2121,7 @@
         const events = (json.data || [])
           .filter(ev => ev.start && ev.start.unix >= nowUnix)
           .sort((a, b) => a.start.unix - b.start.unix)
-          .slice(0, 7)
+          .slice(0, 5)
           .map(ev => ({
             name:      ev.name,
             url:       ev.checkout_url,
