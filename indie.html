@@ -105,47 +105,58 @@
     .highlight p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin: 0; }
 
     /* GALERIE */
-    .galerie { background: rgba(0,0,0,0.5); }
-    .galerie-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
+    .galerie { background: rgba(0,0,0,0.5); padding-bottom: 0; }
+    .galerie-scroll-wrap {
       margin-top: 48px;
-    }
-    .galerie-item {
-      position: relative;
       overflow: hidden;
+      -webkit-mask: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+    @keyframes scroll-left {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .galerie-track {
+      display: flex;
+      gap: 14px;
+      width: max-content;
+      animation: scroll-left 30s linear infinite;
+    }
+    .galerie-track:hover { animation-play-state: paused; }
+    .galerie-item {
+      flex-shrink: 0;
+      width: 260px; height: 195px;
       border-radius: 14px;
+      overflow: hidden;
       border: 1px solid var(--border);
       cursor: pointer;
-      aspect-ratio: 4/3;
+      position: relative;
       background: var(--surface);
+      transition: transform 0.3s ease;
     }
-    .galerie-item.span-2 { grid-column: span 2; }
+    @media (max-width: 768px) {
+      .galerie-item { width: 200px; height: 150px; }
+    }
+    .galerie-item:hover { transform: scale(1.04); }
     .galerie-item img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.5s ease;
     }
-    .galerie-item:hover img { transform: scale(1.06); }
     .galerie-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
       opacity: 0;
       transition: opacity 0.3s ease;
       display: flex; align-items: flex-end;
-      padding: 18px;
+      padding: 14px;
     }
     .galerie-item:hover .galerie-overlay { opacity: 1; }
     .galerie-overlay-title {
       color: #fff;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 600;
-      transform: translateY(8px);
-      transition: transform 0.3s ease;
     }
-    .galerie-item:hover .galerie-overlay-title { transform: translateY(0); }
 
     /* MODAL */
     .img-modal {
@@ -170,15 +181,6 @@
       opacity: 0.7; transition: opacity 0.2s;
     }
     .img-modal-close:hover { opacity: 1; }
-
-    @media (max-width: 768px) {
-      .galerie-grid { grid-template-columns: 1fr 1fr; }
-      .galerie-item.span-2 { grid-column: span 2; }
-    }
-    @media (max-width: 480px) {
-      .galerie-grid { grid-template-columns: 1fr; }
-      .galerie-item.span-2 { grid-column: span 1; }
-    }
 
     /* ANLÄSSE */
     .anlaesse { background: rgba(0,0,0,0.35); }
@@ -296,7 +298,9 @@
     <div class="container">
       <span class="section-label">Impressionen</span>
       <h2 class="section-title">Echte Events</h2>
-      <div class="galerie-grid" id="galerieGrid"></div>
+    </div>
+    <div class="galerie-scroll-wrap">
+      <div class="galerie-track" id="galerieTrack"></div>
     </div>
   </section>
 
@@ -390,41 +394,40 @@
   </footer>
 
   <script>
-    const grid     = document.getElementById('galerieGrid');
+    const track    = document.getElementById('galerieTrack');
     const modal    = document.getElementById('imgModal');
     const modalImg = document.getElementById('imgModalImg');
 
-    function renderGalerie(bilder) {
-      grid.innerHTML = '';
-      bilder.forEach((bild, i) => {
-        // Jedes 3. Bild (0-basiert: 0, 3, 6 ...) wird doppelt breit
-        const span = (i % 3 === 0) ? ' span-2' : '';
-        const item = document.createElement('div');
-        item.className = 'galerie-item' + span;
-        item.innerHTML = `
-          <img src="${bild.src}" alt="${bild.title}" loading="lazy" />
-          <div class="galerie-overlay">
-            <span class="galerie-overlay-title">${bild.title}</span>
-          </div>`;
-        item.addEventListener('click', () => {
-          modalImg.src = bild.src;
-          modalImg.alt = bild.title;
-          modal.classList.add('open');
-          document.body.style.overflow = 'hidden';
-        });
-        grid.appendChild(item);
+    function makeItem(bild) {
+      const item = document.createElement('div');
+      item.className = 'galerie-item';
+      item.innerHTML = `
+        <img src="${bild.src}" alt="${bild.title}" loading="lazy" />
+        <div class="galerie-overlay">
+          <span class="galerie-overlay-title">${bild.title}</span>
+        </div>`;
+      item.addEventListener('click', () => {
+        modalImg.src = bild.src;
+        modalImg.alt = bild.title;
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
       });
+      return item;
     }
 
-    // Bilder aus galerie-indie.json laden
+    function renderGalerie(bilder) {
+      track.innerHTML = '';
+      // Bilder doppelt einfügen für nahtlose Endlosschleife
+      [...bilder, ...bilder].forEach(bild => track.appendChild(makeItem(bild)));
+    }
+
     fetch('galerie-indie.json')
       .then(r => r.json())
       .then(bilder => renderGalerie(bilder))
       .catch(() => {
-        grid.innerHTML = '<p style="color:rgba(255,255,255,0.4);padding:20px">Keine Bilder gefunden.</p>';
+        track.innerHTML = '<p style="color:rgba(255,255,255,0.4);padding:20px 5%">Keine Bilder gefunden.</p>';
       });
 
-    // Modal schließen
     function closeModal() {
       modal.classList.remove('open');
       document.body.style.overflow = '';
