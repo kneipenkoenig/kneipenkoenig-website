@@ -1,0 +1,44 @@
+name: Galerie automatisch aktualisieren
+
+on:
+  push:
+    paths:
+      - 'images/indie/**'
+
+permissions:
+  contents: write
+
+jobs:
+  update-gallery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Galerie JSON generieren
+        run: |
+          DIR="images/indie"
+          OUT="galerie-indie.json"
+          echo "[" > "$OUT"
+          first=true
+          for f in $(ls "$DIR"/*.jpg "$DIR"/*.jpeg "$DIR"/*.png "$DIR"/*.webp "$DIR"/*.gif 2>/dev/null | sort); do
+            [ -f "$f" ] || continue
+            filename=$(basename "$f")
+            title="${filename%.*}"
+            title="${title//-/ }"
+            title="${title//_/ }"
+            if [ "$first" = true ]; then
+              first=false
+            else
+              echo "  ," >> "$OUT"
+            fi
+            echo "  {\"src\": \"$f\", \"title\": \"$title\"}" >> "$OUT"
+          done
+          echo "]" >> "$OUT"
+
+      - name: JSON committen
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add galerie-indie.json
+          git diff --staged --quiet || git commit -m "Auto: Galerie indie aktualisiert"
+          git push

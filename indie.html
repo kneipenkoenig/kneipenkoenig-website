@@ -390,57 +390,39 @@
   </footer>
 
   <script>
-    // ═══════════════════════════════════════════════════════════
-    // GALERIE – Bilder hier verwalten
-    // ► Bild hinzufügen: neues Objekt in das Array eintragen
-    // ► Bild entfernen: das entsprechende Objekt löschen
-    // ► span: "span-2" = doppelt breit | "" = normal breit
-    // ═══════════════════════════════════════════════════════════
-    const galeriebilder = [
-      {
-        src:   "https://tsimg.cloud/91513-12557/e7c9c8c9cef4923d4ca5af87491b572342306bb7.jpg",
-        title: "Teamabend – Quiz in Action",
-        span:  "span-2"
-      },
-      {
-        src:   "https://tsimg.cloud/91513-12557/51272bcbef2e5ff6fad2663f99f1ea4d7c96e7c7.jpg",
-        title: "Firmenfeier mit Kneipenkönig",
-        span:  ""
-      },
-      {
-        src:   "https://tsimg.cloud/91513-12557/b88876dc94f7a740cf2c0ad6c7d294774dd4322e.jpg",
-        title: "Teams im Wettkampf",
-        span:  ""
-      },
-      {
-        src:   "https://tsimg.cloud/91513-12557/263a3a97265c0b08baf63f8eeb6b014a82978329.jpg",
-        title: "Siegerehrung",
-        span:  "span-2"
-      },
-    ];
-    // ═══════════════════════════════════════════════════════════
-
-    const grid  = document.getElementById('galerieGrid');
-    const modal = document.getElementById('imgModal');
+    const grid     = document.getElementById('galerieGrid');
+    const modal    = document.getElementById('imgModal');
     const modalImg = document.getElementById('imgModalImg');
 
-    // Galerie rendern
-    galeriebilder.forEach(bild => {
-      const item = document.createElement('div');
-      item.className = 'galerie-item' + (bild.span ? ' ' + bild.span : '');
-      item.innerHTML = `
-        <img src="${bild.src}" alt="${bild.title}" loading="lazy" />
-        <div class="galerie-overlay">
-          <span class="galerie-overlay-title">${bild.title}</span>
-        </div>`;
-      item.addEventListener('click', () => {
-        modalImg.src = bild.src;
-        modalImg.alt = bild.title;
-        modal.classList.add('open');
-        document.body.style.overflow = 'hidden';
+    function renderGalerie(bilder) {
+      grid.innerHTML = '';
+      bilder.forEach((bild, i) => {
+        // Jedes 3. Bild (0-basiert: 0, 3, 6 ...) wird doppelt breit
+        const span = (i % 3 === 0) ? ' span-2' : '';
+        const item = document.createElement('div');
+        item.className = 'galerie-item' + span;
+        item.innerHTML = `
+          <img src="${bild.src}" alt="${bild.title}" loading="lazy" />
+          <div class="galerie-overlay">
+            <span class="galerie-overlay-title">${bild.title}</span>
+          </div>`;
+        item.addEventListener('click', () => {
+          modalImg.src = bild.src;
+          modalImg.alt = bild.title;
+          modal.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        });
+        grid.appendChild(item);
       });
-      grid.appendChild(item);
-    });
+    }
+
+    // Bilder aus galerie-indie.json laden
+    fetch('galerie-indie.json')
+      .then(r => r.json())
+      .then(bilder => renderGalerie(bilder))
+      .catch(() => {
+        grid.innerHTML = '<p style="color:rgba(255,255,255,0.4);padding:20px">Keine Bilder gefunden.</p>';
+      });
 
     // Modal schließen
     function closeModal() {
