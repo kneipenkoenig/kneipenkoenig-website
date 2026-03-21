@@ -1,0 +1,2218 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Der Kneipenkönig – Das interaktive Quiz für dich und deine Freunde. Live-Events in NRW, private Feiern und Online-Quizze." />
+  <title>Der Kneipenkönig – Das interaktive Quiz</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── CI DESIGN TOKENS ──────────────────────────────── */
+    :root {
+      /* Light mode */
+      --bg:              #ffffff;
+      --bg-2:            #f8f9fa;
+      --bg-3:            #f1f3f5;
+      --surface:         rgba(0,0,0,0.04);
+      --surface-hover:   rgba(0,0,0,0.07);
+      --border:          rgba(0,0,0,0.10);
+      --border-blue:     rgba(56,182,255,0.40);
+
+      --blue:            #38b6ff;
+      --blue-light:      #7dd3fc;
+      --blue-dark:       #0ea5e9;
+      --blue-glow:       rgba(56,182,255,0.25);
+
+      --text-primary:    #000000;
+      --text-secondary:  rgba(0,0,0,0.55);
+      --text-muted:      rgba(0,0,0,0.38);
+
+      --shadow-blue:     0 0 60px rgba(56,182,255,0.15);
+      --shadow-card:     0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    html.dark {
+      --bg:              #000000;
+      --bg-2:            #0a0a0a;
+      --bg-3:            #111111;
+      --surface:         rgba(255,255,255,0.04);
+      --surface-hover:   rgba(255,255,255,0.08);
+      --border:          rgba(255,255,255,0.09);
+      --border-blue:     rgba(56,182,255,0.35);
+
+      --text-primary:    #ffffff;
+      --text-secondary:  rgba(255,255,255,0.55);
+      --text-muted:      rgba(255,255,255,0.35);
+
+      --shadow-blue:     0 0 60px rgba(56,182,255,0.12);
+      --shadow-card:     0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body:    'Open Sans', sans-serif;
+
+    --radius-sm:    8px;
+    --radius-md:    16px;
+    --radius-lg:    24px;
+    --radius-xl:    36px;
+
+    --ease-out:     cubic-bezier(0.16,1,0.3,1);
+    --ease-in-out:  cubic-bezier(0.45,0,0.55,1);
+
+    /* ─── RESET & BASE ──────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Open Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    ::selection { background: #38b6ff; color: #000; }
+
+    /* ─── SCROLL ANIMATIONS ─────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.65s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.10s; }
+    .reveal-delay-2 { transition-delay: 0.20s; }
+    .reveal-delay-3 { transition-delay: 0.30s; }
+    .reveal-delay-4 { transition-delay: 0.40s; }
+
+    /* ─── NAVBAR ────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 18px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.4s, backdrop-filter 0.4s, border-color 0.4s;
+      border-bottom: 1px solid transparent;
+    }
+    .nav.scrolled {
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(20px);
+      border-color: var(--border);
+    }
+    html:not(.dark) .nav.scrolled {
+      background: rgba(255,255,255,0.90);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.55rem;
+      letter-spacing: 0.06em;
+      color: #38b6ff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .nav-logo .crown { font-size: 1.3rem; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #38b6ff; }
+
+    .nav-cta {
+      padding: 9px 20px;
+      background: #38b6ff;
+      color: #000;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: #7dd3fc; transform: translateY(-1px); }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .nav-toggle span {
+      width: 22px; height: 2px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      display: block;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    /* ─── HERO ──────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 120px 5% 80px;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+    }
+    .hero-bg-gradient {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56,182,255,0.12) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 80% at 80% 100%, rgba(14,165,233,0.07) 0%, transparent 60%),
+        linear-gradient(180deg, transparent 0%, var(--bg) 100%);
+    }
+    .hero-noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 900px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border: 1px solid var(--border-blue);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #38b6ff;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      background: rgba(56,182,255,0.07);
+      animation: fadeDown 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s both;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #38b6ff;
+      animation: pulse 2s infinite;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 12vw, 10rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: var(--text-primary);
+      animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.35s both;
+    }
+    .hero-title .accent {
+      color: #38b6ff;
+      position: relative;
+      display: inline-block;
+    }
+    .hero-title .accent::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #38b6ff, #0ea5e9);
+      border-radius: 2px;
+    }
+
+    .hero-subtitle {
+      margin-top: 28px;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--text-secondary);
+      font-weight: 300;
+      max-width: 560px;
+      margin-left: auto; margin-right: auto;
+      animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.5s both;
+    }
+
+    .hero-actions {
+      margin-top: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.65s both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      background: #38b6ff;
+      color: #000;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover {
+      background: #7dd3fc;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px var(--blue-glow);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 26px;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+    }
+    .btn-secondary:hover {
+      border-color: #38b6ff;
+      color: #38b6ff;
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      margin-top: 68px;
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.8s both;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      letter-spacing: 0.02em;
+      color: #38b6ff;
+      line-height: 1;
+    }
+    .hero-stat-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 32px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: fadeUp 1s 1.1s both;
+    }
+    .hero-scroll-line {
+      width: 1px; height: 44px;
+      background: linear-gradient(180deg, #38b6ff, transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+
+    /* ─── SHARED SECTION ────────────────────────────────── */
+    section { position: relative; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 5%;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: #38b6ff;
+      margin-bottom: 16px;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 28px; height: 1px;
+      background: #38b6ff;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      letter-spacing: 0.02em;
+      line-height: 1.0;
+      color: var(--text-primary);
+    }
+
+    .section-desc {
+      margin-top: 16px;
+      font-size: 1.02rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      max-width: 520px;
+      line-height: 1.75;
+    }
+
+    /* ─── FORMATS ───────────────────────────────────────── */
+    .formats { padding: 120px 0; }
+    .formats-header { margin-bottom: 60px; }
+
+    .formats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .format-card {
+      position: relative;
+      padding: 38px 30px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+      overflow: hidden;
+      transition: border-color 0.35s, background 0.35s, transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s;
+    }
+    .format-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #38b6ff, transparent);
+      opacity: 0;
+      transition: opacity 0.35s;
+    }
+    .format-card:hover {
+      border-color: var(--border-blue);
+      background: var(--surface-hover);
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-blue), var(--shadow-card);
+    }
+    .format-card:hover::before { opacity: 1; }
+
+    .format-card-glow {
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.35s;
+      filter: blur(60px);
+      pointer-events: none;
+    }
+    .format-card:hover .format-card-glow { opacity: 1; }
+    .format-card--live .format-card-glow   { background: rgba(239,68,68,0.15); }
+    .format-card--indie .format-card-glow  { background: rgba(56,182,255,0.15); }
+    .format-card--online .format-card-glow { background: rgba(16,185,129,0.15); }
+
+    .format-icon {
+      width: 52px; height: 52px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .format-card--live .format-icon   { background: rgba(239,68,68,0.12); }
+    .format-card--indie .format-icon  { background: rgba(56,182,255,0.12); }
+    .format-card--online .format-icon { background: rgba(16,185,129,0.12); }
+
+    .format-tag {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .format-card--live .format-tag   { color: #f87171; }
+    .format-card--indie .format-tag  { color: #38b6ff; }
+    .format-card--online .format-tag { color: #34d399; }
+
+    .format-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.1rem;
+      letter-spacing: 0.02em;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+
+    .format-desc {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .format-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .format-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+    }
+    .format-features li::before {
+      content: '';
+      display: block;
+      width: 6px; height: 6px;
+      min-width: 6px;
+      border-radius: 50%;
+      margin-top: 6px;
+    }
+    .format-card--live .format-features li::before   { background: #f87171; }
+    .format-card--indie .format-features li::before  { background: #38b6ff; }
+    .format-card--online .format-features li::before { background: #34d399; }
+
+    /* ─── EVENTS ────────────────────────────────────────── */
+    .events {
+      padding: 120px 0;
+      background: var(--bg-2);
+    }
+    .events::before, .events::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+    .events::before { top: 0; }
+    .events::after  { bottom: 0; }
+
+    .events-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 52px;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .events-upcoming {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 68px;
+    }
+
+    .event-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 24px;
+      padding: 22px 28px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      transition: border-color 0.3s, background 0.3s, transform 0.3s cubic-bezier(0.16,1,0.3,1);
+      text-decoration: none;
+      color: inherit;
+    }
+    .event-card:hover {
+      border-color: var(--border-blue);
+      background: var(--surface-hover);
+      transform: translateX(4px);
+    }
+
+    .event-date-block { text-align: center; min-width: 58px; }
+    .event-date-day {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.1rem;
+      line-height: 1;
+      color: #38b6ff;
+    }
+    .event-date-month {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .event-info { min-width: 0; }
+    .event-title {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .event-location {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .event-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .event-time {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .badge-sold     { background: rgba(239,68,68,0.10);  color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+    .badge-available{ background: rgba(52,211,153,0.10); color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
+    .badge-special  { background: rgba(56,182,255,0.10); color: #38b6ff; border: 1px solid var(--border-blue); }
+
+    .events-past-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .events-past-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .past-event-card {
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      transition: border-color 0.3s, transform 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    .past-event-card:hover {
+      border-color: var(--border-blue);
+      transform: translateY(-4px);
+    }
+
+    .past-event-teams {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      line-height: 1;
+      color: #38b6ff;
+      margin-bottom: 4px;
+    }
+    .past-event-teams span { font-size: 0.9rem; color: var(--text-muted); font-family: 'Open Sans', sans-serif; }
+    .past-event-name  { font-weight: 600; font-size: 0.88rem; color: var(--text-primary); margin-bottom: 3px; }
+    .past-event-date  { font-size: 0.78rem; color: var(--text-muted); }
+    .past-event-winner {
+      margin-top: 12px; padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+    .past-event-winner strong { color: #38b6ff; font-weight: 600; }
+
+    /* ─── STATS STRIP ───────────────────────────────────── */
+    .stats-strip {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .stat-item {
+      text-align: center;
+      padding: 0 28px;
+      position: relative;
+    }
+    .stat-item + .stat-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 10%; bottom: 10%;
+      width: 1px;
+      background: var(--border);
+    }
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      letter-spacing: 0.02em;
+      line-height: 1;
+      color: #38b6ff;
+    }
+    .stat-suffix { font-size: 60%; vertical-align: super; }
+    .stat-label {
+      margin-top: 8px;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    /* ─── BINGO ─────────────────────────────────────────── */
+    .bingo { padding: 120px 0; overflow: hidden; }
+
+    .bingo-inner {
+      position: relative;
+      padding: 68px;
+      border: 1px solid var(--border-blue);
+      border-radius: 32px;
+      background: linear-gradient(135deg, rgba(56,182,255,0.05) 0%, rgba(14,165,233,0.03) 100%);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 48px;
+      align-items: center;
+    }
+    .bingo-glow {
+      position: absolute;
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56,182,255,0.12), transparent 70%);
+      top: -100px; right: -80px;
+      pointer-events: none;
+    }
+
+    .bingo-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: #38b6ff;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .bingo-eyebrow::before { content: ''; display: block; width: 24px; height: 1px; background: #38b6ff; }
+
+    .bingo-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      letter-spacing: 0.02em;
+      line-height: 1;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+    }
+
+    .bingo-desc {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 32px;
+      max-width: 480px;
+    }
+
+    .bingo-details {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+    .bingo-detail {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .bingo-detail-icon {
+      width: 30px; height: 30px;
+      border-radius: 7px;
+      background: rgba(56,182,255,0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .bingo-visual { width: 240px; height: 240px; flex-shrink: 0; }
+    .bingo-grid-visual {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      width: 100%; height: 100%;
+    }
+    .bingo-cell {
+      border-radius: 7px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      color: var(--text-muted);
+      transition: background 0.3s, border-color 0.3s, color 0.3s, transform 0.3s;
+      aspect-ratio: 1;
+    }
+    .bingo-cell.hit {
+      background: rgba(56,182,255,0.15);
+      border-color: var(--border-blue);
+      color: #38b6ff;
+      transform: scale(1.07);
+    }
+    .bingo-cell.center {
+      background: #38b6ff;
+      border-color: #38b6ff;
+      color: #000;
+      font-size: 1.2rem;
+    }
+
+    /* ─── INDIE / BUCHUNG ───────────────────────────────── */
+    .indie {
+      padding: 120px 0;
+      background: var(--bg-2);
+    }
+    .indie::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    .indie-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .indie-occasions {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .occasion-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      font-weight: 500;
+    }
+    .occasion-item:hover {
+      border-color: var(--border-blue);
+      color: var(--text-primary);
+      background: var(--surface-hover);
+    }
+    .occasion-icon {
+      width: 26px; height: 26px;
+      background: rgba(56,182,255,0.10);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .indie-form-card {
+      padding: 44px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+    }
+    .indie-form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, #0ea5e9, #38b6ff, #7dd3fc);
+    }
+
+    .form-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.75rem;
+      letter-spacing: 0.02em;
+      margin-bottom: 24px;
+    }
+    .form-group { margin-bottom: 18px; }
+    .form-label {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      margin-bottom: 7px;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 12px 15px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.93rem;
+      transition: border-color 0.2s, background 0.2s;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: #38b6ff;
+      background: rgba(56,182,255,0.04);
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--text-muted); }
+    .form-select option { background: #111; color: #fff; }
+    .form-textarea { min-height: 96px; resize: vertical; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .form-submit {
+      width: 100%;
+      margin-top: 6px;
+      padding: 14px;
+      background: #38b6ff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .form-submit:hover { background: #7dd3fc; transform: translateY(-1px); }
+
+    /* ─── FOOTER (shadcn-inspired) ───────────────────────── */
+    .footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      color: var(--text-primary);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 5% 40px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Col 1 – newsletter */
+    .footer-brand-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.05em;
+      color: #38b6ff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .footer-tagline {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 22px;
+      max-width: 280px;
+    }
+
+    .footer-newsletter-label {
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+    .footer-newsletter-sub {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .footer-email-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .footer-email-input {
+      width: 100%;
+      padding: 11px 48px 11px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .footer-email-input::placeholder { color: var(--text-muted); }
+    .footer-email-input:focus { border-color: #38b6ff; }
+
+    .footer-email-btn {
+      position: absolute;
+      right: 6px;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: #38b6ff;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.15s;
+      flex-shrink: 0;
+    }
+    .footer-email-btn:hover { background: #7dd3fc; transform: scale(1.08); }
+    .footer-email-btn svg { color: #000; }
+
+    /* Col 2+3 – links */
+    .footer-col-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+      letter-spacing: 0.02em;
+    }
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: #38b6ff; }
+
+    /* Col 4 – social + dark mode */
+    .footer-social-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .social-btn {
+      position: relative;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: var(--text-secondary);
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+    .social-btn:hover {
+      border-color: var(--border-blue);
+      color: #38b6ff;
+      background: rgba(56,182,255,0.08);
+    }
+
+    /* Tooltip */
+    .social-btn .tooltip {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) scale(0.85);
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-size: 0.75rem;
+      white-space: nowrap;
+      padding: 5px 10px;
+      border-radius: 6px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.18s, transform 0.18s;
+      z-index: 10;
+    }
+    .social-btn:hover .tooltip,
+    .social-btn:focus .tooltip {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* Dark mode toggle */
+    .darkmode-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .darkmode-row svg { color: var(--text-secondary); flex-shrink: 0; }
+
+    .toggle-switch {
+      position: relative;
+      width: 44px; height: 24px;
+      cursor: pointer;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0; height: 0;
+      position: absolute;
+    }
+    .toggle-track {
+      display: block;
+      width: 44px; height: 24px;
+      border-radius: 12px;
+      background: var(--border);
+      transition: background 0.25s;
+      border: 1px solid var(--border);
+    }
+    .toggle-switch input:checked ~ .toggle-track {
+      background: #38b6ff;
+      border-color: #38b6ff;
+    }
+    .toggle-thumb {
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .toggle-switch input:checked ~ .toggle-thumb { transform: translateX(20px); }
+    .toggle-switch:focus-within .toggle-track { outline: 2px solid #38b6ff; outline-offset: 2px; }
+
+    .darkmode-label {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* Footer bottom bar */
+    .footer-bottom {
+      padding-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-copy {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .footer-legal {
+      display: flex;
+      gap: 20px;
+    }
+    .footer-legal a {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: #38b6ff; }
+
+    /* ─── MOBILE NAV ────────────────────────────────────── */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 99;
+      background: rgba(0,0,0,0.97);
+      backdrop-filter: blur(24px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .mobile-nav a:hover { color: #38b6ff; }
+    .mobile-nav-close {
+      position: absolute;
+      top: 22px; right: 5%;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 1.8rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* ─── KEYFRAMES ─────────────────────────────────────── */
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes pulse    { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.55;transform:scale(.82)} }
+    @keyframes scrollLine { 0%,100%{transform:scaleY(1);opacity:1;transform-origin:top} 50%{transform:scaleY(.4);opacity:.4;transform-origin:top} }
+
+    /* ─── INSTAGRAM FEED ────────────────────────────────── */
+    .instagram { padding: 120px 0; background: var(--bg-2); }
+    .instagram::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    .instagram-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 48px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .instagram-profile-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .instagram-profile-link:hover {
+      border-color: var(--border-blue);
+      color: #38b6ff;
+      background: rgba(56,182,255,0.06);
+    }
+    .instagram-profile-link svg { flex-shrink: 0; }
+
+    .instagram-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .ig-post {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: block;
+      text-decoration: none;
+      transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s;
+    }
+    .ig-post:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+      z-index: 1;
+    }
+
+    .ig-post img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .ig-post:hover img { transform: scale(1.06); }
+
+    .ig-post-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.15) 55%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+    }
+    .ig-post:hover .ig-post-overlay { opacity: 1; }
+
+    .ig-post-caption {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .ig-post-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .ig-post-date {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.55);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .ig-post-type {
+      position: absolute;
+      top: 12px; right: 12px;
+      width: 28px; height: 28px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    /* Skeleton for instagram */
+    .ig-post-skeleton {
+      aspect-ratio: 1;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .ig-post-skeleton .skeleton {
+      width: 100%; height: 100%;
+      border-radius: 14px;
+    }
+
+    /* Token notice */
+    .ig-token-notice {
+      grid-column: 1 / -1;
+      padding: 48px 32px;
+      border: 1px dashed var(--border-blue);
+      border-radius: 16px;
+      text-align: center;
+      background: rgba(56,182,255,0.03);
+    }
+    .ig-token-notice strong {
+      display: block;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .ig-token-notice p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .ig-token-notice code {
+      background: rgba(56,182,255,0.1);
+      color: #38b6ff;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 768px) {
+      .instagram-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    }
+    @media (max-width: 480px) {
+      .instagram-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    }
+
+    /* ─── SKELETON LOADING ──────────────────────────────── */
+    @keyframes shimmer {
+      0%   { background-position: -600px 0; }
+      100% { background-position:  600px 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg,
+        var(--surface) 25%,
+        var(--surface-hover) 50%,
+        var(--surface) 75%);
+      background-size: 600px 100%;
+      animation: shimmer 1.6s infinite linear;
+      border-radius: 6px;
+    }
+    .event-card-skeleton {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 24px;
+      padding: 22px 28px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 14px;
+    }
+    .skel-date  { width: 42px; }
+    .skel-day   { height: 32px; margin-bottom: 6px; }
+    .skel-month { height: 12px; width: 30px; }
+    .skel-info  { flex: 1; }
+    .skel-title { height: 16px; width: 60%; margin-bottom: 10px; }
+    .skel-loc   { height: 12px; width: 40%; }
+    .skel-badge { height: 26px; width: 80px; border-radius: 100px; }
+
+    /* Error state */
+    .events-error {
+      padding: 28px 32px;
+      border: 1px solid rgba(239,68,68,0.25);
+      border-radius: 14px;
+      background: rgba(239,68,68,0.06);
+      color: #f87171;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .events-empty {
+      padding: 48px 32px;
+      text-align: center;
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+    .events-empty strong { display: block; color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 6px; }
+
+    /* Ticket Tailor link indicator */
+    .event-card-external .event-meta::after {
+      content: '↗';
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-left: 4px;
+    }
+
+    /* ─── RESPONSIVE ────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .formats-grid      { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
+      .events-past-grid  { grid-template-columns: repeat(2,1fr); }
+      .bingo-inner       { grid-template-columns: 1fr; }
+      .bingo-visual      { display: none; }
+      .indie-grid        { grid-template-columns: 1fr; }
+      .stats-grid        { grid-template-columns: repeat(2,1fr); gap: 36px 0; }
+      .stat-item + .stat-item::before { display: none; }
+      .footer-grid       { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .nav-toggle { display: flex; }
+      .hero-stats { gap: 24px; }
+      .event-card { grid-template-columns: auto 1fr; }
+      .event-meta { display: none; }
+      .events-past-grid { grid-template-columns: 1fr 1fr; }
+      .bingo-inner { padding: 36px 24px; }
+      .indie-occasions { grid-template-columns: 1fr; }
+      .indie-form-card { padding: 26px; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-social-row { flex-wrap: wrap; }
+    }
+    @media (max-width: 480px) {
+      .hero-stats { flex-direction: column; gap: 18px; }
+      .events-past-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════ NAVBAR ═══════════ -->
+  <nav class="nav" id="navbar" aria-label="Hauptnavigation">
+    <a href="#start" class="nav-logo">
+      <span class="crown" aria-hidden="true">♛</span>
+      Kneipenkönig
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="#formate">Formate</a></li>
+      <li><a href="#events">Events</a></li>
+      <li><a href="#instagram">Instagram</a></li>
+      <li><a href="#bingo">Bingo</a></li>
+      <li><a href="#buchung">Buchung</a></li>
+    </ul>
+    <a href="#buchung" class="nav-cta">Jetzt buchen</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-nav" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Menü schließen">✕</button>
+    <a href="#formate"    class="mobile-link">Formate</a>
+    <a href="#events"     class="mobile-link">Events</a>
+    <a href="#instagram"  class="mobile-link">Instagram</a>
+    <a href="#bingo"      class="mobile-link">Bingo</a>
+    <a href="#buchung"  class="mobile-link">Buchung</a>
+  </div>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="hero" id="start" aria-labelledby="hero-title">
+    <div class="hero-bg">
+      <canvas id="heroCanvas" aria-hidden="true"></canvas>
+      <div class="hero-bg-gradient"></div>
+      <div class="hero-noise"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot" aria-hidden="true"></span>
+        Live-Events in NRW
+      </div>
+
+      <h1 class="hero-title" id="hero-title">
+        Der<br><span class="accent">Kneipen</span><br>König
+      </h1>
+
+      <p class="hero-subtitle">
+        Das interaktive Quiz, das dich und deine Freunde begeistern wird – live in der Kneipe, privat auf deiner Feier oder bequem online.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#events" class="btn-primary">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Nächste Events
+        </a>
+        <a href="#buchung" class="btn-secondary">
+          Event anfragen
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="hero-stats" role="list">
+        <div class="hero-stat" role="listitem">
+          <div class="hero-stat-value">3+</div>
+          <div class="hero-stat-label">Locations in NRW</div>
+        </div>
+        <div class="hero-stat" role="listitem">
+          <div class="hero-stat-value">31</div>
+          <div class="hero-stat-label">Teams pro Event</div>
+        </div>
+        <div class="hero-stat" role="listitem">
+          <div class="hero-stat-value">3</div>
+          <div class="hero-stat-label">Spielformate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll" aria-hidden="true">
+      <div class="hero-scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ═══════════ FORMATE ═══════════ -->
+  <section class="formats" id="formate" aria-labelledby="formats-title">
+    <div class="container">
+      <div class="formats-header">
+        <span class="section-label reveal">Spielformate</span>
+        <h2 class="section-title reveal reveal-delay-1" id="formats-title">Drei Wege<br>zu spielen</h2>
+        <p class="section-desc reveal reveal-delay-2">Ob Kneipenabend, Firmenfeier oder Sofa – der Kneipenkönig hat das passende Format.</p>
+      </div>
+
+      <div class="formats-grid">
+        <div class="format-card format-card--live reveal">
+          <div class="format-card-glow"></div>
+          <div class="format-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="format-tag">Live</div>
+          <div class="format-name">Pub Quiz</div>
+          <p class="format-desc">Triff dich mit deinen Freunden an einer unserer Locations und tretet als Team gegen andere Mannschaften an.</p>
+          <ul class="format-features">
+            <li>Teams aus 2–8 Spielern</li>
+            <li>Mehrere Kategorien pro Abend</li>
+            <li>Live-Moderation vor Ort</li>
+            <li>Regelmäßige Events in NRW</li>
+          </ul>
+        </div>
+
+        <div class="format-card format-card--indie reveal reveal-delay-1">
+          <div class="format-card-glow"></div>
+          <div class="format-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#38b6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="format-tag">Indie</div>
+          <div class="format-name">Privat-Event</div>
+          <p class="format-desc">Wir kommen zu dir! Maßgeschneidertes Quiz für Firmenfeiern, Betriebsfeste, Geburtstage oder Weihnachtsfeiern.</p>
+          <ul class="format-features">
+            <li>Individuelle Fragen &amp; Themen</li>
+            <li>Flexible Locations &amp; Termine</li>
+            <li>Komplettpaket inkl. Moderation</li>
+            <li>Ab 10 Personen buchbar</li>
+          </ul>
+        </div>
+
+        <div class="format-card format-card--online reveal reveal-delay-2">
+          <div class="format-card-glow"></div>
+          <div class="format-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="format-tag">Online</div>
+          <div class="format-name">Digital Quiz</div>
+          <p class="format-desc">Spiele bequem via PC und Smartphone. Fragen kommen per Stream, Antworten gibst du per Handy ein.</p>
+          <ul class="format-features">
+            <li>Kein Download nötig</li>
+            <li>Live-Moderation im Stream</li>
+            <li>Spielen per Smartphone</li>
+            <li>Von überall aus mitmachen</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ EVENTS ═══════════ -->
+  <section class="events" id="events" aria-labelledby="events-title">
+    <div class="container">
+      <div class="events-header">
+        <div>
+          <span class="section-label reveal">Kalender</span>
+          <h2 class="section-title reveal reveal-delay-1" id="events-title">Kommende<br>Events</h2>
+        </div>
+        <a href="#buchung" class="btn-secondary reveal reveal-delay-2">
+          Platz reservieren
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div id="eventsContainer" role="list" aria-live="polite" aria-label="Kommende Events"></div>
+      <div id="eventsError" class="events-error" style="display:none"></div>
+
+      <div class="events-past-title reveal">Vergangene Events</div>
+      <div class="events-past-grid">
+        <div class="past-event-card reveal">
+          <div class="past-event-teams">31<span> Teams</span></div>
+          <div class="past-event-name">Gleisdrei – Burghof</div>
+          <div class="past-event-date">14. März 2026</div>
+        </div>
+        <div class="past-event-card reveal reveal-delay-1">
+          <div class="past-event-teams">28<span> Teams</span></div>
+          <div class="past-event-name">Lakeside Inn Haltern</div>
+          <div class="past-event-date">23. Februar 2026</div>
+        </div>
+        <div class="past-event-card reveal reveal-delay-2">
+          <div class="past-event-teams">22<span> Teams</span></div>
+          <div class="past-event-name">Haus zum Bült, Lette</div>
+          <div class="past-event-date">20. Februar 2026</div>
+          <div class="past-event-winner">🏆 Sieger: <strong>van der Graaf</strong> (+17 Pkt.)</div>
+        </div>
+        <div class="past-event-card reveal reveal-delay-3">
+          <div class="past-event-teams" style="font-size:1.8rem;margin-bottom:8px;">Corporate</div>
+          <div class="past-event-name">group24ag Campus</div>
+          <div class="past-event-date">12. März 2026</div>
+          <div class="past-event-winner">Private Firmenveranstaltung</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ STATS ═══════════ -->
+  <section class="stats-strip" aria-label="Statistiken">
+    <div class="container">
+      <div class="stats-grid" role="list">
+        <div class="stat-item reveal" role="listitem">
+          <div class="stat-number"><span class="stat-count" data-target="81">81</span></div>
+          <div class="stat-label">Teams insgesamt</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-1" role="listitem">
+          <div class="stat-number"><span class="stat-count" data-target="3">3</span><span class="stat-suffix">+</span></div>
+          <div class="stat-label">Locations in NRW</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-2" role="listitem">
+          <div class="stat-number"><span class="stat-count" data-target="100">100</span><span class="stat-suffix">%</span></div>
+          <div class="stat-label">Ausverkaufte Events</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-3" role="listitem">
+          <div class="stat-number"><span class="stat-count" data-target="3">3</span></div>
+          <div class="stat-label">Formate verfügbar</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ INSTAGRAM ═══════════ -->
+  <section class="instagram" id="instagram" aria-labelledby="instagram-title">
+    <div class="container">
+      <div class="instagram-header">
+        <div>
+          <span class="section-label reveal">Social Media</span>
+          <h2 class="section-title reveal reveal-delay-1" id="instagram-title">Unsere letzten<br>Events</h2>
+        </div>
+        <a href="https://www.instagram.com/derkneipenkoenig/"
+           target="_blank" rel="noopener noreferrer"
+           class="instagram-profile-link reveal reveal-delay-2"
+           aria-label="Instagram-Profil @derkneipenkoenig öffnen">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          @derkneipenkoenig
+        </a>
+      </div>
+      <!-- LightWidget WIDGET -->
+      <script src="https://cdn.lightwidget.com/widgets/lightwidget.js"></script>
+      <iframe src="//lightwidget.com/widgets/e8c7cb83b489553d9f197ff383136b5c.html" scrolling="no" allowtransparency="true" class="lightwidget-widget" style="width:100%;border:0;overflow:hidden;"></iframe>
+    </div>
+  </section>
+
+  <!-- ═══════════ BINGO ═══════════ -->
+  <section class="bingo" id="bingo" aria-labelledby="bingo-title">
+    <div class="container">
+      <div class="bingo-inner reveal">
+        <div class="bingo-glow" aria-hidden="true"></div>
+        <div>
+          <div class="bingo-eyebrow">Neu im Programm</div>
+          <h2 class="bingo-title" id="bingo-title">Kneipen<br>Bingo</h2>
+          <p class="bingo-desc">
+            Die perfekte Mischung aus Zahlen-Bingo, Musik-Bingo und Quiz-Bingo – jetzt auch an ausgewählten Locations! Nächster Termin: <strong style="color:#38b6ff">26. März 2026</strong> im Manhattan Marl.
+          </p>
+          <div class="bingo-details">
+            <div class="bingo-detail"><div class="bingo-detail-icon" aria-hidden="true">📅</div>26. März 2026</div>
+            <div class="bingo-detail"><div class="bingo-detail-icon" aria-hidden="true">📍</div>Manhattan, Marl</div>
+            <div class="bingo-detail"><div class="bingo-detail-icon" aria-hidden="true">🕕</div>18:30 Uhr</div>
+          </div>
+          <a href="#buchung" class="btn-primary">Platz sichern →</a>
+        </div>
+        <div class="bingo-visual" aria-hidden="true">
+          <div class="bingo-grid-visual" id="bingoGrid"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ INDIE / BUCHUNG ═══════════ -->
+  <section class="indie" id="buchung" aria-labelledby="indie-title">
+    <div class="container">
+      <div class="indie-grid">
+        <div>
+          <span class="section-label reveal">Buchung &amp; Anfragen</span>
+          <h2 class="section-title reveal reveal-delay-1" id="indie-title">Dein Event,<br>deine Regeln</h2>
+          <p class="section-desc reveal reveal-delay-2">Von der Weihnachtsfeier bis zum Betriebsfest – wir gestalten ein unvergessliches Quiz-Erlebnis nach deinen Wünschen.</p>
+          <div class="indie-occasions reveal reveal-delay-3">
+            <div class="occasion-item"><div class="occasion-icon">🎄</div>Weihnachtsfeier</div>
+            <div class="occasion-item"><div class="occasion-icon">🏢</div>Betriebsfest</div>
+            <div class="occasion-item"><div class="occasion-icon">🎂</div>Geburtstag</div>
+            <div class="occasion-item"><div class="occasion-icon">🥂</div>JGA / Jubiläum</div>
+            <div class="occasion-item"><div class="occasion-icon">🎓</div>Schulfeier</div>
+            <div class="occasion-item"><div class="occasion-icon">✨</div>Jeder Anlass</div>
+          </div>
+        </div>
+
+        <div class="indie-form-card reveal reveal-delay-2">
+          <div class="form-title">Anfrage senden</div>
+          <form id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="name">Name *</label>
+                <input type="text" id="name" name="name" class="form-input" placeholder="Dein Name" required autocomplete="name" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="email">E-Mail *</label>
+                <input type="email" id="email" name="email" class="form-input" placeholder="deine@email.de" required autocomplete="email" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="occasion">Anlass *</label>
+              <select id="occasion" name="occasion" class="form-select" required>
+                <option value="" disabled selected>Welcher Anlass?</option>
+                <option value="weihnachtsfeier">Weihnachtsfeier</option>
+                <option value="betriebsfest">Betriebsfest</option>
+                <option value="geburtstag">Geburtstag</option>
+                <option value="jga">JGA / Jubiläum</option>
+                <option value="schulfeier">Schulfeier</option>
+                <option value="sonstiges">Sonstiges</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="guests">Personen *</label>
+                <input type="number" id="guests" name="guests" class="form-input" placeholder="ca. 30" min="10" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="date">Wunschdatum</label>
+                <input type="date" id="date" name="date" class="form-input" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="message">Nachricht</label>
+              <textarea id="message" name="message" class="form-textarea" placeholder="Weitere Wünsche oder Fragen..."></textarea>
+            </div>
+            <button type="submit" class="form-submit">Anfrage absenden →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FOOTER (shadcn-inspired) ═══════════ -->
+  <footer class="footer" aria-label="Footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+
+        <!-- Col 1: Newsletter -->
+        <div>
+          <div class="footer-brand-logo" aria-label="Der Kneipenkönig">
+            <span aria-hidden="true">♛</span> Kneipenkönig
+          </div>
+          <p class="footer-tagline">Das interaktive Quiz-Erlebnis für Live-Events, private Feiern und Online-Abende – direkt aus NRW.</p>
+
+          <div class="footer-newsletter-label">Stay Connected</div>
+          <p class="footer-newsletter-sub">Neuigkeiten &amp; exklusive Angebote direkt in dein Postfach.</p>
+          <form class="footer-email-row" id="newsletterForm" novalidate>
+            <input type="email" class="footer-email-input" placeholder="deine@email.de" aria-label="E-Mail-Adresse für Newsletter" required />
+            <button type="submit" class="footer-email-btn" aria-label="Newsletter abonnieren">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </form>
+        </div>
+
+        <!-- Col 2: Quick Links -->
+        <div>
+          <div class="footer-col-title">Quick Links</div>
+          <ul class="footer-links" role="list">
+            <li><a href="#start">Home</a></li>
+            <li><a href="#formate">Formate</a></li>
+            <li><a href="#events">Events</a></li>
+            <li><a href="#bingo">Kneipenbingo</a></li>
+            <li><a href="#buchung">Event anfragen</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Locations -->
+        <div>
+          <div class="footer-col-title">Locations</div>
+          <ul class="footer-links" role="list">
+            <li><a href="#events">Gleisdrei, Burghof</a></li>
+            <li><a href="#events">Lakeside Inn Haltern</a></li>
+            <li><a href="#events">Haus zum Bült, Lette</a></li>
+            <li><a href="#events">Manhattan, Marl</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Social + Dark mode -->
+        <div>
+          <div class="footer-col-title">Follow Us</div>
+          <div class="footer-social-row" role="list" aria-label="Social Media">
+
+            <a href="https://kneipenkoenig.de" class="social-btn" target="_blank" rel="noopener" aria-label="Website" role="listitem">
+              <span class="tooltip">Unsere Website</span>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </a>
+
+            <a href="#" class="social-btn" aria-label="Facebook" role="listitem">
+              <span class="tooltip">Auf Facebook folgen</span>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+
+            <a href="#" class="social-btn" aria-label="Twitter / X" role="listitem">
+              <span class="tooltip">Auf Twitter folgen</span>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+            </a>
+
+            <a href="#" class="social-btn" aria-label="Instagram" role="listitem">
+              <span class="tooltip">Auf Instagram folgen</span>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+
+            <a href="#" class="social-btn" aria-label="LinkedIn" role="listitem">
+              <span class="tooltip">Auf LinkedIn vernetzen</span>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+          </div>
+
+          <!-- Dark/Light mode toggle -->
+          <div class="darkmode-row">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <label class="toggle-switch" for="darkModeToggle" aria-label="Dark Mode umschalten">
+              <input type="checkbox" id="darkModeToggle" checked />
+              <span class="toggle-track"></span>
+              <span class="toggle-thumb"></span>
+            </label>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <span class="darkmode-label" id="darkmodeLabel">Dark</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Der Kneipenkönig. Alle Rechte vorbehalten.</p>
+        <nav class="footer-legal" aria-label="Rechtliches">
+          <a href="#">Datenschutz</a>
+          <a href="#">Impressum</a>
+          <a href="#">Cookie-Einstellungen</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════ SCRIPTS ═══════════ -->
+  <script>
+    // Instagram Feed wird via LightWidget geladen (siehe HTML-Bereich)
+
+    // ════════════════════════════════════════════════════════
+    // TICKET TAILOR — statische Eventdaten (via API befüllt)
+    // Automatisch aktualisiert: 2026-03-20
+    // ════════════════════════════════════════════════════════
+    const TT_API_KEY = 'sk_12829_95741_17573262ca2299967c965df2bb898e11';
+
+    const TT_STATIC_EVENTS = [
+      { name:"Kneipenbingo LIVE – Manhattan in Marl",     url:"https://www.tickettailor.com/checkout/view-event/id/7697074/chk/cc1f/", date:"2026-03-26", time:"18:30", venue:"Manhattan, Marl",       available:true  },
+      { name:"Kneipenkönig LIVE – Johnny Canone Datteln", url:"https://www.tickettailor.com/checkout/view-event/id/6926181/chk/84f9/", date:"2026-04-02", time:"19:00", venue:"Johnny Canone, Datteln", available:false },
+      { name:"Kneipenkönig LIVE – Haus Zumbült Lette",    url:"https://www.tickettailor.com/checkout/view-event/id/6993152/chk/e920/", date:"2026-04-16", time:"19:00", venue:"Haus Zumbült, Lette",    available:false },
+      { name:"Kneipenkönig LIVE – Brauhaus Coesfeld",     url:"https://www.tickettailor.com/checkout/view-event/id/7643452/chk/b126/", date:"2026-04-20", time:"19:00", venue:"Brauhaus, Coesfeld",      available:false },
+      { name:"Kneipenkönig LIVE – Zum Moetken Reken",     url:"https://www.tickettailor.com/checkout/view-event/id/6986647/chk/2c28/", date:"2026-04-24", time:"19:00", venue:"Zum Moetken, Reken",      available:false },
+      { name:"Kneipenkönig LIVE – Manhattan Marl",        url:"https://www.tickettailor.com/checkout/view-event/id/6928927/chk/0347/", date:"2026-05-07", time:"19:00", venue:"Manhattan, Marl",          available:false },
+      { name:"Kneipenkönig LIVE – Gasthof Küpper Dingden",url:"https://www.tickettailor.com/checkout/view-event/id/6928897/chk/77d9/", date:"2026-05-18", time:"19:00", venue:"Gasthof Küpper, Dingden",  available:false },
+    ];
+
+    // ── Event-Rendering ───────────────────────────────────────
+    const DE_MONTHS = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+
+    function renderSkeleton(n = 4) {
+      return Array.from({ length: n }, () => `
+        <div class="event-card-skeleton" aria-hidden="true">
+          <div class="skel-date"><div class="skeleton skel-day"></div><div class="skeleton skel-month"></div></div>
+          <div class="skel-info"><div class="skeleton skel-title"></div><div class="skeleton skel-loc"></div></div>
+          <div class="skeleton skel-badge"></div>
+        </div>`).join('');
+    }
+
+    function buildBadge(available) {
+      return available
+        ? '<span class="badge badge-available">Verfügbar</span>'
+        : '<span class="badge badge-sold">Ausverkauft</span>';
+    }
+
+    function buildEventCard(ev, index) {
+      const parts  = (ev.date || '').split('-');
+      const day    = parts[2] ? parseInt(parts[2], 10) : '';
+      const month  = parts[1] ? DE_MONTHS[parseInt(parts[1], 10) - 1] : '';
+      const delay  = index > 0 ? ` reveal-delay-${Math.min(index, 4)}` : '';
+      const pinSvg = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
+      // Normalize available flag (API returns string "true"/"false" or bool)
+      const isAvail = ev.available === true || ev.available === 'true' || ev.tickets_available === 'true';
+
+      return `
+        <a href="${ev.url || ev.checkout_url || '#'}" target="_blank" rel="noopener noreferrer"
+           class="event-card event-card-external reveal${delay}" role="listitem"
+           aria-label="${ev.name}${ev.venue ? ' – ' + ev.venue : ''}">
+          <div class="event-date-block">
+            <div class="event-date-day">${day}</div>
+            <div class="event-date-month">${month}</div>
+          </div>
+          <div class="event-info">
+            <div class="event-title">${ev.name}</div>
+            ${ev.venue ? `<div class="event-location">${pinSvg}${ev.venue}</div>` : ''}
+          </div>
+          <div class="event-meta">
+            ${ev.time ? `<span class="event-time">${ev.time} Uhr</span>` : ''}
+            ${buildBadge(isAvail)}
+          </div>
+        </a>`;
+    }
+
+    function renderEvents(events) {
+      const container = document.getElementById('eventsContainer');
+      if (!events.length) {
+        container.innerHTML = `<div class="events-empty"><strong>Keine anstehenden Events</strong>Schau bald wieder vorbei – neue Termine folgen!</div>`;
+        return;
+      }
+      container.innerHTML = events.map((ev, i) => buildEventCard(ev, i)).join('');
+      container.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+    }
+
+    async function loadTicketTailorEvents() {
+      const container = document.getElementById('eventsContainer');
+      const errorBox  = document.getElementById('eventsError');
+
+      // Sofort statische Daten anzeigen (immer zuverlässig)
+      renderEvents(TT_STATIC_EVENTS);
+
+      // Im Hintergrund versuchen, frische API-Daten zu laden
+      // (funktioniert wenn die Seite auf einem Webserver läuft)
+      if (window.location.protocol === 'file:') return; // lokale Datei → API nicht erreichbar
+
+      try {
+        const nowUnix = Math.floor(Date.now() / 1000);
+        const auth    = btoa(TT_API_KEY + ':');
+        const apiUrl  = `https://api.tickettailor.com/v1/events?limit=100&ending_before=2147483647`;
+
+        const res = await fetch(apiUrl, {
+          headers: { 'Authorization': `Basic ${auth}`, 'Accept': 'application/json' }
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const json   = await res.json();
+        const events = (json.data || [])
+          .filter(ev => ev.start && ev.start.unix >= nowUnix)
+          .sort((a, b) => a.start.unix - b.start.unix)
+          .slice(0, 7)
+          .map(ev => ({
+            name:      ev.name,
+            url:       ev.checkout_url,
+            date:      ev.start.date,
+            time:      ev.start.time,
+            venue:     ev.venue?.name || '',
+            available: ev.tickets_available,
+          }));
+
+        if (events.length) renderEvents(events); // Statische Daten mit frischen überschreiben
+
+      } catch (_) {
+        // Stille Fehlerbehandlung – statische Daten bleiben sichtbar
+      }
+    }
+
+    loadTicketTailorEvents();
+
+    // ── Dark mode toggle ─────────────────────────────────────
+    const htmlEl      = document.documentElement;
+    const toggle      = document.getElementById('darkModeToggle');
+    const dmLabel     = document.getElementById('darkmodeLabel');
+
+    function applyDark(dark) {
+      htmlEl.classList.toggle('dark', dark);
+      toggle.checked = dark;
+      dmLabel.textContent = dark ? 'Dark' : 'Light';
+    }
+
+    // Read from localStorage if available
+    const stored = localStorage.getItem('kk-dark');
+    applyDark(stored !== null ? stored === '1' : true);
+
+    toggle.addEventListener('change', () => {
+      applyDark(toggle.checked);
+      localStorage.setItem('kk-dark', toggle.checked ? '1' : '0');
+    });
+
+    // ── Navbar scroll ─────────────────────────────────────────
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // ── Mobile nav ────────────────────────────────────────────
+    const navToggleBtn = document.getElementById('navToggle');
+    const mobileNav    = document.getElementById('mobileNav');
+    const closeBtn     = document.getElementById('mobileNavClose');
+
+    navToggleBtn.addEventListener('click', () => {
+      mobileNav.classList.add('open');
+      navToggleBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    });
+    function closeMobileNav() {
+      mobileNav.classList.remove('open');
+      navToggleBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+    closeBtn.addEventListener('click', closeMobileNav);
+    document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMobileNav));
+
+    // ── Scroll reveal ─────────────────────────────────────────
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -36px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // ── Hero canvas: particles ────────────────────────────────
+    (function() {
+      const canvas = document.getElementById('heroCanvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, pts = [];
+
+      function resize() {
+        W = canvas.width  = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+      }
+      function init() {
+        pts = Array.from({ length: 65 }, () => ({
+          x: Math.random() * W, y: Math.random() * H,
+          r: Math.random() * 1.4 + 0.2,
+          dx: (Math.random() - 0.5) * 0.22,
+          dy: (Math.random() - 0.5) * 0.22,
+          o: Math.random() * 0.35 + 0.07,
+        }));
+      }
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        pts.forEach(p => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(56,182,255,${p.o})`;
+          ctx.fill();
+          p.x += p.dx; p.y += p.dy;
+          if (p.x < -4) p.x = W + 4;
+          if (p.x > W + 4) p.x = -4;
+          if (p.y < -4) p.y = H + 4;
+          if (p.y > H + 4) p.y = -4;
+        });
+        requestAnimationFrame(draw);
+      }
+      new ResizeObserver(() => { resize(); init(); }).observe(canvas.parentElement);
+      resize(); init(); draw();
+    })();
+
+    // ── Counter animation ─────────────────────────────────────
+    function animateCount(el, target, dur = 1500) {
+      let start = null;
+      const step = ts => {
+        if (!start) start = ts;
+        const p = Math.min((ts - start) / dur, 1);
+        el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+    const countObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el  = e.target;
+        const tgt = parseInt(el.dataset.target, 10);
+        if (tgt) animateCount(el, tgt);
+        countObs.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-count[data-target]').forEach(el => countObs.observe(el));
+
+    // ── Bingo grid ────────────────────────────────────────────
+    (function() {
+      const grid = document.getElementById('bingoGrid');
+      if (!grid) return;
+      const hits = new Set([2, 6, 8, 12, 16, 18, 22]);
+      for (let i = 0; i < 25; i++) {
+        const c = document.createElement('div');
+        c.className = 'bingo-cell';
+        if (i === 12) { c.classList.add('center'); c.textContent = '♛'; }
+        else if (hits.has(i)) { c.classList.add('hit'); c.textContent = 'BINGO'[Math.floor(Math.random()*5)]; }
+        else { c.textContent = Math.floor(Math.random() * 75) + 1; }
+        grid.appendChild(c);
+      }
+      setInterval(() => {
+        grid.querySelectorAll('.bingo-cell:not(.center)').forEach(c => {
+          if (Math.random() < 0.06) {
+            c.classList.toggle('hit');
+            c.textContent = c.classList.contains('hit')
+              ? 'BINGO'[Math.floor(Math.random()*5)]
+              : Math.floor(Math.random() * 75) + 1;
+          }
+        });
+      }, 1200);
+    })();
+
+    // ── Contact form ──────────────────────────────────────────
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = this.querySelector('.form-submit');
+      btn.textContent = '✓ Anfrage gesendet!';
+      btn.style.background = '#22c55e';
+      btn.style.color = '#fff';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = 'Anfrage absenden →';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+        this.reset();
+      }, 4000);
+    });
+
+    // ── Newsletter form ───────────────────────────────────────
+    document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn   = this.querySelector('.footer-email-btn');
+      const input = this.querySelector('.footer-email-input');
+      btn.style.background = '#22c55e';
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+      setTimeout(() => {
+        btn.style.background = '#38b6ff';
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+        input.value = '';
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
