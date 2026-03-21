@@ -20,7 +20,7 @@ jobs:
           OUT="galerie-indie.json"
           echo "[" > "$OUT"
           first=true
-          for f in $(ls "$DIR"/*.jpg "$DIR"/*.jpeg "$DIR"/*.png "$DIR"/*.webp "$DIR"/*.gif 2>/dev/null | sort); do
+          for f in $(ls "$DIR"/*.jpg "$DIR"/*.jpeg "$DIR"/*.png "$DIR"/*.webp "$DIR"/*.gif "$DIR"/*.avif 2>/dev/null | sort); do
             [ -f "$f" ] || continue
             filename=$(basename "$f")
             title="${filename%.*}"
