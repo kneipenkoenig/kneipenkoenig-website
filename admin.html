@@ -566,12 +566,11 @@ const msalConfig = {
   cache: { cacheLocation: 'sessionStorage' }
 };
 const msalInstance = new msal.PublicClientApplication(msalConfig);
-let msalReady = false;
+let initPromise = null;
 
 async function initMsal() {
   await msalInstance.initialize();
   const resp = await msalInstance.handleRedirectPromise();
-  msalReady = true;
   const account = resp?.account || msalInstance.getAllAccounts()[0];
   if (account) {
     msalInstance.setActiveAccount(account);
@@ -582,14 +581,16 @@ async function initMsal() {
 }
 
 async function msLogin() {
+  const errEl = document.getElementById('authError');
+  errEl.style.display = 'none';
   try {
+    await initPromise; // warten bis MSAL bereit ist
     const resp = await msalInstance.loginPopup({ scopes: ['User.Read'] });
     msalInstance.setActiveAccount(resp.account);
     showAdminUI(resp.account);
   } catch(e) {
-    const el = document.getElementById('authError');
-    el.style.display = 'block';
-    el.textContent = 'Anmeldung fehlgeschlagen: ' + e.message;
+    errEl.style.display = 'block';
+    errEl.textContent = 'Anmeldung fehlgeschlagen: ' + e.message;
   }
 }
 
@@ -1088,7 +1089,8 @@ function loadAll() {
   loadGallery('live');
 }
 
-initMsal().catch(e => {
+initPromise = initMsal();
+initPromise.catch(e => {
   // Falls CLIENT_ID noch nicht gesetzt ist, direkt Admin zeigen (Entwicklungsmodus)
   if (CLIENT_ID === 'DEINE_CLIENT_ID') {
     document.getElementById('authScreen').style.display = 'none';
