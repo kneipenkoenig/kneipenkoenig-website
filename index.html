@@ -651,6 +651,7 @@
       transition: border-color 0.3s, background 0.3s, transform 0.3s cubic-bezier(0.16,1,0.3,1);
       text-decoration: none;
       color: inherit;
+      position: relative;
     }
     .event-card:hover {
       border-color: var(--border-blue);
@@ -719,6 +720,16 @@
     .event-card.card-sold      { background: rgba(239,68,68,0.12);  border-color: rgba(239,68,68,0.4); }
     .event-card.card-available:hover { background: rgba(52,211,153,0.18); }
     .event-card.card-sold:hover      { background: rgba(239,68,68,0.18); }
+    .event-avail-icon {
+      position: absolute;
+      top: 10px; left: 12px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem;
+    }
+    .event-avail-icon.icon-available { background: rgba(52,211,153,0.25); color: #34d399; }
+    .event-avail-icon.icon-sold      { background: rgba(239,68,68,0.25);  color: #f87171; }
 
     .events-past-title {
       font-family: 'Bebas Neue', sans-serif;
@@ -2071,10 +2082,18 @@
       const isAvail = ev.available === true || ev.available === 'true' || ev.tickets_available === 'true';
 
       const cardColor = isAvail ? ' card-available' : ' card-sold';
+      const availIcon = isAvail
+        ? `<span class="event-avail-icon icon-available" aria-hidden="true">
+             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+           </span>`
+        : `<span class="event-avail-icon icon-sold" aria-hidden="true">
+             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+           </span>`;
       return `
         <a href="${ev.url || ev.checkout_url || '#'}" target="_blank" rel="noopener noreferrer"
            class="event-card event-card-external reveal${delay}${cardColor}" role="listitem"
            aria-label="${ev.name}${ev.venue ? ' – ' + ev.venue : ''}">
+          ${availIcon}
           <div class="event-date-block">
             <div class="event-date-day">${day}</div>
             <div class="event-date-month">${month}</div>
