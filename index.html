@@ -717,8 +717,10 @@
     .badge-available{ background: rgba(52,211,153,0.10); color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
     .badge-special  { background: rgba(56,182,255,0.10); color: #38b6ff; border: 1px solid var(--border-blue); }
     .event-card.card-available { background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.4); }
+    .event-card.card-low       { background: rgba(234,179,8,0.12);  border-color: rgba(234,179,8,0.4); }
     .event-card.card-sold      { background: rgba(239,68,68,0.12);  border-color: rgba(239,68,68,0.4); }
     .event-card.card-available:hover { background: rgba(52,211,153,0.18); }
+    .event-card.card-low:hover       { background: rgba(234,179,8,0.18); }
     .event-card.card-sold:hover      { background: rgba(239,68,68,0.18); }
     .event-avail-icon {
       position: absolute;
@@ -726,9 +728,9 @@
       width: 20px; height: 20px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.65rem;
     }
     .event-avail-icon.icon-available { background: rgba(52,211,153,0.25); color: #34d399; }
+    .event-avail-icon.icon-low       { background: rgba(234,179,8,0.25);  color: #eab308; }
     .event-avail-icon.icon-sold      { background: rgba(239,68,68,0.25);  color: #f87171; }
 
     .events-past-title {
@@ -2066,10 +2068,18 @@
         </div>`).join('');
     }
 
-    function buildBadge(available) {
-      return available
-        ? '<span class="badge badge-available">Verfügbar</span>'
-        : '<span class="badge badge-sold">Ausverkauft</span>';
+    function buildBadge(status) {
+      if (status === 'low')  return '<span class="badge badge-special">Letzte Plätze</span>';
+      if (status === 'sold') return '<span class="badge badge-sold">Ausverkauft</span>';
+      return '<span class="badge badge-available">Verfügbar</span>';
+    }
+
+    function getStatus(ev) {
+      const remaining = typeof ev.remaining === 'number' ? ev.remaining : null;
+      const isAvail = ev.available === true || ev.available === 'true' || ev.tickets_available === 'true';
+      if (!isAvail) return 'sold';
+      if (remaining !== null && remaining < 5) return 'low';
+      return 'available';
     }
 
     function buildEventCard(ev, index) {
@@ -2078,13 +2088,16 @@
       const month  = parts[1] ? DE_MONTHS[parseInt(parts[1], 10) - 1] : '';
       const delay  = index > 0 ? ` reveal-delay-${Math.min(index, 4)}` : '';
       const pinSvg = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
-      // Normalize available flag (API returns string "true"/"false" or bool)
-      const isAvail = ev.available === true || ev.available === 'true' || ev.tickets_available === 'true';
 
-      const cardColor = isAvail ? ' card-available' : ' card-sold';
-      const availIcon = isAvail
+      const status = getStatus(ev);
+      const cardColor = status === 'available' ? ' card-available' : status === 'low' ? ' card-low' : ' card-sold';
+      const availIcon = status === 'available'
         ? `<span class="event-avail-icon icon-available" aria-hidden="true">
              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+           </span>`
+        : status === 'low'
+        ? `<span class="event-avail-icon icon-low" aria-hidden="true">
+             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
            </span>`
         : `<span class="event-avail-icon icon-sold" aria-hidden="true">
              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -2104,7 +2117,7 @@
           </div>
           <div class="event-meta">
             ${ev.time ? `<span class="event-time">${ev.time} Uhr</span>` : ''}
-            ${buildBadge(isAvail)}
+            ${buildBadge(status)}
           </div>
         </a>`;
     }
@@ -2153,6 +2166,7 @@
             time:      ev.start.time,
             venue:     ev.venue?.name || '',
             available: ev.tickets_available,
+            remaining: typeof ev.tickets_remaining === 'number' ? ev.tickets_remaining : null,
           }));
 
         if (events.length) renderEvents(events); // Statische Daten mit frischen überschreiben
