@@ -1,20 +1,37 @@
 [
-  { "src": "images/live/sieger.jpg",            "title": "Die Sieger des Abends" },
-  { "src": "images/live/gewinner.jpg",           "title": "Abgeholt! Der Gewinner steht fest" },
-  { "src": "images/live/siegerinnen.jpg",        "title": "Diese Damen haben abgeräumt!" },
-  { "src": "images/live/siegeswille.jpg",        "title": "Dieser Siegeswille ist ansteckend" },
-  { "src": "images/live/freude.jpg",             "title": "Wenn der Jubel ausbricht" },
-  { "src": "images/live/spass.jpg",              "title": "Hier wird noch lange gefeiert" },
-  { "src": "images/live/spass-mit-freunden.jpg", "title": "Beste Freunde, beste Quizabende" },
-  { "src": "images/live/freunde.jpg",            "title": "Mit den Richtigen macht's doppelt Spaß" },
-  { "src": "images/live/freundinnen.jpg",        "title": "Girls' Night – Quiz Night" },
-  { "src": "images/live/gruppe2.jpg",            "title": "Gemeinsam klüger" },
-  { "src": "images/live/stimmung.jpg",           "title": "Kneipenatmosphäre pur" },
-  { "src": "images/live/immer-dabei.jpg",        "title": "Treue Stammgäste beim Kneipenkönig" },
-  { "src": "images/live/bier.jpg",               "title": "Gut gespielt verdient ein kühles Bier" },
-  { "src": "images/live/bier2.jpg",              "title": "Auf die richtigen Antworten – Prost!" },
-  { "src": "images/live/botb.jpg",               "title": "Battle of the Brains" },
-  { "src": "images/live/jahresgewinne.jpg",      "title": "Die Jahressieger haben abgeräumt" },
-  { "src": "images/live/kneipenkoenig.jpg",      "title": "Der Kneipenkönig – live und in Farbe" },
-  { "src": "images/live/viel-gruebelei.jpg",     "title": "Ganz schön knifflig heute Abend..." }
+  {"src": "images/live/bier.jpg", "title": "bier"}
+  ,
+  {"src": "images/live/bier2.jpg", "title": "bier2"}
+  ,
+  {"src": "images/live/botb.jpg", "title": "botb"}
+  ,
+  {"src": "images/live/freude.jpg", "title": "freude"}
+  ,
+  {"src": "images/live/freunde.jpg", "title": "freunde"}
+  ,
+  {"src": "images/live/freundinnen.jpg", "title": "freundinnen"}
+  ,
+  {"src": "images/live/gewinner.jpg", "title": "gewinner"}
+  ,
+  {"src": "images/live/gruppe2.jpg", "title": "gruppe2"}
+  ,
+  {"src": "images/live/immer-dabei.jpg", "title": "immer dabei"}
+  ,
+  {"src": "images/live/jahresgewinne.jpg", "title": "jahresgewinne"}
+  ,
+  {"src": "images/live/kneipenkoenig.jpg", "title": "kneipenkoenig"}
+  ,
+  {"src": "images/live/sieger.jpg", "title": "sieger"}
+  ,
+  {"src": "images/live/siegerinnen.jpg", "title": "siegerinnen"}
+  ,
+  {"src": "images/live/siegeswille.jpg", "title": "siegeswille"}
+  ,
+  {"src": "images/live/spass-mit-freunden.jpg", "title": "spass mit freunden"}
+  ,
+  {"src": "images/live/spass.jpg", "title": "spass"}
+  ,
+  {"src": "images/live/stimmung.jpg", "title": "stimmung"}
+  ,
+  {"src": "images/live/viel-gruebelei.jpg", "title": "viel gruebelei"}
 ]
