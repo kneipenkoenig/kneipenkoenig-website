@@ -900,7 +900,8 @@ async function saveTestimonial() {
     const filename = editingIndex != null
       ? testimonials[editingIndex]._filename
       : `${slugify(name)}.json`;
-    const sha = editingIndex != null ? testimonials[editingIndex]._sha : null;
+    // SHA immer frisch holen um Konflikte zu vermeiden
+    const sha = editingIndex != null ? await getSha(`testimonials/${filename}`) : null;
 
     await ghPut(
       `testimonials/${filename}`,
