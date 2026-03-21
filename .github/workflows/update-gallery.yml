@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'images/indie/**'
+      - 'images/live/**'
+      - 'images/bingo/**'
 
 permissions:
   contents: write
@@ -14,31 +16,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Galerie JSON generieren
+      - name: Galerie JSONs generieren
         run: |
-          DIR="images/indie"
-          OUT="galerie-indie.json"
-          echo "[" > "$OUT"
-          first=true
-          for f in $(ls "$DIR"/*.jpg "$DIR"/*.jpeg "$DIR"/*.png "$DIR"/*.webp "$DIR"/*.gif "$DIR"/*.avif 2>/dev/null | sort); do
-            [ -f "$f" ] || continue
-            filename=$(basename "$f")
-            title="${filename%.*}"
-            title="${title//-/ }"
-            title="${title//_/ }"
-            if [ "$first" = true ]; then
-              first=false
-            else
-              echo "  ," >> "$OUT"
-            fi
-            echo "  {\"src\": \"$f\", \"title\": \"$title\"}" >> "$OUT"
-          done
-          echo "]" >> "$OUT"
+          generate_json() {
+            DIR="$1"
+            OUT="$2"
+            echo "[" > "$OUT"
+            first=true
+            for f in $(ls "$DIR"/*.jpg "$DIR"/*.jpeg "$DIR"/*.png "$DIR"/*.webp "$DIR"/*.gif "$DIR"/*.avif 2>/dev/null | sort); do
+              [ -f "$f" ] || continue
+              filename=$(basename "$f")
+              title="${filename%.*}"
+              title="${title//-/ }"
+              title="${title//_/ }"
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo "  ," >> "$OUT"
+              fi
+              echo "  {\"src\": \"$f\", \"title\": \"$title\"}" >> "$OUT"
+            done
+            echo "]" >> "$OUT"
+          }
 
-      - name: JSON committen
+          generate_json "images/indie" "galerie-indie.json"
+          generate_json "images/live"  "galerie-live.json"
+          generate_json "images/bingo" "galerie-bingo.json"
+
+      - name: JSONs committen
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add galerie-indie.json
-          git diff --staged --quiet || git commit -m "Auto: Galerie indie aktualisiert"
+          git add galerie-indie.json galerie-live.json galerie-bingo.json
+          git diff --staged --quiet || git commit -m "Auto: Galerien aktualisiert"
           git push

@@ -197,6 +197,52 @@
     .footer-back { font-size: 0.85rem; color: var(--blue); }
     .footer-back:hover { text-decoration: underline; }
 
+    /* GALERIE */
+    .galerie { background: rgba(0,0,0,0.5); padding-bottom: 0; }
+    .galerie-scroll-wrap {
+      margin-top: 48px;
+      overflow: hidden;
+      -webkit-mask: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+    @keyframes scroll-left {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .galerie-track {
+      display: flex; gap: 14px;
+      width: max-content;
+      animation: scroll-left 30s linear infinite;
+    }
+    .galerie-track:hover { animation-play-state: paused; }
+    .galerie-item {
+      flex-shrink: 0;
+      width: 260px; height: 195px;
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--border);
+      cursor: pointer; position: relative;
+      background: var(--surface);
+      transition: transform 0.3s ease;
+    }
+    @media (max-width: 768px) { .galerie-item { width: 200px; height: 150px; } }
+    .galerie-item:hover { transform: scale(1.04); }
+    .galerie-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .galerie-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      opacity: 0; transition: opacity 0.3s ease;
+      display: flex; align-items: flex-end; padding: 14px;
+    }
+    .galerie-item:hover .galerie-overlay { opacity: 1; }
+    .galerie-overlay-title { color: #fff; font-size: 0.85rem; font-weight: 600; }
+
+    /* MODAL */
+    .img-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 9999; align-items: center; justify-content: center; }
+    .img-modal.open { display: flex; }
+    .img-modal img { max-width: 90vw; max-height: 90vh; border-radius: 12px; box-shadow: 0 24px 80px rgba(0,0,0,0.6); object-fit: contain; }
+    .img-modal-close { position: absolute; top: 20px; right: 24px; background: none; border: none; color: #fff; font-size: 2.5rem; cursor: pointer; line-height: 1; opacity: 0.7; transition: opacity 0.2s; }
+    .img-modal-close:hover { opacity: 1; }
+
     @media (max-width: 900px) { .varianten-grid { grid-template-columns: 1fr; } .ablauf-steps { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 768px) { .bingo-visual-inner { grid-template-columns: 1fr; } .ablauf-steps { grid-template-columns: 1fr; } }
   </style>
@@ -306,6 +352,23 @@
     </div>
   </section>
 
+  <!-- GALERIE -->
+  <section class="galerie">
+    <div class="container">
+      <span class="section-label">Impressionen</span>
+      <h2 class="section-title">Echte Events</h2>
+    </div>
+    <div class="galerie-scroll-wrap">
+      <div class="galerie-track" id="galerieTrack"></div>
+    </div>
+  </section>
+
+  <!-- MODAL -->
+  <div class="img-modal" id="imgModal" role="dialog" aria-modal="true">
+    <button class="img-modal-close" id="imgModalClose" aria-label="Schließen">&times;</button>
+    <img id="imgModalImg" src="" alt="" />
+  </div>
+
   <!-- ABLAUF -->
   <section class="ablauf">
     <div class="container">
@@ -348,6 +411,38 @@
       </div>
     </div>
   </section>
+
+  <script>
+    const track    = document.getElementById('galerieTrack');
+    const modal    = document.getElementById('imgModal');
+    const modalImg = document.getElementById('imgModalImg');
+
+    function makeItem(bild) {
+      const item = document.createElement('div');
+      item.className = 'galerie-item';
+      item.innerHTML = `
+        <img src="${bild.src}" alt="${bild.title}" loading="lazy" />
+        <div class="galerie-overlay"><span class="galerie-overlay-title">${bild.title}</span></div>`;
+      item.addEventListener('click', () => {
+        modalImg.src = bild.src; modalImg.alt = bild.title;
+        modal.classList.add('open'); document.body.style.overflow = 'hidden';
+      });
+      return item;
+    }
+
+    fetch('galerie-bingo.json')
+      .then(r => r.json())
+      .then(bilder => {
+        if (!bilder.length) return;
+        [...bilder, ...bilder].forEach(b => track.appendChild(makeItem(b)));
+      })
+      .catch(() => {});
+
+    function closeModal() { modal.classList.remove('open'); document.body.style.overflow = ''; modalImg.src = ''; }
+    document.getElementById('imgModalClose').addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
 
   <footer class="footer">
     <div class="footer-logo"><span class="crown">♛</span> Kneipenkönig</div>
