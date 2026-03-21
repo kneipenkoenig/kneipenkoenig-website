@@ -1325,6 +1325,142 @@
     @keyframes pulse    { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.55;transform:scale(.82)} }
     @keyframes scrollLine { 0%,100%{transform:scaleY(1);opacity:1;transform-origin:top} 50%{transform:scaleY(.4);opacity:.4;transform-origin:top} }
 
+    /* ─── TESTIMONIALS ──────────────────────────────────── */
+    .testimonials-section {
+      padding: 120px 0 80px;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+    .testimonials-bg-glow {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(56,182,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .testimonials-carousel-wrap {
+      margin-top: 52px;
+      position: relative;
+    }
+    .testimonials-track {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    }
+    .testimonial-card {
+      min-width: 100%;
+      padding: 0 max(24px, calc((100% - 860px) / 2));
+      box-sizing: border-box;
+    }
+    .testimonial-inner {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(56,182,255,0.15);
+      border-radius: 24px;
+      padding: 48px 52px;
+      position: relative;
+      backdrop-filter: blur(10px);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: start;
+    }
+    .testimonial-quote-icon {
+      position: absolute;
+      top: 32px; left: 44px;
+      color: rgba(56,182,255,0.25);
+    }
+    .testimonial-stars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+    .testimonial-stars svg { color: #eab308; }
+    .testimonial-text {
+      font-size: 1.15rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+      font-style: italic;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .testimonial-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #38b6ff, #1a6fa8);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      color: #000;
+      flex-shrink: 0;
+    }
+    .testimonial-name { font-weight: 700; font-size: 1rem; }
+    .testimonial-role { font-size: 0.83rem; color: var(--text-muted); margin-top: 2px; }
+    .testimonial-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 180px;
+    }
+    .testimonial-stat {
+      background: rgba(56,182,255,0.07);
+      border: 1px solid rgba(56,182,255,0.15);
+      border-radius: 12px;
+      padding: 14px 18px;
+      text-align: center;
+    }
+    .testimonial-stat-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      color: #38b6ff;
+      line-height: 1;
+    }
+    .testimonial-stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .testimonials-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 36px;
+    }
+    .testimonials-btn {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .testimonials-btn:hover { border-color: #38b6ff; color: #38b6ff; }
+    .testimonials-dots { display: flex; gap: 8px; }
+    .testimonials-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .testimonials-dot.active { background: #38b6ff; transform: scale(1.3); }
+    @media (max-width: 768px) {
+      .testimonial-inner { grid-template-columns: 1fr; padding: 32px 24px; gap: 24px; }
+      .testimonial-stats { flex-direction: row; min-width: unset; }
+      .testimonial-stat { flex: 1; }
+      .testimonial-text { font-size: 1rem; }
+      .testimonial-quote-icon { left: 18px; top: 24px; }
+    }
+
     /* ─── INSTAGRAM FEED ────────────────────────────────── */
     .instagram { padding: 120px 0; background: var(--bg-2); }
     .instagram::before {
@@ -1880,6 +2016,27 @@
     </div>
   </section>
 
+  <!-- ═══════════ TESTIMONIALS ═══════════ -->
+  <section class="testimonials-section" aria-labelledby="testimonials-title">
+    <div class="testimonials-bg-glow"></div>
+    <div class="container">
+      <span class="section-label reveal">Stimmen</span>
+      <h2 class="section-title reveal reveal-delay-1" id="testimonials-title">Was unsere<br>Gäste sagen</h2>
+    </div>
+    <div class="testimonials-carousel-wrap reveal reveal-delay-2">
+      <div class="testimonials-track" id="testimonialsTrack"></div>
+      <div class="testimonials-controls">
+        <button class="testimonials-btn" id="testimonialsPrev" aria-label="Vorherige Bewertung">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="testimonials-dots" id="testimonialsDots"></div>
+        <button class="testimonials-btn" id="testimonialsNext" aria-label="Nächste Bewertung">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- ═══════════ FOOTER (shadcn-inspired) ═══════════ -->
   <footer class="footer" aria-label="Footer">
     <div class="footer-inner">
@@ -2129,6 +2286,102 @@
     }
 
     loadTicketTailorEvents();
+
+    // ── Testimonials Carousel ─────────────────────────────────
+    const TESTIMONIALS = [
+      {
+        initials: 'SK',
+        name: 'Sarah K.',
+        role: 'Stammgast, Datteln',
+        text: '„Jeder Abend mit dem Kneipenkönig ist ein Highlight! Die Fragen sind knackig, die Moderation energiegeladen – man merkt, dass hier jemand mit echter Leidenschaft dabei ist."',
+        stats: [{ value: '12×', label: 'Teilgenommen' }, { value: '1×', label: 'Gewonnen 🏆' }, { value: '100%', label: 'Wiederkommen' }]
+      },
+      {
+        initials: 'TM',
+        name: 'Thomas M.',
+        role: 'Teamleiter, Coesfeld',
+        text: '„Wir haben den Kneipenkönig für unseren Firmenevent gebucht – absolut professionell und trotzdem wahnsinnig lustig. Das Team redet heute noch davon!"',
+        stats: [{ value: '28', label: 'Teilnehmer' }, { value: '4.9★', label: 'Bewertung' }, { value: '3×', label: 'Gebucht' }]
+      },
+      {
+        initials: 'AW',
+        name: 'Anna W.',
+        role: 'Wirtin, Haltern am See',
+        text: '„Seit wir den Kneipenkönig bei uns haben, ist der Quiz-Abend ausgebucht. Die Gäste kommen regelmäßig wieder und konsumieren deutlich mehr. Klare Empfehlung!"',
+        stats: [{ value: '+40%', label: 'Umsatz abends' }, { value: '31', label: 'Teams' }, { value: 'Immer', label: 'Ausverkauft' }]
+      },
+      {
+        initials: 'MH',
+        name: 'Markus H.',
+        role: 'Geburtstagskind, Reken',
+        text: '„Meine Geburtstagsfeier war unvergesslich! Der Kneipenkönig hat alles individuell angepasst – unsere Freunde hatten den besten Abend seit Jahren."',
+        stats: [{ value: '40', label: 'Gäste' }, { value: '5★', label: 'Bewertung' }, { value: '1', label: 'Toller Abend' }]
+      }
+    ];
+
+    const track = document.getElementById('testimonialsTrack');
+    const dotsEl = document.getElementById('testimonialsDots');
+    const prevBtn = document.getElementById('testimonialsPrev');
+    const nextBtn = document.getElementById('testimonialsNext');
+    let currentSlide = 0;
+    let autoTimer;
+
+    function starSVG() {
+      return `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+    }
+
+    function buildSlides() {
+      track.innerHTML = TESTIMONIALS.map(t => `
+        <div class="testimonial-card">
+          <div class="testimonial-inner">
+            <div class="testimonial-quote-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1zm12 0c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+            </div>
+            <div>
+              <div class="testimonial-stars">${Array(5).fill(starSVG()).join('')}</div>
+              <p class="testimonial-text">${t.text}</p>
+              <div class="testimonial-author">
+                <div class="testimonial-avatar">${t.initials}</div>
+                <div>
+                  <div class="testimonial-name">${t.name}</div>
+                  <div class="testimonial-role">${t.role}</div>
+                </div>
+              </div>
+            </div>
+            <div class="testimonial-stats">
+              ${t.stats.map(s => `<div class="testimonial-stat"><div class="testimonial-stat-value">${s.value}</div><div class="testimonial-stat-label">${s.label}</div></div>`).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      dotsEl.innerHTML = TESTIMONIALS.map((_, i) =>
+        `<div class="testimonials-dot${i === 0 ? ' active' : ''}" data-i="${i}" role="button" aria-label="Bewertung ${i+1}"></div>`
+      ).join('');
+
+      dotsEl.querySelectorAll('.testimonials-dot').forEach(d =>
+        d.addEventListener('click', () => goTo(+d.dataset.i))
+      );
+    }
+
+    function goTo(i) {
+      currentSlide = (i + TESTIMONIALS.length) % TESTIMONIALS.length;
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+      dotsEl.querySelectorAll('.testimonials-dot').forEach((d, idx) =>
+        d.classList.toggle('active', idx === currentSlide)
+      );
+      resetTimer();
+    }
+
+    function resetTimer() {
+      clearInterval(autoTimer);
+      autoTimer = setInterval(() => goTo(currentSlide + 1), 6000);
+    }
+
+    buildSlides();
+    prevBtn.addEventListener('click', () => goTo(currentSlide - 1));
+    nextBtn.addEventListener('click', () => goTo(currentSlide + 1));
+    resetTimer();
 
     // ── Dark mode toggle ─────────────────────────────────────
     const htmlEl      = document.documentElement;
