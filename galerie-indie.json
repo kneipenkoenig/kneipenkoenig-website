@@ -1,27 +1,15 @@
 [
-  {"src": "images/indie/angepasst-auf-euer-unternehmen.avif", "title": "angepasst auf euer unternehmen"}
-  ,
-  {"src": "images/indie/bis-zu-300-personen-sind-moeglich.jpg", "title": "bis zu 300 personen sind moeglich"}
-  ,
-  {"src": "images/indie/der-kneipenkoenig-und-eure-firma-perfekt-in-szene-gesetzt.jpg", "title": "der kneipenkoenig und eure firma perfekt in szene gesetzt"}
-  ,
-  {"src": "images/indie/exklusive-preise-fuer-die-gewinner.jpg", "title": "exklusive preise fuer die gewinner"}
-  ,
-  {"src": "images/indie/gewinne-gewinne-gewinne.jpg", "title": "gewinne gewinne gewinne"}
-  ,
-  {"src": "images/indie/immer-perfekt-vorbereitet....avif", "title": "immer perfekt vorbereitet..."}
-  ,
-  {"src": "images/indie/perfketes-teambuilding.jpg", "title": "perfketes teambuilding"}
-  ,
-  {"src": "images/indie/platz-ist-im-kleinsten-raum.jpg", "title": "platz ist im kleinsten raum"}
-  ,
-  {"src": "images/indie/quiz-beim-sportverein.jpg", "title": "quiz beim sportverein"}
-  ,
-  {"src": "images/indie/quizspass-fuer-alle.jpg", "title": "quizspass fuer alle"}
-  ,
-  {"src": "images/indie/so-sehen-sieger-aus.jpg", "title": "so sehen sieger aus"}
-  ,
-  {"src": "images/indie/tablets-und-teamname-stehen-bereit.jpg", "title": "tablets und teamname stehen bereit"}
-  ,
-  {"src": "images/indie/wir-kommen-in-eure-location.jpg", "title": "wir kommen in eure location"}
+  { "src": "images/indie/angepasst-auf-euer-unternehmen.avif",                          "title": "Maßgeschneidert für euer Unternehmen" },
+  { "src": "images/indie/bis-zu-300-personen-sind-moeglich.jpg",                        "title": "Bis zu 300 Personen – kein Problem!" },
+  { "src": "images/indie/der-kneipenkoenig-und-eure-firma-perfekt-in-szene-gesetzt.jpg","title": "Euer Unternehmen perfekt in Szene gesetzt" },
+  { "src": "images/indie/exklusive-preise-fuer-die-gewinner.jpg",                       "title": "Exklusive Preise für die Gewinner" },
+  { "src": "images/indie/gewinne-gewinne-gewinne.jpg",                                  "title": "Gewinne, Gewinne, Gewinne!" },
+  { "src": "images/indie/immer-perfekt-vorbereitet....avif",                            "title": "Immer perfekt vorbereitet" },
+  { "src": "images/indie/perfketes-teambuilding.jpg",                                   "title": "Teambuilding, das verbindet" },
+  { "src": "images/indie/platz-ist-im-kleinsten-raum.jpg",                              "title": "Platz ist im kleinsten Raum" },
+  { "src": "images/indie/quiz-beim-sportverein.jpg",                                    "title": "Quiz beim Sportverein – volles Haus!" },
+  { "src": "images/indie/quizspass-fuer-alle.jpg",                                      "title": "Quizspaß für die ganze Belegschaft" },
+  { "src": "images/indie/so-sehen-sieger-aus.jpg",                                      "title": "So sehen Sieger aus!" },
+  { "src": "images/indie/tablets-und-teamname-stehen-bereit.jpg",                       "title": "Tablets & Teamnamen – alles startklar" },
+  { "src": "images/indie/wir-kommen-in-eure-location.jpg",                              "title": "Wir kommen in eure Location" }
 ]
