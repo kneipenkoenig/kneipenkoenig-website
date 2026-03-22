@@ -2420,6 +2420,14 @@
     closeBtn.addEventListener('click', closeMobileNav);
     document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMobileNav));
 
+    // ── Kontakt iframe Auto-Resize ─────────────────────────────
+    window.addEventListener('message', e => {
+      if (e.data && e.data.type === 'iframeResize') {
+        const iframe = document.querySelector('iframe[src*="kontakt"]');
+        if (iframe) iframe.style.height = e.data.height + 'px';
+      }
+    });
+
     // ── Home Galerie ───────────────────────────────────────────
     fetch('galerie-home.json')
       .then(r => r.json())
