@@ -1080,7 +1080,7 @@ function renderGallery() {
     return;
   }
 
-  const isHome = currentGallery === 'galerie-home';
+  const isHome = currentGallery === 'home';
   grid.innerHTML = data.map((item, i) => `
     <div class="gallery-item" data-idx="${i}">
       <img src="https://raw.githubusercontent.com/${REPO}/${BRANCH}/${item.src}" alt="" loading="lazy" />
