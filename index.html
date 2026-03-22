@@ -778,6 +778,28 @@
     }
     .galerie-item:hover .galerie-overlay { opacity: 1; }
     .galerie-overlay-title { color: #fff; font-size: 0.82rem; font-weight: 600; }
+    .galerie-caption-wrap {
+      overflow: hidden;
+      padding: 10px 0 0;
+      -webkit-mask: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+    .galerie-caption-track {
+      display: flex; gap: 0; width: max-content;
+      animation: scroll-left 80s linear infinite;
+    }
+    .galerie-caption-track:hover { animation-play-state: paused; }
+    .galerie-caption-item {
+      flex-shrink: 0; width: 260px;
+      padding: 0 14px;
+      font-size: 0.8rem; font-weight: 600;
+      color: #38b6ff;
+      letter-spacing: 0.03em;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .img-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 9999; align-items: center; justify-content: center; }
     .img-modal.open { display: flex; }
     .img-modal img { max-width: 90vw; max-height: 90vh; border-radius: 12px; box-shadow: 0 24px 80px rgba(0,0,0,0.6); object-fit: contain; }
@@ -1966,6 +1988,9 @@
     <div class="galerie-scroll-wrap" style="margin-top:48px;">
       <div class="galerie-track" id="homeGalerieTrack"></div>
     </div>
+    <div class="galerie-caption-wrap">
+      <div class="galerie-caption-track" id="homeGalerieCaptionTrack"></div>
+    </div>
   </section>
 
   <!-- ═══════════ FORMATE ═══════════ -->
@@ -2591,7 +2616,8 @@
         console.log('[HomeGalerie] Bilder geladen:', bilder.length);
         if (!bilder.length) return;
         document.getElementById('homeGalerieSection').style.display = '';
-        const track = document.getElementById('homeGalerieTrack');
+        const track        = document.getElementById('homeGalerieTrack');
+        const captionTrack = document.getElementById('homeGalerieCaptionTrack');
         const s = bilder.slice().sort(() => Math.random() - 0.5);
         const modal    = document.getElementById('homeImgModal');
         const modalImg = document.getElementById('homeImgModalImg');
@@ -2610,6 +2636,11 @@
             modal.classList.add('open'); document.body.style.overflow = 'hidden';
           });
           track.appendChild(item);
+
+          const cap = document.createElement('div');
+          cap.className = 'galerie-caption-item';
+          cap.textContent = bild.caption || '';
+          captionTrack.appendChild(cap);
         });
       })
       .catch(err => { console.error('[HomeGalerie] Fehler:', err); });
