@@ -60,13 +60,13 @@
     ]
   },
   {
-    "name": "Thomas M.",
-    "rolle": "Teamleiter, Coesfeld",
-    "text": "Wir haben den Kneipenkönig für unseren Firmenevent gebucht – absolut professionell und trotzdem wahnsinnig lustig. Das Team redet heute noch davon!",
+    "name": "Sascha Kruse",
+    "rolle": "Teilnehmer",
+    "text": "Das Quiz macht einfach mega Bock! Statt Zettelchaos gibt es Tablets - das fühlt sich ein bisschen an wie \"Wer wird Millionär\" auf Kneipenniveau. Manche Spiele können einen auch schonmal verwirren, aber das macht es umso witziger. Fazit: Unser Wissen ist mittelmäßig, Spaß dafür maximal. Wir kommen auf jeden Fall wieder!",
     "foto": "thomas-m.jpg",
     "stats": [
       {
-        "wert": "28",
+        "wert": ">30 x",
         "label": "Teilnehmer"
       },
       {
@@ -74,8 +74,8 @@
         "label": "Bewertung"
       },
       {
-        "wert": "3×",
-        "label": "Gebucht"
+        "wert": "9 x",
+        "label": "Sieger"
       }
     ]
   }
