@@ -1966,47 +1966,14 @@
           </div>
         </div>
 
-        <div class="indie-form-card reveal reveal-delay-2">
-          <div class="form-title">Anfrage senden</div>
-          <form id="contactForm" novalidate>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="name">Name *</label>
-                <input type="text" id="name" name="name" class="form-input" placeholder="Dein Name" required autocomplete="name" />
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="email">E-Mail *</label>
-                <input type="email" id="email" name="email" class="form-input" placeholder="deine@email.de" required autocomplete="email" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="occasion">Anlass *</label>
-              <select id="occasion" name="occasion" class="form-select" required>
-                <option value="" disabled selected>Welcher Anlass?</option>
-                <option value="weihnachtsfeier">Weihnachtsfeier</option>
-                <option value="betriebsfest">Betriebsfest</option>
-                <option value="geburtstag">Geburtstag</option>
-                <option value="jga">JGA / Jubiläum</option>
-                <option value="schulfeier">Schulfeier</option>
-                <option value="sonstiges">Sonstiges</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="guests">Personen *</label>
-                <input type="number" id="guests" name="guests" class="form-input" placeholder="ca. 30" min="10" required />
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="date">Wunschdatum</label>
-                <input type="date" id="date" name="date" class="form-input" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="message">Nachricht</label>
-              <textarea id="message" name="message" class="form-textarea" placeholder="Weitere Wünsche oder Fragen..."></textarea>
-            </div>
-            <button type="submit" class="form-submit">Anfrage absenden →</button>
-          </form>
+        <div class="indie-form-card reveal reveal-delay-2" style="padding:0; overflow:hidden; background:transparent; border:none; box-shadow:none;">
+          <iframe
+            src="https://kneipenkoenig-manager.netlify.app/kontakt.html?embed=true"
+            width="100%"
+            height="750"
+            frameborder="0"
+            style="border:none; width:100%; display:block;">
+          </iframe>
         </div>
       </div>
     </div>
