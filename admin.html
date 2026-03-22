@@ -122,6 +122,7 @@
   .btn-primary { background: var(--blue); color: #000; }
   .btn-ghost { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
   .btn-danger { background: rgba(248,113,113,0.12); color: var(--red); border: 1px solid rgba(248,113,113,0.25); }
+  .btn-replace { background: rgba(56,182,255,0.10); color: var(--blue); border: 1px solid rgba(56,182,255,0.30); }
   .btn-sm { padding: 6px 12px; font-size: 0.78rem; border-radius: 8px; }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
@@ -1088,7 +1089,7 @@ function renderGallery() {
         <input class="caption-input" value="${(item.caption||'').replace(/"/g,'&quot;')}" placeholder="Caption…" data-idx="${i}" onchange="updateCaption(${i}, this.value)" />
         ${isHome ? `<input class="caption-input" style="margin-top:6px;" value="${(item.caption2||'').replace(/"/g,'&quot;')}" placeholder="Caption Strip (Lauftext)…" data-idx="${i}" onchange="updateCaption2(${i}, this.value)" />` : ''}
         <div class="gallery-item-actions">
-          <label class="btn btn-sm" style="flex:1; cursor:pointer; text-align:center;">Ersetzen<input type="file" accept="image/*" style="display:none" onchange="replaceGalleryImage(${i}, this.files[0])"></label>
+          <label class="btn btn-replace btn-sm" style="flex:1; cursor:pointer; text-align:center;">Ersetzen<input type="file" accept="image/*" style="display:none" onchange="replaceGalleryImage(${i}, this.files[0])"></label>
           <button class="btn btn-danger btn-sm" style="flex:1;" onclick="deleteGalleryImage(${i})">Löschen</button>
         </div>
       </div>
