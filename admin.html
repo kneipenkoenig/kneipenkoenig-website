@@ -1088,6 +1088,7 @@ function renderGallery() {
         <input class="caption-input" value="${(item.caption||'').replace(/"/g,'&quot;')}" placeholder="Caption…" data-idx="${i}" onchange="updateCaption(${i}, this.value)" />
         ${isHome ? `<input class="caption-input" style="margin-top:6px;" value="${(item.caption2||'').replace(/"/g,'&quot;')}" placeholder="Caption Strip (Lauftext)…" data-idx="${i}" onchange="updateCaption2(${i}, this.value)" />` : ''}
         <div class="gallery-item-actions">
+          <label class="btn btn-sm" style="flex:1; cursor:pointer; text-align:center;">Ersetzen<input type="file" accept="image/*" style="display:none" onchange="replaceGalleryImage(${i}, this.files[0])"></label>
           <button class="btn btn-danger btn-sm" style="flex:1;" onclick="deleteGalleryImage(${i})">Löschen</button>
         </div>
       </div>
@@ -1165,6 +1166,31 @@ async function deleteGalleryImage(idx) {
     galleryData[currentGallery].splice(idx, 1);
     await saveGalleryCaptions(true);
     toast('Bild gelöscht ✓', 'ok');
+    renderGallery();
+  } catch(e) {
+    toast('Fehler: ' + e.message, 'err');
+  }
+}
+
+async function replaceGalleryImage(idx, file) {
+  if (!file) return;
+  if (!getToken()) { toast('Bitte erst Token einrichten', 'err'); return; }
+  const item = galleryData[currentGallery][idx];
+  const oldSrc = item.src;
+  const folder = GALLERY_MAP[currentGallery].folder;
+  const ext = file.name.split('.').pop().toLowerCase();
+  const base = slugify(file.name.replace(/\.[^.]+$/, ''));
+  const filename = `${base}-${Date.now()}.${ext === 'jpeg' ? 'jpg' : ext}`;
+  const remotePath = `${folder}/${filename}`;
+  try {
+    toast('Lade hoch…', 'ok');
+    const b64 = await compressImage(file, 1400, 0.78);
+    await ghPutBinary(remotePath, b64, `Galerie: ${filename} hochgeladen`);
+    const oldSha = await getSha(oldSrc);
+    if (oldSha) await ghDelete(oldSrc, `Galerie: ${oldSrc} ersetzt`, oldSha);
+    item.src = remotePath;
+    await saveGalleryCaptions(true);
+    toast('Bild ersetzt ✓', 'ok');
     renderGallery();
   } catch(e) {
     toast('Fehler: ' + e.message, 'err');
