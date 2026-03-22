@@ -387,6 +387,7 @@
       <span id="tokenStatus">Kein Token</span>
     </div>
     <button class="btn btn-ghost btn-sm" onclick="msLogout()" style="display:none;" id="logoutBtn">Abmelden</button>
+    <a href="https://kneipenkoenig.work" class="btn btn-ghost btn-sm" style="display:none;" id="toWebsiteBtn">← Website</a>
   </div>
 </nav>
 
@@ -710,6 +711,7 @@ function showAdminUI(account) {
   document.getElementById('navName').textContent = name;
   document.getElementById('navUser').style.display = 'flex';
   document.getElementById('logoutBtn').style.display = 'inline-flex';
+  document.getElementById('toWebsiteBtn').style.display = 'inline-flex';
   updateTokenUI();
   if (!getToken()) setTimeout(() => openModal('tokenModal'), 400);
   else loadAll();
