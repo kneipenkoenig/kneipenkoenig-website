@@ -608,6 +608,36 @@
       border-color: #38b6ff;
     }
 
+    /* ─── HOME GALERIE ──────────────────────────────────── */
+    .galerie-scroll-wrap {
+      overflow: hidden;
+      -webkit-mask: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+    @keyframes scroll-left {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .galerie-track {
+      display: flex; gap: 14px; width: max-content;
+      animation: scroll-left 80s linear infinite;
+    }
+    .galerie-track:hover { animation-play-state: paused; }
+    .galerie-item {
+      flex-shrink: 0; width: 260px; height: 195px;
+      border-radius: 14px; overflow: hidden; position: relative; cursor: pointer;
+    }
+    .galerie-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+    .galerie-item:hover img { transform: scale(1.05); }
+    .galerie-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+      display: flex; align-items: flex-end; padding: 12px;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .galerie-item:hover .galerie-overlay { opacity: 1; }
+    .galerie-overlay-title { color: #fff; font-size: 0.82rem; font-weight: 600; }
+
     /* ─── EVENTS ────────────────────────────────────────── */
     .events {
       padding: 120px 0;
@@ -1949,6 +1979,17 @@
     </div>
   </section>
 
+  <!-- ═══════════ HOME GALERIE ═══════════ -->
+  <section style="padding: 80px 0 0; background: var(--bg-2); overflow: hidden;">
+    <div class="container">
+      <span class="section-label reveal">Impressionen</span>
+      <h2 class="section-title reveal reveal-delay-1">Echte Momente</h2>
+    </div>
+    <div class="galerie-scroll-wrap" style="margin-top:48px;">
+      <div class="galerie-track" id="homeGalerieTrack"></div>
+    </div>
+  </section>
+
   <!-- ═══════════ INDIE / BUCHUNG ═══════════ -->
   <section class="indie" id="buchung" aria-labelledby="indie-title">
     <div class="container">
@@ -2378,6 +2419,21 @@
     }
     closeBtn.addEventListener('click', closeMobileNav);
     document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMobileNav));
+
+    // ── Home Galerie ───────────────────────────────────────────
+    fetch('galerie-home.json')
+      .then(r => r.json())
+      .then(bilder => {
+        if (!bilder.length) return;
+        const track = document.getElementById('homeGalerieTrack');
+        [...bilder, ...bilder].forEach(bild => {
+          const item = document.createElement('div');
+          item.className = 'galerie-item';
+          item.innerHTML = `<img src="${bild.src}" alt="${bild.caption||''}" loading="lazy" /><div class="galerie-overlay"><span class="galerie-overlay-title">${bild.caption||''}</span></div>`;
+          track.appendChild(item);
+        });
+      })
+      .catch(() => {});
 
     // ── Scroll reveal ─────────────────────────────────────────
     const revealObs = new IntersectionObserver(entries => {
