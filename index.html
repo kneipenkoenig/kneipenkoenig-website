@@ -2366,7 +2366,7 @@
     fetch('testimonials.json')
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(data => {
-        testimonials = data;
+        testimonials = data.slice().sort(() => Math.random() - 0.5);
         buildSlides();
         prevBtn.addEventListener('click', () => goTo(currentSlide - 1));
         nextBtn.addEventListener('click', () => goTo(currentSlide + 1));
