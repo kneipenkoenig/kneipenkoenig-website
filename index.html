@@ -238,9 +238,8 @@
       flex: 1;
       min-width: 0;
       opacity: 0;
-      animation: introFadeUp 0.7s var(--ease-out) 0.1s forwards;
+      animation: introFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
     }
-    .intro-hero-text .section-label { animation: introFadeUp 0.6s var(--ease-out) 0.05s both; }
     .intro-hero-title {
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(3.5rem, 7vw, 6rem);
@@ -262,7 +261,7 @@
       position: relative;
       height: 320px;
       opacity: 0;
-      animation: introFadeRight 0.8s var(--ease-out) 0.35s forwards;
+      animation: introFadeRight 0.8s cubic-bezier(0.16,1,0.3,1) 0.35s forwards;
     }
     .intro-card {
       position: absolute;
