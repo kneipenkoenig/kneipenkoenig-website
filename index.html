@@ -2430,8 +2430,9 @@
 
     // ── Home Galerie ───────────────────────────────────────────
     fetch('galerie-home.json')
-      .then(r => r.json())
+      .then(r => { console.log('[HomeGalerie] fetch status:', r.status); return r.json(); })
       .then(bilder => {
+        console.log('[HomeGalerie] Bilder geladen:', bilder.length);
         if (!bilder.length) return;
         document.getElementById('homeGalerieSection').style.display = '';
         const track = document.getElementById('homeGalerieTrack');
@@ -2443,7 +2444,7 @@
           track.appendChild(item);
         });
       })
-      .catch(() => {});
+      .catch(err => { console.error('[HomeGalerie] Fehler:', err); });
 
     // ── Scroll reveal ─────────────────────────────────────────
     const revealObs = new IntersectionObserver(entries => {
