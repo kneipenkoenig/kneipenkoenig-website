@@ -408,6 +408,11 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
       Intro Bilder
     </button>
+    <div class="sidebar-label" style="margin-top:24px;">System</div>
+    <button class="nav-item" onclick="showPage('settings', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Einstellungen
+    </button>
   </aside>
 
   <!-- MAIN -->
@@ -524,6 +529,34 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           Captions speichern
         </button>
+      </div>
+    </div>
+
+    <!-- ══ EINSTELLUNGEN ══ -->
+    <div class="page" id="page-settings">
+      <div class="page-header">
+        <div class="page-title">Einstellungen</div>
+        <div class="page-sub">GitHub Token und weitere Konfiguration</div>
+      </div>
+      <div style="max-width:520px;">
+        <div class="card" style="padding:24px;">
+          <div style="font-weight:700;font-size:1rem;margin-bottom:6px;">GitHub Personal Access Token</div>
+          <div style="color:var(--muted);font-size:0.83rem;margin-bottom:16px;line-height:1.6;">
+            Wird benötigt um Bilder hochzuladen und Inhalte zu speichern. Token wird nur lokal im Browser gespeichert.
+          </div>
+          <div style="position:relative;margin-bottom:12px;">
+            <input class="form-input" id="settingsTokenInput" type="password" placeholder="github_pat_…" style="padding-right:48px;" />
+            <button onclick="toggleSettingsTokenVisibility()" id="settingsTokenEye" title="Token anzeigen/verbergen"
+              style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;">
+              <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-primary" onclick="saveSettingsToken()">Token speichern</button>
+            <button class="btn btn-ghost" onclick="clearSettingsToken()">Token löschen</button>
+          </div>
+          <div id="settingsTokenStatus" style="margin-top:14px;font-size:0.82rem;"></div>
+        </div>
       </div>
     </div>
 
@@ -761,10 +794,52 @@ function saveToken() {
   loadAll();
 }
 
+function saveSettingsToken() {
+  const v = document.getElementById('settingsTokenInput').value.trim();
+  if (!v) { toast('Token darf nicht leer sein', 'err'); return; }
+  localStorage.setItem('gh_token', v);
+  updateTokenUI();
+  const status = document.getElementById('settingsTokenStatus');
+  status.textContent = '✓ Token gespeichert (' + v.length + ' Zeichen)';
+  status.style.color = 'var(--blue)';
+  toast('Token gespeichert!', 'ok');
+  loadAll();
+}
+
+function clearSettingsToken() {
+  localStorage.removeItem('gh_token');
+  document.getElementById('settingsTokenInput').value = '';
+  updateTokenUI();
+  const status = document.getElementById('settingsTokenStatus');
+  status.textContent = 'Token gelöscht.';
+  status.style.color = 'var(--muted)';
+  toast('Token gelöscht', 'ok');
+}
+
+function toggleSettingsTokenVisibility() {
+  const input = document.getElementById('settingsTokenInput');
+  const icon = document.getElementById('eyeIcon');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    input.type = 'password';
+    icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+}
+
 // ═══════════════════════════════════════════════════
-// NAV
+// SETTINGS
 // ═══════════════════════════════════════════════════
 function showPage(id, btn) {
+  if (id === 'settings') {
+    const t = getToken();
+    const input = document.getElementById('settingsTokenInput');
+    if (input) input.value = t;
+    const status = document.getElementById('settingsTokenStatus');
+    if (status) status.textContent = t ? '✓ Token ist gesetzt (' + t.length + ' Zeichen)' : 'Kein Token gesetzt.';
+    if (status) status.style.color = t ? 'var(--blue)' : 'var(--muted)';
+  }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
