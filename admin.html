@@ -630,9 +630,14 @@ try {
 }
 
 function initMsal() {
-  // MSAL v2: kein initialize() nötig, direkt handleRedirectPromise aufrufen
   msalInstance.handleRedirectPromise().then(resp => {
-    const account = resp?.account || msalInstance.getAllAccounts()[0];
+    if (resp) {
+      msalInstance.setActiveAccount(resp.account);
+      showAdminUI(resp.account);
+      loadAll();
+      return;
+    }
+    const account = msalInstance.getAllAccounts()[0];
     if (account) {
       msalInstance.setActiveAccount(account);
       showAdminUI(account);
@@ -653,9 +658,7 @@ async function msLogin() {
     return;
   }
   try {
-    const resp = await msalInstance.loginPopup({ scopes: ['User.Read'] });
-    msalInstance.setActiveAccount(resp.account);
-    showAdminUI(resp.account);
+    await msalInstance.loginRedirect({ scopes: ['User.Read'] });
   } catch(e) {
     errEl.style.display = 'block';
     errEl.textContent = 'Anmeldung fehlgeschlagen: ' + e.message;
@@ -663,7 +666,7 @@ async function msLogin() {
 }
 
 function msLogout() {
-  msalInstance.logoutPopup();
+  msalInstance.logoutRedirect();
 }
 
 function showAdminUI(account) {
