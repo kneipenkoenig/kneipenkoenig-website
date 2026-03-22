@@ -1980,7 +1980,7 @@
   </section>
 
   <!-- ═══════════ HOME GALERIE ═══════════ -->
-  <section style="padding: 80px 0 0; background: var(--bg-2); overflow: hidden;">
+  <section id="homeGalerieSection" style="padding: 80px 0 0; background: var(--bg-2); overflow: hidden; display:none;">
     <div class="container">
       <span class="section-label reveal">Impressionen</span>
       <h2 class="section-title reveal reveal-delay-1">Echte Momente</h2>
@@ -2433,6 +2433,7 @@
       .then(r => r.json())
       .then(bilder => {
         if (!bilder.length) return;
+        document.getElementById('homeGalerieSection').style.display = '';
         const track = document.getElementById('homeGalerieTrack');
         const s = bilder.slice().sort(() => Math.random() - 0.5);
         [...s, ...s].forEach(bild => {
