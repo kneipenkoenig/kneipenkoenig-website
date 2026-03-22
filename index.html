@@ -194,6 +194,24 @@
       transition: transform 0.3s, opacity 0.3s;
     }
 
+    /* ── NAV-LINE Lauflicht ── */
+    @keyframes navLineRun {
+      from { left: -30%; }
+      to   { left: 130%; }
+    }
+    .nav-line {
+      position: fixed; top: 57px; left: 0; right: 0;
+      height: 2px; z-index: 99;
+      background: rgba(56,182,255,0.15);
+      overflow: hidden;
+    }
+    .nav-line::after {
+      content: ''; position: absolute; top: 0;
+      width: 30%; height: 100%;
+      background: linear-gradient(90deg, transparent 0%, #38b6ff 35%, #bfefff 50%, #38b6ff 65%, transparent 100%);
+      animation: navLineRun 2.5s linear infinite;
+    }
+
     /* ─── INTRO HERO ────────────────────────────────────── */
     @keyframes introFadeUp {
       from { opacity: 0; transform: translateY(28px); }
@@ -1911,6 +1929,8 @@
     <a href="#instagram"  class="mobile-link">Letzte Events</a>
     <a href="#buchung"   class="mobile-link">Kontakt</a>
   </div>
+  <!-- NAV-LINE: Lauflicht unter der Navigation. Für neue Seiten: diese Zeile direkt nach </nav> / mobile-nav einfügen -->
+  <div class="nav-line" aria-hidden="true"></div>
 
   <!-- ═══════════ INTRO HERO ═══════════ -->
   <section class="intro-hero">
