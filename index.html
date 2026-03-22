@@ -200,7 +200,7 @@
       to   { left: 130%; }
     }
     .nav-line {
-      position: fixed; top: 57px; left: 0; right: 0;
+      position: fixed; top: 80px; left: 0; right: 0;
       height: 2px; z-index: 99;
       background: rgba(56,182,255,0.15);
       overflow: hidden;
@@ -753,16 +753,19 @@
       100% { transform: translateX(-50%); }
     }
     .galerie-track {
-      display: flex; gap: 14px; width: max-content;
+      display: flex; gap: 0; width: max-content;
       animation: scroll-left 80s linear infinite;
     }
-    .galerie-track:hover { animation-play-state: paused; }
+    .galerie-outer:hover .galerie-track { animation-play-state: paused; }
+    .galerie-slot {
+      flex-shrink: 0; width: 274px;
+    }
     @keyframes galerieShine {
       0%, 100% { box-shadow: 0 0 0 2px rgba(56,182,255,0.5), 0 0 12px rgba(56,182,255,0.2); }
       50%       { box-shadow: 0 0 0 2px rgba(125,211,252,0.95), 0 0 26px rgba(56,182,255,0.55); }
     }
     .galerie-item {
-      flex-shrink: 0; width: 260px; height: 195px;
+      width: 260px; height: 195px; margin: 0 7px;
       border-radius: 14px; overflow: hidden; position: relative; cursor: pointer;
       box-shadow: 0 0 0 2px rgba(56,182,255,0.5), 0 0 12px rgba(56,182,255,0.2);
       animation: galerieShine 2.5s ease-in-out infinite;
@@ -778,20 +781,10 @@
     }
     .galerie-item:hover .galerie-overlay { opacity: 1; }
     .galerie-overlay-title { color: #fff; font-size: 0.82rem; font-weight: 600; }
-    .galerie-caption-wrap {
-      overflow: hidden;
-      padding: 10px 0 0;
-      -webkit-mask: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
-      mask: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
-    }
-    .galerie-caption-track {
-      display: flex; gap: 0; width: max-content;
-      animation: scroll-left 80s linear infinite;
-    }
-    .galerie-caption-track:hover { animation-play-state: paused; }
     .galerie-caption-item {
-      flex-shrink: 0; width: 260px;
-      padding: 0 14px;
+      width: 274px;
+      padding: 6px 7px 0;
+      display: block;
       font-size: 0.8rem; font-weight: 600;
       color: #38b6ff;
       letter-spacing: 0.03em;
@@ -1988,9 +1981,6 @@
     <div class="galerie-scroll-wrap" style="margin-top:48px;">
       <div class="galerie-track" id="homeGalerieTrack"></div>
     </div>
-    <div class="galerie-caption-wrap">
-      <div class="galerie-caption-track" id="homeGalerieCaptionTrack"></div>
-    </div>
   </section>
 
   <!-- ═══════════ FORMATE ═══════════ -->
@@ -2616,8 +2606,7 @@
         console.log('[HomeGalerie] Bilder geladen:', bilder.length);
         if (!bilder.length) return;
         document.getElementById('homeGalerieSection').style.display = '';
-        const track        = document.getElementById('homeGalerieTrack');
-        const captionTrack = document.getElementById('homeGalerieCaptionTrack');
+        const track    = document.getElementById('homeGalerieTrack');
         const s = bilder.slice().sort(() => Math.random() - 0.5);
         const modal    = document.getElementById('homeImgModal');
         const modalImg = document.getElementById('homeImgModalImg');
@@ -2627,6 +2616,9 @@
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
         [...s, ...s].forEach(bild => {
+          const slot = document.createElement('div');
+          slot.className = 'galerie-slot';
+
           const item = document.createElement('div');
           item.className = 'galerie-item';
           item.style.cursor = 'pointer';
@@ -2635,12 +2627,14 @@
             modalImg.src = bild.src; modalImg.alt = bild.caption || '';
             modal.classList.add('open'); document.body.style.overflow = 'hidden';
           });
-          track.appendChild(item);
+          slot.appendChild(item);
 
           const cap = document.createElement('div');
           cap.className = 'galerie-caption-item';
-          cap.textContent = bild.caption || '';
-          captionTrack.appendChild(cap);
+          cap.textContent = bild.caption2 || bild.caption || '';
+          slot.appendChild(cap);
+
+          track.appendChild(slot);
         });
       })
       .catch(err => { console.error('[HomeGalerie] Fehler:', err); });

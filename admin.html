@@ -1080,11 +1080,13 @@ function renderGallery() {
     return;
   }
 
+  const isHome = currentGallery === 'galerie-home';
   grid.innerHTML = data.map((item, i) => `
     <div class="gallery-item" data-idx="${i}">
       <img src="https://raw.githubusercontent.com/${REPO}/${BRANCH}/${item.src}" alt="" loading="lazy" />
       <div class="gallery-item-body">
         <input class="caption-input" value="${(item.caption||'').replace(/"/g,'&quot;')}" placeholder="Caption…" data-idx="${i}" onchange="updateCaption(${i}, this.value)" />
+        ${isHome ? `<input class="caption-input" style="margin-top:6px;" value="${(item.caption2||'').replace(/"/g,'&quot;')}" placeholder="Caption Strip (Lauftext)…" data-idx="${i}" onchange="updateCaption2(${i}, this.value)" />` : ''}
         <div class="gallery-item-actions">
           <button class="btn btn-danger btn-sm" style="flex:1;" onclick="deleteGalleryImage(${i})">Löschen</button>
         </div>
@@ -1094,6 +1096,10 @@ function renderGallery() {
 
 function updateCaption(idx, val) {
   if (galleryData[currentGallery]) galleryData[currentGallery][idx].caption = val;
+}
+
+function updateCaption2(idx, val) {
+  if (galleryData[currentGallery]) galleryData[currentGallery][idx].caption2 = val;
 }
 
 async function handleGalleryUpload(files) {
