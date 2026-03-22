@@ -1,42 +1,52 @@
 [
   {
     "src": "images/home/eingabefragen-1774177088232.jpg",
-    "caption": "Kein Klicken, kein Raten – hier müssen die Antworten direkt in die Tasten fließen"
+    "caption": "Kein Klicken, kein Raten – hier müssen die Antworten direkt in die Tasten fließen",
+    "caption2": "Eingabefragen"
   },
   {
     "src": "images/home/familienduell-1774177089140.jpg",
-    "caption": "Die Macht der Mehrheit: Gesucht ist nicht die richtige, sondern die beliebtesten Antworten"
+    "caption": "Die Macht der Mehrheit: Gesucht ist nicht die richtige, sondern die beliebtesten Antworten",
+    "caption2": "Familienduell"
   },
   {
     "src": "images/home/multiple-choice-fragen-1774177090055.jpg",
-    "caption": "Vier Wege, ein Ziel: Wähle die richtige Antwort aus vier kniffligen Optionen"
+    "caption": "Vier Wege, ein Ziel: Wähle die richtige Antwort aus vier kniffligen Optionen",
+    "caption2": "Multiple Choice-Fragen"
   },
   {
     "src": "images/home/musikalische-zeitreise-1774177090911.jpg",
-    "caption": "Rhythmus im Blut: Eine Reise durch die Jahrzehnte der Musikgeschichte"
+    "caption": "Rhythmus im Blut: Eine Reise durch die Jahrzehnte der Musikgeschichte",
+    "caption2": "Musikalische Zeitreise"
   },
   {
     "src": "images/home/pferderennen-1774177091823.jpg",
-    "caption": "Das Glück der Erde: Setze auf den richtigen Favoriten und fiebere bis zur Ziellinie mit"
+    "caption": "Das Glück der Erde: Setze auf den richtigen Favoriten und fiebere bis zur Ziellinie mit",
+    "caption2": "Pferderennen"
   },
   {
     "src": "images/home/promimixer-1774177092636.jpg",
-    "caption": "Fusion der Stars: Zwei Gesichter verschmelzen zu einem – wer steckt dahinter?"
+    "caption": "Fusion der Stars: Zwei Gesichter verschmelzen zu einem – wer steckt dahinter?",
+    "caption2": "Promimixer"
   },
   {
     "src": "images/home/sortierfragen-1774177093536.jpg",
-    "caption": "Ordnung muss sein: Bringe die Fakten in die historisch oder logisch richtige Reihe"
+    "caption": "Ordnung muss sein: Bringe die Fakten in die historisch oder logisch richtige Reihe",
+    "caption2": "Sortierfragen"
   },
   {
     "src": "images/home/voice-of-ai-1774177094459.jpg",
-    "caption": "Deepfake für die Ohren – erkenne das Original im digitalen Rauschen"
+    "caption": "Deepfake für die Ohren – erkenne das Original im digitalen Rauschen",
+    "caption2": "Voice of AI"
   },
   {
     "src": "images/home/wann-war-das-1774177095274.jpg",
-    "caption": "Zeitreise-Expertise gefragt: Wann genau schrieben diese Momente Geschichte?"
+    "caption": "Zeitreise-Expertise gefragt: Wann genau schrieben diese Momente Geschichte?",
+    "caption2": "Wann war das?"
   },
   {
     "src": "images/home/wer-ist-das-1774177096330.jpg",
-    "caption": "Die Suche nach der Identität: Errate die Person anhand von Hinweisen oder Bildteilen"
+    "caption": "Die Suche nach der Identität: Errate die Person anhand von Hinweisen oder Bildteilen",
+    "caption2": "Wer ist das?"
   }
 ]
