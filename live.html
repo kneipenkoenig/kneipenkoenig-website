@@ -542,7 +542,8 @@
       .then(r => r.json())
       .then(bilder => {
         if (!bilder.length) return;
-        [...bilder, ...bilder].forEach(b => track.appendChild(makeItem(b)));
+        const s = bilder.slice().sort(() => Math.random() - 0.5);
+        [...s, ...s].forEach(b => track.appendChild(makeItem(b)));
       })
       .catch(() => {});
 

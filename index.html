@@ -2434,7 +2434,8 @@
       .then(bilder => {
         if (!bilder.length) return;
         const track = document.getElementById('homeGalerieTrack');
-        [...bilder, ...bilder].forEach(bild => {
+        const s = bilder.slice().sort(() => Math.random() - 0.5);
+        [...s, ...s].forEach(bild => {
           const item = document.createElement('div');
           item.className = 'galerie-item';
           item.innerHTML = `<img src="${bild.src}" alt="${bild.caption||''}" loading="lazy" /><div class="galerie-overlay"><span class="galerie-overlay-title">${bild.caption||''}</span></div>`;

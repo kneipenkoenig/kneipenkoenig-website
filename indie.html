@@ -415,10 +415,18 @@
       return item;
     }
 
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
     function renderGalerie(bilder) {
       track.innerHTML = '';
-      // Bilder doppelt einfügen für nahtlose Endlosschleife
-      [...bilder, ...bilder].forEach(bild => track.appendChild(makeItem(bild)));
+      const s = shuffle(bilder);
+      [...s, ...s].forEach(bild => track.appendChild(makeItem(bild)));
     }
 
     fetch('galerie-indie.json')
