@@ -47,17 +47,47 @@
     .page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 5vw, 4rem); letter-spacing: 0.03em; }
     .page-sub { color: var(--text-secondary); margin-top: 6px; font-size: 1rem; }
 
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
     .results-iframe-wrap {
-      width: 100%; min-height: 600px;
-      background: rgba(255,255,255,0.03);
+      background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.09);
       border-radius: 16px;
       overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(8px);
     }
-    .results-iframe-wrap iframe { width: 100%; min-height: 600px; border: none; display: block; }
-    .placeholder-msg { text-align: center; color: var(--text-secondary); padding: 60px 20px; }
-    .placeholder-msg p { margin-top: 8px; font-size: 0.9rem; }
+    .results-iframe-wrap iframe { width: 100%; height: 760px; border: none; display: block; }
+
+    /* ── MOBILE TABS ── */
+    .mobile-tabs { display: none; }
+    .mobile-panel { display: none; }
+
+    @media (max-width: 700px) {
+      .results-grid { display: none; }
+      .results-alltime { display: none; }
+
+      .mobile-tabs {
+        display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+      }
+      .mobile-tab {
+        flex: 1; min-width: 0;
+        padding: 10px 8px; border-radius: 10px; cursor: pointer;
+        font-size: 0.8rem; font-weight: 700; text-align: center;
+        border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+        color: rgba(255,255,255,0.5); transition: all 0.15s; white-space: nowrap;
+      }
+      .mobile-tab.active {
+        background: rgba(56,182,255,0.15); border-color: rgba(56,182,255,0.4);
+        color: #38b6ff;
+      }
+      .mobile-panel { display: none; }
+      .mobile-panel.active { display: block; }
+      .mobile-panel .results-iframe-wrap { display: block; }
+      .mobile-panel .results-iframe-wrap iframe { height: 760px; }
+    }
   </style>
 </head>
 <body>
@@ -90,14 +120,41 @@
     <div class="page-header">
       <div class="section-label">Ergebnisse</div>
       <h1 class="page-title">Datteln</h1>
-      <p class="page-sub"></p>
+      <p class="page-sub">Johnny Canone</p>
     </div>
-    <div class="results-iframe-wrap" id="iframeWrap">
-      <!-- iframe src hier eintragen -->
-      <div class="placeholder-msg" id="iframePlaceholder">
-        <strong>Ergebnisse folgen in Kürze.</strong>
-        <p>Hier werden die Ranglisten für Datteln eingebettet.</p>
+    <!-- Mobile Tab-Navigation -->
+    <div class="mobile-tabs">
+      <button class="mobile-tab active" onclick="showTab(0, this)">Letztes Quiz</button>
+      <button class="mobile-tab" onclick="showTab(1, this)">Jahrestabelle</button>
+      <button class="mobile-tab" onclick="showTab(2, this)">Ewige Tabelle</button>
+    </div>
+    <div class="mobile-panel active">
+      <div class="results-iframe-wrap">
+        <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/results.html?location=11" style="width:100%;height:760px;border:none;display:block;" allowfullscreen></iframe>
       </div>
+    </div>
+    <div class="mobile-panel">
+      <div class="results-iframe-wrap">
+        <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/ranking.html?location=11" style="width:100%;height:760px;border:none;display:block;" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="mobile-panel">
+      <div class="results-iframe-wrap">
+        <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/ranking.html?location=11&alltime=1" style="width:100%;height:760px;border:none;display:block;" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- Desktop-Layout -->
+    <div class="results-grid">
+      <div class="results-iframe-wrap">
+        <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/results.html?location=11" style="width:100%;height:760px;border:none;display:block;" allowfullscreen></iframe>
+      </div>
+      <div class="results-iframe-wrap">
+        <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/ranking.html?location=11" style="width:100%;height:760px;border:none;display:block;" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="results-iframe-wrap results-alltime" style="margin-top:20px;">
+      <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/ranking.html?location=11&alltime=1" style="width:100%;height:760px;border:none;display:block;" allowfullscreen></iframe>
     </div>
   </div>
 
@@ -112,21 +169,13 @@
     mobileClose.addEventListener('click', closeMobileNav);
     document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMobileNav));
 
-    // iframe aus locations.json laden
-    fetch('locations.json?t=' + Date.now())
-      .then(r => r.ok ? r.json() : {})
-      .then(data => {
-        const src = data['location11']?.iframe;
-        if (src) {
-          document.getElementById('iframePlaceholder').style.display = 'none';
-          const iframe = document.createElement('iframe');
-          iframe.src = src;
-          iframe.style.cssText = 'width:100%;min-height:600px;border:none;display:block;';
-          iframe.allowFullscreen = true;
-          document.getElementById('iframeWrap').appendChild(iframe);
-        }
-      })
-      .catch(() => {});
+    function showTab(index, btn) {
+      document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.mobile-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.mobile-panel')[index].classList.add('active');
+    }
+
   </script>
 </body>
 </html>
