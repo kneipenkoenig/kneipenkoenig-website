@@ -1,7 +1,8 @@
 {
   "location01": {
     "name": "Coesfeld-Lette",
-    "sub": "Haus Zumbült"
+    "sub": "Haus Zumbült",
+    "img": "images/locations/location01-1774305091423.jpg"
   },
   "location02": {
     "name": "Haltern am See",
