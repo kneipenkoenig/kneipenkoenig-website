@@ -6,7 +6,9 @@
     "sub": "Zum Moetken"
   },
   "location04": {
-    "sub": "Gasthof Küpper"
+    "sub": "Gasthof Küpper",
+    "linkHomepage": "https://www.gasthof-kuepper.de/",
+    "img": "images/locations/location04-1774295374459.jpg"
   },
   "location03": {
     "sub": "Manhattan Sportsbar"
