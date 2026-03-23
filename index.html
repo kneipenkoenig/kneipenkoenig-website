@@ -1931,6 +1931,7 @@
       <li><a href="#formate">Der Kneipenkönig</a></li>
       <li><a href="#events">Kommende Events</a></li>
       <li><a href="#instagram">Letzte Events</a></li>
+      <li><a href="ergebnisse.html">Ergebnisse</a></li>
       <li><a href="#buchung">Kontakt</a></li>
     </ul>
     <a href="admin.html" class="nav-cta">Admin</a>
@@ -1941,10 +1942,11 @@
 
   <div class="mobile-nav" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation">
     <button class="mobile-nav-close" id="mobileNavClose" aria-label="Menü schließen">✕</button>
-    <a href="#formate"    class="mobile-link">Der Kneipenkönig</a>
-    <a href="#events"     class="mobile-link">Kommende Events</a>
-    <a href="#instagram"  class="mobile-link">Letzte Events</a>
-    <a href="#buchung"   class="mobile-link">Kontakt</a>
+    <a href="#formate"       class="mobile-link">Der Kneipenkönig</a>
+    <a href="#events"        class="mobile-link">Kommende Events</a>
+    <a href="#instagram"     class="mobile-link">Letzte Events</a>
+    <a href="ergebnisse.html" class="mobile-link">Ergebnisse</a>
+    <a href="#buchung"       class="mobile-link">Kontakt</a>
   </div>
   <!-- NAV-LINE: Lauflicht unter der Navigation. Für neue Seiten: diese Zeile direkt nach </nav> / mobile-nav einfügen -->
   <div class="nav-line" aria-hidden="true"></div>
@@ -2510,7 +2512,11 @@
     fetch('testimonials.json')
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(data => {
-        testimonials = data.slice().sort(() => Math.random() - 0.5);
+        testimonials = data.slice();
+        for (let i = testimonials.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [testimonials[i], testimonials[j]] = [testimonials[j], testimonials[i]];
+        }
         buildSlides();
         prevBtn.addEventListener('click', () => goTo(currentSlide - 1));
         nextBtn.addEventListener('click', () => goTo(currentSlide + 1));
