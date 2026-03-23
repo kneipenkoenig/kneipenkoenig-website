@@ -98,15 +98,15 @@
       cursor: pointer;
     }
     .loc-figure {
-      padding: 28px;
-      border-radius: 16px;
-      transition: padding 0.2s ease;
+      padding: 0;
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-radius 0.2s ease;
     }
-    .loc-figure:hover { padding: 14px; }
 
     .loc-clip {
       width: 100%;
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 4 / 3;
       overflow: hidden;
     }
     .loc-clip img {
@@ -115,7 +115,7 @@
       display: block;
       transition: transform 0.35s ease;
     }
-    .loc-item:hover .loc-clip img { transform: scale(1.12); }
+    .loc-item:hover .loc-clip img { transform: scale(1.06); }
 
     .loc-name {
       margin-top: 14px;
@@ -230,7 +230,7 @@
       <!-- Location 01: Coesfeld -->
       <a href="location01.html" class="loc-item">
         <figure class="loc-figure grad-1">
-          <div class="loc-clip" style="clip-path: url(#clip-goey1);">
+          <div class="loc-clip">
             <img src="hero-bg.jpg" alt="Coesfeld" />
           </div>
         </figure>
@@ -241,7 +241,7 @@
       <!-- Location 02: Haltern -->
       <a href="location02.html" class="loc-item">
         <figure class="loc-figure grad-2">
-          <div class="loc-clip" style="clip-path: url(#clip-goey2);">
+          <div class="loc-clip">
             <img src="hero-bg.jpg" alt="Haltern am See" />
           </div>
         </figure>
@@ -252,7 +252,7 @@
       <!-- Location 03: Marl -->
       <a href="location03.html" class="loc-item">
         <figure class="loc-figure grad-3">
-          <div class="loc-clip" style="clip-path: url(#clip-goey3);">
+          <div class="loc-clip">
             <img src="hero-bg.jpg" alt="Marl" />
           </div>
         </figure>
@@ -263,7 +263,7 @@
       <!-- Location 04: Dingden -->
       <a href="location04.html" class="loc-item">
         <figure class="loc-figure grad-4">
-          <div class="loc-clip" style="clip-path: url(#clip-goey4);">
+          <div class="loc-clip">
             <img src="hero-bg.jpg" alt="Dingden" />
           </div>
         </figure>
@@ -274,7 +274,7 @@
       <!-- Location 05: Reken -->
       <a href="location05.html" class="loc-item">
         <figure class="loc-figure grad-5">
-          <div class="loc-clip" style="clip-path: url(#clip-goey5);">
+          <div class="loc-clip">
             <img src="hero-bg.jpg" alt="Reken" />
           </div>
         </figure>
@@ -285,7 +285,7 @@
       <!-- Location 06: Lüdinghausen -->
       <a href="location06.html" class="loc-item">
         <figure class="loc-figure grad-6">
-          <div class="loc-clip" style="clip-path: url(#clip-goey6);">
+          <div class="loc-clip">
             <img src="hero-bg.jpg" alt="Lüdinghausen" />
           </div>
         </figure>
@@ -296,7 +296,7 @@
       <!-- Location 07: Datteln -->
       <a href="location07.html" class="loc-item">
         <figure class="loc-figure grad-7">
-          <div class="loc-clip" style="clip-path: url(#clip-goey1);">
+          <div class="loc-clip">
             <img src="hero-bg.jpg" alt="Datteln" />
           </div>
         </figure>
