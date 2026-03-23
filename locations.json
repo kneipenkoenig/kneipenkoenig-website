@@ -1,23 +1,32 @@
 {
-  "location06": {
-    "sub": "Burghof / GleisDrei"
+  "location01": {
+    "name": "Coesfeld-Lette",
+    "sub": "Haus Zumbült"
   },
-  "location05": {
-    "sub": "Zum Moetken"
+  "location02": {
+    "name": "Haltern am See",
+    "sub": "Lakeside Inn"
+  },
+  "location03": {
+    "name": "Marl",
+    "sub": "Manhattan Sportsbar"
   },
   "location04": {
+    "name": "Dingden",
     "sub": "Gasthof Küpper",
     "linkHomepage": "https://www.gasthof-kuepper.de/",
     "img": "images/locations/location04-1774295374459.jpg"
   },
-  "location03": {
-    "sub": "Manhattan Sportsbar"
+  "location05": {
+    "name": "Reken",
+    "sub": "Zum Moetken"
   },
-  "location01": {
-    "sub": "Haus Zumbült",
-    "name": "Coesfeld-Lette"
+  "location06": {
+    "name": "Lüdinghausen",
+    "sub": "Burghof / GleisDrei"
   },
   "location07": {
+    "name": "Datteln",
     "sub": "Johnny Canone"
   }
 }

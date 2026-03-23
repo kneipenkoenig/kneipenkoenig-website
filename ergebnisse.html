@@ -272,7 +272,13 @@
             if (el) el.textContent = d.name;
           }
           if (d.sub !== undefined) {
-            const el = item.querySelector('.loc-sub');
+            let el = item.querySelector('.loc-sub');
+            if (!el) {
+              el = document.createElement('div');
+              el.className = 'loc-sub';
+              const txt = item.querySelector('.loc-text');
+              if (txt) txt.appendChild(el);
+            }
             if (el) el.textContent = d.sub;
           }
           // Zwei Icon-Buttons nebeneinander oben rechts
