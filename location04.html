@@ -98,15 +98,14 @@
       <p class="page-sub"></p>
     </div>
     <div class="results-grid">
-      <div class="results-iframe-wrap" id="iframeWrap">
-        <div class="placeholder-msg" id="iframePlaceholder">
-          <strong>Ergebnisse folgen in Kürze.</strong>
-          <p>Hier werden die Ranglisten für Dingden eingebettet.</p>
-        </div>
+      <div class="results-iframe-wrap">
+        <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/results.html?quiz=196"
+          style="width:100%;height:600px;border:none;display:block;"
+          allowfullscreen></iframe>
       </div>
       <div class="results-iframe-wrap">
         <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/ranking.html?location=4"
-          style="width:100%;height:600px;border:none;display:block;border-radius:8px;"
+          style="width:100%;height:600px;border:none;display:block;"
           allowfullscreen></iframe>
       </div>
     </div>
@@ -123,21 +122,6 @@
     mobileClose.addEventListener('click', closeMobileNav);
     document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMobileNav));
 
-    // iframe aus locations.json laden
-    fetch('locations.json?t=' + Date.now())
-      .then(r => r.ok ? r.json() : {})
-      .then(data => {
-        const src = data['location04']?.iframe;
-        if (src) {
-          document.getElementById('iframePlaceholder').style.display = 'none';
-          const iframe = document.createElement('iframe');
-          iframe.src = src;
-          iframe.style.cssText = 'width:100%;min-height:600px;border:none;display:block;border-radius:8px;';
-          iframe.allowFullscreen = true;
-          document.getElementById('iframeWrap').appendChild(iframe);
-        }
-      })
-      .catch(() => {});
   </script>
 </body>
 </html>
