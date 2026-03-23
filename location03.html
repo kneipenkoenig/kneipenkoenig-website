@@ -92,9 +92,9 @@
       <h1 class="page-title">Marl</h1>
       <p class="page-sub">Manhattan</p>
     </div>
-    <div class="results-iframe-wrap">
+    <div class="results-iframe-wrap" id="iframeWrap">
       <!-- iframe src hier eintragen -->
-      <div class="placeholder-msg">
+      <div class="placeholder-msg" id="iframePlaceholder">
         <strong>Ergebnisse folgen in Kürze.</strong>
         <p>Hier werden die Ranglisten für Marl eingebettet.</p>
       </div>
@@ -111,6 +111,22 @@
     function closeMobileNav() { mobileNav.classList.remove('open'); navToggleBtn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
     mobileClose.addEventListener('click', closeMobileNav);
     document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMobileNav));
+
+    // iframe aus locations.json laden
+    fetch('locations.json?t=' + Date.now())
+      .then(r => r.ok ? r.json() : {})
+      .then(data => {
+        const src = data['location03'];
+        if (src) {
+          document.getElementById('iframePlaceholder').style.display = 'none';
+          const iframe = document.createElement('iframe');
+          iframe.src = src;
+          iframe.style.cssText = 'width:100%;min-height:600px;border:none;display:block;';
+          iframe.allowFullscreen = true;
+          document.getElementById('iframeWrap').appendChild(iframe);
+        }
+      })
+      .catch(() => {});
   </script>
 </body>
 </html>

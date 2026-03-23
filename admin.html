@@ -409,6 +409,10 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
       Intro Bilder
     </button>
+    <button class="nav-item" onclick="showPage('locations', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Ergebnisse / Locations
+    </button>
     <div class="sidebar-label" style="margin-top:24px;">System</div>
     <button class="nav-item" onclick="showPage('settings', this)">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -530,6 +534,20 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           Captions speichern
         </button>
+      </div>
+    </div>
+
+    <!-- ══ LOCATIONS / ERGEBNISSE ══ -->
+    <div class="page" id="page-locations">
+      <div class="page-header">
+        <div class="page-title">Ergebnisse / Locations</div>
+        <div class="page-sub">iframe-URL für jede Location hinterlegen</div>
+      </div>
+      <div id="locationsForm" style="display:flex;flex-direction:column;gap:18px;max-width:700px;">
+        <div class="spinner" id="locSpinner" style="margin:20px auto;"></div>
+      </div>
+      <div style="margin-top:24px;">
+        <button class="btn btn-primary" onclick="saveLocations()">Speichern</button>
       </div>
     </div>
 
@@ -1349,6 +1367,58 @@ function loadAll() {
   loadTestimonials();
   loadGallery('live');
   loadIntroHero();
+  loadLocations();
+}
+
+// ═══════════════════════════════════════════════════
+// LOCATIONS / ERGEBNISSE
+// ═══════════════════════════════════════════════════
+const LOCATIONS_JSON = 'locations.json';
+const LOCATIONS_DEF = [
+  { id: 'location01', name: 'Coesfeld', sub: 'Gleisdrei, Burghof' },
+  { id: 'location02', name: 'Haltern am See', sub: 'Lakeside Inn' },
+  { id: 'location03', name: 'Marl', sub: 'Manhattan' },
+  { id: 'location04', name: 'Dingden', sub: '' },
+  { id: 'location05', name: 'Reken', sub: '' },
+  { id: 'location06', name: 'Lüdinghausen', sub: '' },
+  { id: 'location07', name: 'Datteln', sub: '' },
+];
+let locData = {};
+let locSha = null;
+
+async function loadLocations() {
+  try {
+    const d = await ghGet(LOCATIONS_JSON);
+    locSha = d.sha;
+    locData = JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
+  } catch {
+    locData = {};
+    locSha = null;
+  }
+  renderLocations();
+}
+
+function renderLocations() {
+  const form = document.getElementById('locationsForm');
+  const spinner = document.getElementById('locSpinner');
+  if (spinner) spinner.style.display = 'none';
+  form.innerHTML = LOCATIONS_DEF.map(loc => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+      <div style="font-weight:700;font-size:0.95rem;margin-bottom:4px;">${loc.name}${loc.sub ? ` <span style="color:var(--muted);font-weight:400;font-size:0.82rem;">${loc.sub}</span>` : ''}</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">Seite: ${loc.id}.html</div>
+      <input class="caption-input" style="width:100%;" placeholder="iframe src URL (leer lassen = Platzhalter)" value="${(locData[loc.id]||'').replace(/"/g,'&quot;')}" oninput="locData['${loc.id}']=this.value" />
+    </div>
+  `).join('');
+}
+
+async function saveLocations() {
+  if (!getToken()) { toast('Bitte erst Token einrichten', 'err'); return; }
+  try {
+    const sha = locSha || await getSha(LOCATIONS_JSON);
+    const res = await ghPut(LOCATIONS_JSON, JSON.stringify(locData, null, 2), 'Locations: iframes aktualisiert', sha);
+    locSha = res.content.sha;
+    toast('Locations gespeichert ✓', 'ok');
+  } catch(e) { toast('Fehler: ' + e.message, 'err'); }
 }
 
 initMsal();
