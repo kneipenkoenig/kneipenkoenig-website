@@ -115,7 +115,7 @@
     fetch('locations.json?t=' + Date.now())
       .then(r => r.ok ? r.json() : {})
       .then(data => {
-        const src = data['location01'];
+        const src = data['location01']?.iframe;
         if (src) {
           document.getElementById('iframePlaceholder').style.display = 'none';
           const iframe = document.createElement('iframe');

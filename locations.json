@@ -15,7 +15,8 @@
     "name": "Dingden",
     "sub": "Gasthof Küpper",
     "linkHomepage": "https://www.gasthof-kuepper.de/",
-    "img": "images/locations/location04-1774295374459.jpg"
+    "img": "images/locations/location04-1774295374459.jpg",
+    "iframe": "https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/results.html?quiz=196"
   },
   "location05": {
     "name": "Reken",
