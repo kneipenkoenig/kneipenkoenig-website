@@ -1427,9 +1427,9 @@ function renderLocations() {
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;">
         <div style="font-size:0.75rem;color:var(--muted);">Seite: ${loc.id}.html</div>
-        <label class="form-label">Name</label>
+        <label class="form-label">Ort</label>
         <input class="caption-input" style="width:100%;" placeholder="Ortsname" value="${nameVal}" oninput="if(!locData['${loc.id}'])locData['${loc.id}']={};locData['${loc.id}'].name=this.value" />
-        <label class="form-label">Untertitel</label>
+        <label class="form-label">Location-Name</label>
         <input class="caption-input" style="width:100%;" placeholder="z.B. Location-Name" value="${subVal}" oninput="if(!locData['${loc.id}'])locData['${loc.id}']={};locData['${loc.id}'].sub=this.value" />
         <label class="form-label">iframe URL</label>
         <input class="caption-input" style="width:100%;" placeholder="iframe src URL (leer = Platzhalter)" value="${(d.iframe||'').replace(/"/g,'&quot;')}" oninput="if(!locData['${loc.id}'])locData['${loc.id}']={};locData['${loc.id}'].iframe=this.value" />
