@@ -12,11 +12,11 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:       #0a0a0f;
-    --bg2:      #10101a;
-    --bg3:      #17172a;
-    --surface:  #1c1c2e;
-    --border:   rgba(255,255,255,0.08);
+    --bg:       transparent;
+    --bg2:      rgba(0,0,0,0.55);
+    --bg3:      rgba(0,0,0,0.70);
+    --surface:  rgba(255,255,255,0.05);
+    --border:   rgba(255,255,255,0.09);
     --blue:     #38b6ff;
     --blue-dim: rgba(56,182,255,0.12);
     --green:    #34d399;
@@ -28,11 +28,21 @@
   }
 
   body {
-    background: var(--bg);
+    background: #000;
     color: var(--text);
     font-family: 'Open Sans', sans-serif;
     min-height: 100vh;
     font-size: 14px;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background: url('hero-bg.jpg') center center / cover no-repeat;
+    z-index: -2; pointer-events: none;
+  }
+  body::after {
+    content: ''; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.68);
+    z-index: -1; pointer-events: none;
   }
 
   /* ── SCROLLBAR ── */
@@ -43,18 +53,34 @@
   /* ── NAV ── */
   .nav {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(10,10,15,0.92);
-    backdrop-filter: blur(16px);
+    background: rgba(0,0,0,0.82);
+    backdrop-filter: blur(18px);
     border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 32px; height: 60px;
+    padding: 0 5%; height: 64px;
   }
-  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.03em; }
-  .nav-logo span { color: var(--blue); }
+  .nav-logo {
+    font-family: 'Open Sans', sans-serif; font-size: 1.1rem; font-weight: 800;
+    letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none;
+    display: flex; align-items: center; color: inherit;
+  }
+  .nav-logo .der { color: #fff; }
+  .nav-logo .kneipen { color: var(--blue); }
+  .nav-logo-img { height: 26px; width: auto; mix-blend-mode: screen; margin-right: 8px; }
   .nav-badge {
     font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
     background: var(--blue-dim); color: var(--blue);
     border: 1px solid rgba(56,182,255,0.25); border-radius: 6px; padding: 3px 8px;
+  }
+  @keyframes navLineRun { from { left: -30%; } to { left: 130%; } }
+  .nav-line {
+    position: sticky; top: 64px; left: 0; right: 0; height: 2px; z-index: 99;
+    background: rgba(56,182,255,0.12); overflow: hidden;
+  }
+  .nav-line::after {
+    content: ''; position: absolute; top: 0; width: 30%; height: 100%;
+    background: linear-gradient(90deg, transparent 0%, #38b6ff 35%, #bfefff 50%, #38b6ff 65%, transparent 100%);
+    animation: navLineRun 2.5s linear infinite;
   }
   .nav-right { display: flex; align-items: center; gap: 12px; }
   .token-indicator {
@@ -65,12 +91,13 @@
   .token-dot.ok { background: var(--green); }
 
   /* ── LAYOUT ── */
-  .layout { display: flex; min-height: calc(100vh - 60px); }
+  .layout { display: flex; min-height: calc(100vh - 66px); }
 
   /* ── SIDEBAR ── */
   .sidebar {
     width: 220px; flex-shrink: 0;
-    background: var(--bg2);
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(12px);
     border-right: 1px solid var(--border);
     padding: 24px 12px;
     display: flex; flex-direction: column; gap: 4px;
@@ -94,7 +121,7 @@
   .nav-item.active svg { opacity: 1; }
 
   /* ── MAIN ── */
-  .main { flex: 1; padding: 32px; overflow: auto; }
+  .main { flex: 1; padding: 32px; overflow: auto; background: transparent; }
   .page { display: none; }
   .page.active { display: block; }
 
@@ -105,10 +132,11 @@
 
   /* ── CARDS ── */
   .card {
-    background: var(--surface);
+    background: rgba(255,255,255,0.04);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 20px;
+    backdrop-filter: blur(8px);
   }
 
   /* ── BUTTONS ── */
@@ -131,7 +159,7 @@
   .form-group { margin-bottom: 16px; }
   .form-label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
   .form-input, .form-textarea, .form-select {
-    width: 100%; background: var(--bg2);
+    width: 100%; background: rgba(0,0,0,0.45);
     border: 1px solid var(--border); border-radius: 10px;
     color: var(--text); font-family: 'Open Sans', sans-serif;
     font-size: 0.88rem; padding: 10px 14px;
@@ -165,7 +193,7 @@
   }
   .modal-backdrop.open { opacity: 1; pointer-events: all; }
   .modal {
-    background: var(--bg2); border: 1px solid var(--border);
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(24px); border: 1px solid var(--border);
     border-radius: 20px; width: 100%; max-width: 580px;
     max-height: 90vh; overflow-y: auto;
     padding: 32px; transform: translateY(20px);
@@ -186,7 +214,8 @@
   /* ── TESTIMONIALS LIST ── */
   .t-grid { display: grid; gap: 14px; }
   .t-card {
-    background: var(--surface); border: 1px solid var(--border);
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
     border-radius: var(--radius); padding: 18px;
     display: grid; grid-template-columns: 52px 1fr auto;
     gap: 16px; align-items: start;
@@ -265,13 +294,14 @@
 
   .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
   .gallery-item {
-    background: var(--surface); border: 1px solid var(--border);
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
     border-radius: var(--radius); overflow: hidden;
   }
   .gallery-item img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
   .gallery-item-body { padding: 10px; }
   .caption-input {
-    width: 100%; background: var(--bg2); border: 1px solid var(--border);
+    width: 100%; background: rgba(0,0,0,0.45); border: 1px solid var(--border);
     border-radius: 8px; color: var(--text); font-family: 'Open Sans', sans-serif;
     font-size: 0.78rem; padding: 6px 10px; outline: none;
     transition: border-color 0.2s;
@@ -298,7 +328,7 @@
   /* ── SAVE BAR ── */
   .save-bar {
     position: sticky; bottom: 0;
-    background: rgba(10,10,15,0.95); backdrop-filter: blur(12px);
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(16px);
     border-top: 1px solid var(--border);
     padding: 14px 32px; margin: 24px -32px -32px;
     display: flex; align-items: center; justify-content: space-between;
@@ -309,17 +339,25 @@
   /* ── AUTH SCREEN ── */
   #authScreen {
     position: fixed; inset: 0; z-index: 999;
-    background: var(--bg);
+    background: rgba(0,0,0,0.72); backdrop-filter: blur(4px);
     display: flex; align-items: center; justify-content: center;
     flex-direction: column; gap: 0;
   }
   .auth-box {
-    background: var(--bg2); border: 1px solid var(--border);
+    background: rgba(0,0,0,0.65); border: 1px solid var(--border);
+    backdrop-filter: blur(24px);
     border-radius: 24px; padding: 48px 40px; width: 100%; max-width: 400px;
     text-align: center;
   }
-  .auth-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; margin-bottom: 4px; }
-  .auth-logo span { color: var(--blue); }
+  .auth-logo {
+    font-family: 'Open Sans', sans-serif; font-size: 1.3rem; font-weight: 800;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-bottom: 4px;
+  }
+  .auth-logo img { height: 28px; width: auto; mix-blend-mode: screen; }
+  .auth-logo .der { color: #fff; }
+  .auth-logo .kneipen { color: var(--blue); }
   .auth-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 32px; }
   .btn-microsoft {
     display: inline-flex; align-items: center; justify-content: center; gap: 12px;
@@ -356,7 +394,7 @@
 <!-- AUTH SCREEN -->
 <div id="authScreen">
   <div class="auth-box">
-    <div class="auth-logo">DER <span>KNEIPENKÖNIG</span></div>
+    <div class="auth-logo"><img src="images/logos/logo-blackbg.png" alt="" /><span class="der">DER</span><span class="kneipen">KNEIPENKÖNIG</span></div>
     <div class="auth-sub">Admin-Bereich – Bitte mit Microsoft anmelden</div>
     <button class="btn-microsoft" onclick="msLogin()">
       <svg width="20" height="20" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -374,7 +412,9 @@
 <!-- NAV -->
 <nav class="nav">
   <div style="display:flex;align-items:center;gap:12px;">
-    <div class="nav-logo">DER <span>KNEIPENKÖNIG</span></div>
+    <a href="index.html" class="nav-logo">
+      <img src="images/logos/logo-blackbg.png" class="nav-logo-img" alt="" /><span class="der">DER</span><span class="kneipen">KNEIPENKÖNIG</span>
+    </a>
     <div class="nav-badge">Admin</div>
   </div>
   <div class="nav-right">
@@ -390,6 +430,7 @@
     <a href="https://kneipenkoenig.work" class="btn btn-ghost btn-sm" style="display:none;" id="toWebsiteBtn">← Website</a>
   </div>
 </nav>
+<div class="nav-line" aria-hidden="true"></div>
 
 <!-- LAYOUT -->
 <div class="layout">
