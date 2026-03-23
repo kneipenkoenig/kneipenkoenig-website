@@ -241,15 +241,26 @@
     mobileClose.addEventListener('click', closeMobileNav);
     document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMobileNav));
 
-    // Bilder aus locations.json laden
+    // Bilder + Beschriftungen aus locations.json laden
     fetch('locations.json?t=' + Date.now())
       .then(r => r.ok ? r.json() : {})
       .then(data => {
         Object.keys(data).forEach(id => {
           const d = data[id];
-          if (d && d.img) {
+          if (!d) return;
+          const item = document.querySelector(`a[href="${id}.html"]`);
+          if (!item) return;
+          if (d.img) {
             const img = document.getElementById('loc-img-' + id);
             if (img) img.src = d.img;
+          }
+          if (d.name !== undefined) {
+            const el = item.querySelector('.loc-name');
+            if (el) el.textContent = d.name;
+          }
+          if (d.sub !== undefined) {
+            const el = item.querySelector('.loc-sub');
+            if (el) el.textContent = d.sub;
           }
         });
       })
