@@ -16,48 +16,30 @@
       --text-secondary: rgba(255,255,255,0.55);
       --surface: rgba(255,255,255,0.05);
       --border: rgba(255,255,255,0.09);
-      --font-display: 'Bebas Neue', sans-serif;
-      --font-body: 'Open Sans', sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; overflow-x: hidden; }
     body {
-      font-family: var(--font-body);
+      font-family: 'Open Sans', sans-serif;
       color: var(--text-primary);
       background: #000;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
     body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: url('hero-bg.jpg') center center / cover no-repeat;
-      z-index: -2;
+      content: ''; position: fixed; inset: 0;
+      background: url('hero-bg.jpg') center center / cover no-repeat; z-index: -2;
     }
     body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      z-index: -1;
+      content: ''; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.62); z-index: -1;
     }
     a { color: inherit; text-decoration: none; }
 
     /* ── NAV ── */
-    .nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 5%;
-      transition: background 0.3s, backdrop-filter 0.3s;
-    }
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 18px 5%; transition: background 0.3s, backdrop-filter 0.3s; }
     .nav.scrolled { background: rgba(0,0,0,0.85); backdrop-filter: blur(18px); }
-    .nav-logo {
-      font-family: 'Open Sans', sans-serif;
-      font-size: 1.1rem; font-weight: 800;
-      letter-spacing: 0.04em; text-transform: uppercase;
-      text-decoration: none; display: flex; align-items: center;
-    }
+    .nav-logo { font-family: 'Open Sans', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none; display: flex; align-items: center; }
     .nav-logo .der { color: #fff; }
     .nav-logo .kneipen { color: #38b6ff; }
     .nav-logo-img { height: 28px; width: auto; mix-blend-mode: screen; margin-right: 8px; }
@@ -78,28 +60,125 @@
     .nav-line { position: fixed; top: 80px; left: 0; right: 0; height: 2px; z-index: 99; background: rgba(56,182,255,0.15); overflow: hidden; }
     .nav-line::after { content: ''; position: absolute; top: 0; width: 30%; height: 100%; background: linear-gradient(90deg, transparent 0%, #38b6ff 35%, #bfefff 50%, #38b6ff 65%, transparent 100%); animation: navLineRun 2.5s linear infinite; }
 
-    /* ── CONTENT ── */
-    .page-content {
+    /* ── PAGE ── */
+    .page-wrap {
       min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      padding-top: 120px;
-      text-align: center;
+      padding: 140px 5% 80px;
     }
-    .page-content h1 {
+    .page-header { text-align: center; margin-bottom: 72px; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #38b6ff; margin-bottom: 14px;
+    }
+    .section-label::before { content: ''; display: block; width: 28px; height: 1px; background: #38b6ff; }
+    .page-title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(3rem, 8vw, 6rem);
+      font-size: clamp(2.8rem, 6vw, 5rem);
       letter-spacing: 0.03em;
-      color: #fff;
+      line-height: 1;
     }
-    .page-content h1 span { color: #38b6ff; }
-    .page-content p {
-      margin-top: 16px;
+    .page-desc { margin-top: 14px; color: var(--text-secondary); font-size: 1.05rem; }
+
+    /* ── LOCATIONS GRID ── */
+    .locations-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 36px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* 7th item centered in 3-col grid */
+    .loc-item:nth-child(7) { grid-column: 2; }
+
+    .loc-item {
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .loc-figure {
+      padding: 28px;
+      border-radius: 16px;
+      transition: padding 0.2s ease;
+    }
+    .loc-figure:hover { padding: 14px; }
+
+    .loc-clip {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+    }
+    .loc-clip img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+    .loc-item:hover .loc-clip img { transform: scale(1.12); }
+
+    .loc-name {
+      margin-top: 14px;
+      text-align: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.35rem;
+      letter-spacing: 0.07em;
+      color: #fff;
+      transition: color 0.2s;
+    }
+    .loc-sub {
+      text-align: center;
+      font-size: 0.75rem;
       color: var(--text-secondary);
-      font-size: 1.1rem;
+      margin-top: 3px;
+      letter-spacing: 0.04em;
+    }
+    .loc-item:hover .loc-name { color: #38b6ff; }
+
+    /* Gradients per card */
+    .grad-1 { background: linear-gradient(to bottom, #c9ad66, #bd8122); }
+    .grad-2 { background: linear-gradient(to top,    #356778, #022641); }
+    .grad-3 { background: linear-gradient(to top,    #d5685a, #ba4344); }
+    .grad-4 { background: linear-gradient(to top,    #f7d578, #9b2a08); }
+    .grad-5 { background: linear-gradient(to bottom, #8c8a57, #6f7957); }
+    .grad-6 { background: linear-gradient(to bottom, #89a390, #324644); }
+    .grad-7 { background: linear-gradient(to bottom, #38b6ff, #0a3a5c); }
+
+    @media (max-width: 768px) {
+      .locations-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .loc-item:nth-child(7) { grid-column: auto; }
+    }
+    @media (max-width: 480px) {
+      .locations-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+      .loc-figure { padding: 16px; }
     }
   </style>
 </head>
 <body>
+
+  <!-- hidden SVG clip path defs -->
+  <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
+    <defs>
+      <clipPath id="clip-goey1" clipPathUnits="objectBoundingBox">
+        <path d="M0.475097 0.0206081C0.480612 -0.00686926 0.519388 -0.00686941 0.524903 0.0206079L0.571269 0.251605C0.575051 0.270448 0.597161 0.278588 0.61201 0.266604L0.793792 0.119895C0.815436 0.102427 0.845153 0.127617 0.83198 0.152266L0.721096 0.359768C0.712075 0.37665 0.723822 0.397229 0.742771 0.397739L0.975238 0.403995C1.00289 0.404739 1.00963 0.443354 0.983905 0.453651L0.767467 0.540292C0.74985 0.547345 0.745772 0.570735 0.75994 0.58347L0.93413 0.740035C0.954822 0.758634 0.935419 0.792584 0.909186 0.783681L0.688795 0.708892C0.670805 0.702787 0.652793 0.718074 0.655584 0.737078L0.689853 0.970393C0.693926 0.998124 0.657484 1.01152 0.643038 0.987606L0.521679 0.786683C0.511768 0.770275 0.488232 0.770275 0.478321 0.786683L0.356962 0.987606C0.342516 1.01152 0.306074 0.998123 0.310147 0.970393L0.344416 0.737078C0.347207 0.718074 0.329195 0.702787 0.311205 0.708892L0.0908143 0.783681C0.0645805 0.792584 0.0451779 0.758634 0.0658702 0.740035L0.24006 0.58347C0.254228 0.570735 0.25015 0.547345 0.232533 0.540292L0.016095 0.453651C-0.00962926 0.443354 -0.00288931 0.404739 0.0247622 0.403995L0.257229 0.397739C0.276178 0.397229 0.287925 0.37665 0.278904 0.359768L0.16802 0.152266C0.154848 0.127617 0.184564 0.102427 0.206208 0.119895L0.38799 0.266604C0.402839 0.278588 0.424949 0.270448 0.428731 0.251605L0.475097 0.0206081Z"/>
+      </clipPath>
+      <clipPath id="clip-goey2" clipPathUnits="objectBoundingBox">
+        <path d="M0.524367 0.0169408C0.516013 -0.00564697 0.483987 -0.00564692 0.475633 0.0169409L0.355942 0.340559C0.353318 0.347653 0.347718 0.35325 0.340612 0.355881L0.0169359 0.47571C-0.00564523 0.48407 -0.00564523 0.51593 0.0169359 0.52429L0.340612 0.644119C0.347718 0.64675 0.353318 0.652347 0.355942 0.659441L0.475633 0.983059C0.483987 1.00565 0.516013 1.00565 0.524367 0.983059L0.644058 0.659441C0.646682 0.652347 0.652282 0.64675 0.659388 0.644119L0.983064 0.52429C1.00565 0.51593 1.00565 0.48407 0.983064 0.47571L0.659389 0.355881C0.652282 0.35325 0.646682 0.347653 0.644058 0.340559L0.524367 0.0169408Z"/>
+      </clipPath>
+      <clipPath id="clip-goey3" clipPathUnits="objectBoundingBox">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M0.5 0.566745C0.5 0.25374 0.276142 0 0 0V0.433255C0 0.74626 0.223858 1 0.5 1C0.776142 1 1 0.74626 1 0.433255V0H0.5V0.566745Z"/>
+      </clipPath>
+      <clipPath id="clip-goey4" clipPathUnits="objectBoundingBox">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M0.499366 0H0V1H0.5V0.55597H0.509506C0.780398 0.55597 1 0.307054 1 0H0.5H0.499366Z"/>
+      </clipPath>
+      <clipPath id="clip-goey5" clipPathUnits="objectBoundingBox">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M0.0249688 0C0.0111789 0 0 0.0112775 0 0.0251889V0.851385C0 0.865297 0.0111789 0.876574 0.0249688 0.876574H0.179775V0.974811C0.179775 0.988723 0.190954 1 0.204744 1H0.975031C0.988821 1 1 0.988723 1 0.974811V0.157431C1 0.143519 0.988821 0.132242 0.975031 0.132242H0.810237V0.0251889C0.810237 0.0112775 0.799058 0 0.785268 0H0.0249688Z"/>
+      </clipPath>
+      <clipPath id="clip-goey6" clipPathUnits="objectBoundingBox">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M1 0H0V0.5L3.31881e-08 1H0.489388C0.771391 1 1 0.776142 1 0.5H0.489388C0.771391 0.5 1 0.276142 1 0Z"/>
+      </clipPath>
+    </defs>
+  </svg>
 
   <nav class="nav" id="navbar" aria-label="Hauptnavigation">
     <a href="index.html" class="nav-logo">
@@ -128,26 +207,102 @@
   </div>
   <div class="nav-line" aria-hidden="true"></div>
 
-  <div class="page-content">
-    <div>
-      <h1>Ergebnisse<br><span>coming soon</span></h1>
-      <p>Hier erscheinen bald die Ranglisten und Ergebnisse der Quiz-Abende.</p>
+  <div class="page-wrap">
+    <div class="page-header">
+      <div class="section-label">Ranglisten & Resultate</div>
+      <h1 class="page-title">Ergebnisse</h1>
+      <p class="page-desc">Wähle deine Location und schau dir die aktuellen Ranglisten an.</p>
+    </div>
+
+    <div class="locations-grid">
+
+      <!-- Location 01: Coesfeld -->
+      <a href="location01.html" class="loc-item">
+        <figure class="loc-figure grad-1">
+          <div class="loc-clip" style="clip-path: url(#clip-goey1);">
+            <img src="hero-bg.jpg" alt="Coesfeld" />
+          </div>
+        </figure>
+        <div class="loc-name">Coesfeld</div>
+        <div class="loc-sub">Gleisdrei, Burghof</div>
+      </a>
+
+      <!-- Location 02: Haltern -->
+      <a href="location02.html" class="loc-item">
+        <figure class="loc-figure grad-2">
+          <div class="loc-clip" style="clip-path: url(#clip-goey2);">
+            <img src="hero-bg.jpg" alt="Haltern am See" />
+          </div>
+        </figure>
+        <div class="loc-name">Haltern am See</div>
+        <div class="loc-sub">Lakeside Inn</div>
+      </a>
+
+      <!-- Location 03: Marl -->
+      <a href="location03.html" class="loc-item">
+        <figure class="loc-figure grad-3">
+          <div class="loc-clip" style="clip-path: url(#clip-goey3);">
+            <img src="hero-bg.jpg" alt="Marl" />
+          </div>
+        </figure>
+        <div class="loc-name">Marl</div>
+        <div class="loc-sub">Manhattan</div>
+      </a>
+
+      <!-- Location 04: Dingden -->
+      <a href="location04.html" class="loc-item">
+        <figure class="loc-figure grad-4">
+          <div class="loc-clip" style="clip-path: url(#clip-goey4);">
+            <img src="hero-bg.jpg" alt="Dingden" />
+          </div>
+        </figure>
+        <div class="loc-name">Dingden</div>
+        <div class="loc-sub">&nbsp;</div>
+      </a>
+
+      <!-- Location 05: Reken -->
+      <a href="location05.html" class="loc-item">
+        <figure class="loc-figure grad-5">
+          <div class="loc-clip" style="clip-path: url(#clip-goey5);">
+            <img src="hero-bg.jpg" alt="Reken" />
+          </div>
+        </figure>
+        <div class="loc-name">Reken</div>
+        <div class="loc-sub">&nbsp;</div>
+      </a>
+
+      <!-- Location 06: Lüdinghausen -->
+      <a href="location06.html" class="loc-item">
+        <figure class="loc-figure grad-6">
+          <div class="loc-clip" style="clip-path: url(#clip-goey6);">
+            <img src="hero-bg.jpg" alt="Lüdinghausen" />
+          </div>
+        </figure>
+        <div class="loc-name">Lüdinghausen</div>
+        <div class="loc-sub">&nbsp;</div>
+      </a>
+
+      <!-- Location 07: Datteln -->
+      <a href="location07.html" class="loc-item">
+        <figure class="loc-figure grad-7">
+          <div class="loc-clip" style="clip-path: url(#clip-goey1);">
+            <img src="hero-bg.jpg" alt="Datteln" />
+          </div>
+        </figure>
+        <div class="loc-name">Datteln</div>
+        <div class="loc-sub">&nbsp;</div>
+      </a>
+
     </div>
   </div>
 
   <script>
     const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 30);
-    });
+    window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 30); });
     const navToggleBtn = document.getElementById('navToggle');
     const mobileNav    = document.getElementById('mobileNav');
     const mobileClose  = document.getElementById('mobileNavClose');
-    navToggleBtn.addEventListener('click', () => {
-      mobileNav.classList.add('open');
-      navToggleBtn.setAttribute('aria-expanded','true');
-      document.body.style.overflow = 'hidden';
-    });
+    navToggleBtn.addEventListener('click', () => { mobileNav.classList.add('open'); navToggleBtn.setAttribute('aria-expanded','true'); document.body.style.overflow = 'hidden'; });
     function closeMobileNav() { mobileNav.classList.remove('open'); navToggleBtn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
     mobileClose.addEventListener('click', closeMobileNav);
     document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMobileNav));
