@@ -1185,7 +1185,7 @@ function renderGallery() {
     <div class="gallery-item" data-idx="${i}">
       <img src="https://raw.githubusercontent.com/${REPO}/${BRANCH}/${item.src}" alt="" loading="lazy" />
       <div class="gallery-item-body">
-        <input class="caption-input" value="${(item.caption||'').replace(/"/g,'&quot;')}" placeholder="Caption…" data-idx="${i}" onchange="updateCaption(${i}, this.value)" />
+        <input class="caption-input" value="${(item.caption||item.title||'').replace(/"/g,'&quot;')}" placeholder="Caption…" data-idx="${i}" onchange="updateCaption(${i}, this.value)" />
         ${isHome ? `<input class="caption-input" style="margin-top:6px;" value="${(item.caption2||'').replace(/"/g,'&quot;')}" placeholder="Caption Strip (Lauftext)…" data-idx="${i}" onchange="updateCaption2(${i}, this.value)" />` : ''}
         <div class="gallery-item-actions">
           <label class="btn btn-replace btn-sm" style="flex:1; cursor:pointer; text-align:center;">Ersetzen<input type="file" accept="image/*" style="display:none" onchange="replaceGalleryImage(${i}, this.files[0])"></label>
@@ -1196,7 +1196,10 @@ function renderGallery() {
 }
 
 function updateCaption(idx, val) {
-  if (galleryData[currentGallery]) galleryData[currentGallery][idx].caption = val;
+  if (galleryData[currentGallery]) {
+    galleryData[currentGallery][idx].caption = val;
+    galleryData[currentGallery][idx].title   = val; // Kompatibilität mit älteren JSON-Dateien
+  }
 }
 
 function updateCaption2(idx, val) {
