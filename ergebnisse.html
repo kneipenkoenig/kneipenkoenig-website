@@ -83,85 +83,77 @@
     /* ── LOCATIONS GRID ── */
     .locations-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 36px;
-      max-width: 960px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 860px;
       margin: 0 auto;
     }
 
-    /* 7th item centered in 3-col grid */
-    .loc-item:nth-child(7) { grid-column: 2; }
+    /* 7th item volle Breite */
+    .loc-item:nth-child(7) { grid-column: 1 / -1; max-width: 50%; justify-self: center; }
+
+    @keyframes locGlow {
+      0%, 100% { box-shadow: 0 0 0 2px rgba(56,182,255,0.4), 0 0 16px rgba(56,182,255,0.1); }
+      50%       { box-shadow: 0 0 0 2px rgba(125,211,252,0.85), 0 0 28px rgba(56,182,255,0.3); }
+    }
 
     .loc-item {
       display: block;
       text-decoration: none;
       cursor: pointer;
-    }
-    .loc-figure {
-      padding: 0;
       border-radius: 14px;
       overflow: hidden;
-      transition: border-radius 0.2s ease;
+      position: relative;
+      aspect-ratio: 16 / 9;
+      animation: locGlow 3s ease-in-out infinite;
+      background: #0a1e30;
+    }
+    .loc-item:hover {
+      animation: none;
+      box-shadow: 0 0 0 2px #7dd3fc, 0 0 36px rgba(56,182,255,0.5);
     }
 
     .loc-clip {
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      overflow: hidden;
+      position: absolute; inset: 0;
     }
     .loc-clip img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.35s ease;
+      transition: transform 0.4s ease;
     }
     .loc-item:hover .loc-clip img { transform: scale(1.06); }
 
+    /* Dunkler Gradient-Overlay unten */
+    .loc-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);
+    }
+
+    /* Text unten links */
+    .loc-text {
+      position: absolute;
+      bottom: 14px; left: 16px;
+      z-index: 2;
+    }
     .loc-name {
-      margin-top: 14px;
-      text-align: center;
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.35rem;
-      letter-spacing: 0.07em;
+      font-size: 1.6rem;
+      letter-spacing: 0.06em;
       color: #fff;
-      transition: color 0.2s;
+      line-height: 1;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
     .loc-sub {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      margin-top: 3px;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.7);
+      margin-top: 2px;
       letter-spacing: 0.04em;
     }
-    .loc-item:hover .loc-name { color: #38b6ff; }
 
-    /* Gradients – alle im Site-Farbschema (Dunkel + Blau) */
-    @keyframes locGlow {
-      0%, 100% { box-shadow: 0 0 0 2px rgba(56,182,255,0.35), 0 0 18px rgba(56,182,255,0.12); }
-      50%       { box-shadow: 0 0 0 2px rgba(125,211,252,0.8), 0 0 32px rgba(56,182,255,0.35); }
-    }
-    .loc-figure {
-      animation: locGlow 3s ease-in-out infinite;
-    }
-    .loc-item:hover .loc-figure {
-      animation: none;
-      box-shadow: 0 0 0 2px #7dd3fc, 0 0 40px rgba(56,182,255,0.55);
-    }
-    .grad-1 { background: linear-gradient(135deg, #0d2137, #0a3a5c); }
-    .grad-2 { background: linear-gradient(135deg, #071e2e, #103550); }
-    .grad-3 { background: linear-gradient(135deg, #0a2540, #1a4a6e); }
-    .grad-4 { background: linear-gradient(135deg, #061828, #0d3048); }
-    .grad-5 { background: linear-gradient(135deg, #0f2d45, #1c4f72); }
-    .grad-6 { background: linear-gradient(135deg, #081c2e, #123558); }
-    .grad-7 { background: linear-gradient(135deg, #0a2a40, #164e78); }
-
-    @media (max-width: 768px) {
-      .locations-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
-      .loc-item:nth-child(7) { grid-column: auto; }
-    }
-    @media (max-width: 480px) {
-      .locations-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
-      .loc-figure { padding: 16px; }
+    @media (max-width: 600px) {
+      .locations-grid { grid-template-columns: 1fr; }
+      .loc-item:nth-child(7) { grid-column: auto; max-width: 100%; }
     }
   </style>
 </head>
@@ -227,13 +219,13 @@
 
     <div class="locations-grid">
 
-      <a href="location01.html" class="loc-item"><figure class="loc-figure grad-1"><div class="loc-clip"><img id="loc-img-location01" src="hero-bg.jpg" alt="Coesfeld" /></div></figure><div class="loc-name">Coesfeld</div><div class="loc-sub">Gleisdrei, Burghof</div></a>
-      <a href="location02.html" class="loc-item"><figure class="loc-figure grad-2"><div class="loc-clip"><img id="loc-img-location02" src="hero-bg.jpg" alt="Haltern am See" /></div></figure><div class="loc-name">Haltern am See</div><div class="loc-sub">Lakeside Inn</div></a>
-      <a href="location03.html" class="loc-item"><figure class="loc-figure grad-3"><div class="loc-clip"><img id="loc-img-location03" src="hero-bg.jpg" alt="Marl" /></div></figure><div class="loc-name">Marl</div><div class="loc-sub">Manhattan</div></a>
-      <a href="location04.html" class="loc-item"><figure class="loc-figure grad-4"><div class="loc-clip"><img id="loc-img-location04" src="hero-bg.jpg" alt="Dingden" /></div></figure><div class="loc-name">Dingden</div><div class="loc-sub">&nbsp;</div></a>
-      <a href="location05.html" class="loc-item"><figure class="loc-figure grad-5"><div class="loc-clip"><img id="loc-img-location05" src="hero-bg.jpg" alt="Reken" /></div></figure><div class="loc-name">Reken</div><div class="loc-sub">&nbsp;</div></a>
-      <a href="location06.html" class="loc-item"><figure class="loc-figure grad-6"><div class="loc-clip"><img id="loc-img-location06" src="hero-bg.jpg" alt="Lüdinghausen" /></div></figure><div class="loc-name">Lüdinghausen</div><div class="loc-sub">&nbsp;</div></a>
-      <a href="location07.html" class="loc-item"><figure class="loc-figure grad-7"><div class="loc-clip"><img id="loc-img-location07" src="hero-bg.jpg" alt="Datteln" /></div></figure><div class="loc-name">Datteln</div><div class="loc-sub">&nbsp;</div></a>
+      <a href="location01.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location01" src="hero-bg.jpg" alt="Coesfeld" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Coesfeld</div><div class="loc-sub">Gleisdrei, Burghof</div></div></a>
+      <a href="location02.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location02" src="hero-bg.jpg" alt="Haltern am See" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Haltern am See</div><div class="loc-sub">Lakeside Inn</div></div></a>
+      <a href="location03.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location03" src="hero-bg.jpg" alt="Marl" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Marl</div><div class="loc-sub">Manhattan</div></div></a>
+      <a href="location04.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location04" src="hero-bg.jpg" alt="Dingden" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Dingden</div></div></a>
+      <a href="location05.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location05" src="hero-bg.jpg" alt="Reken" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Reken</div></div></a>
+      <a href="location06.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location06" src="hero-bg.jpg" alt="Lüdinghausen" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Lüdinghausen</div></div></a>
+      <a href="location07.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location07" src="hero-bg.jpg" alt="Datteln" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Datteln</div></div></a>
 
     </div>
   </div>
