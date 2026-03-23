@@ -130,6 +130,19 @@
       background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);
     }
 
+    /* Externer Link-Button oben rechts */
+    .loc-link-btn {
+      position: absolute; top: 10px; right: 10px; z-index: 3;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
+      border: 1px solid rgba(56,182,255,0.4);
+      display: flex; align-items: center; justify-content: center;
+      color: #38b6ff; text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .loc-link-btn:hover { background: rgba(56,182,255,0.25); border-color: #38b6ff; transform: scale(1.1); }
+    .loc-link-btn svg { width: 15px; height: 15px; }
+
     /* Text unten links */
     .loc-text {
       position: absolute;
@@ -261,6 +274,26 @@
           if (d.sub !== undefined) {
             const el = item.querySelector('.loc-sub');
             if (el) el.textContent = d.sub;
+          }
+          // Zwei Icon-Buttons nebeneinander oben rechts
+          const icons = [];
+          if (d.linkInstagram) icons.push({ href: d.linkInstagram, label: 'Instagram', svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>` });
+          if (d.linkHomepage) icons.push({ href: d.linkHomepage, label: 'Homepage', svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>` });
+          if (icons.length) {
+            const wrap = document.createElement('div');
+            wrap.style.cssText = 'position:absolute;top:10px;right:10px;z-index:3;display:flex;gap:6px;';
+            icons.forEach(ic => {
+              const btn = document.createElement('a');
+              btn.href = ic.href;
+              btn.target = '_blank';
+              btn.rel = 'noopener noreferrer';
+              btn.className = 'loc-link-btn';
+              btn.setAttribute('aria-label', ic.label);
+              btn.innerHTML = ic.svg;
+              btn.addEventListener('click', e => e.stopPropagation());
+              wrap.appendChild(btn);
+            });
+            item.appendChild(wrap);
           }
         });
       })
