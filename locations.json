@@ -1,46 +1,45 @@
 {
-  "location01": {
+  "location8": {
     "name": "Coesfeld-Lette",
     "sub": "Haus Zumbült",
     "img": "images/locations/location01-1774305091423.jpg",
     "linkHomepage": "https://www.xn--haus-zumblt-1hb.de/",
     "linkInstagram": "https://www.instagram.com/hauszumbuelt/"
   },
-  "location02": {
+  "location10": {
     "name": "Haltern am See",
     "sub": "Lakeside Inn",
     "linkHomepage": "https://lakesideinn.de/",
     "img": "images/locations/location02-1774305438034.jpg",
     "linkInstagram": "https://www.instagram.com/lakesideinnhaltern/"
   },
-  "location03": {
+  "location5": {
     "name": "Marl",
     "sub": "Manhattan Sportsbar",
     "img": "images/locations/location03-1774306072552.jpg",
     "linkHomepage": "https://www.manhattan-marl.de/",
     "linkInstagram": "https://www.instagram.com/manhattan_marl/"
   },
-  "location04": {
+  "location4": {
     "name": "Dingden",
     "sub": "Gasthof Küpper",
     "linkHomepage": "https://www.gasthof-kuepper.de/",
-    "img": "images/locations/location04-1774295374459.jpg",
-    "iframe": ""
+    "img": "images/locations/location04-1774295374459.jpg"
   },
-  "location05": {
+  "location6": {
     "name": "Reken",
     "sub": "Zum Moetken",
     "linkHomepage": "https://zum-moetken.de/",
     "img": "images/locations/location05-1774306012526.jpg"
   },
-  "location06": {
+  "location2": {
     "name": "Lüdinghausen",
     "sub": "Burghof / GleisDrei",
     "linkInstagram": "https://www.instagram.com/burghof.luedinghausen/",
     "img": "images/locations/location06-1774305701461.jpg",
     "linkHomepage": "https://burghof-luedinghausen.de/"
   },
-  "location07": {
+  "location11": {
     "name": "Datteln",
     "sub": "Johnny Canone",
     "linkHomepage": "https://www.johnny-canone.de/",
