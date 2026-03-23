@@ -16,7 +16,9 @@
   "location03": {
     "name": "Marl",
     "sub": "Manhattan Sportsbar",
-    "img": "images/locations/location03-1774306072552.jpg"
+    "img": "images/locations/location03-1774306072552.jpg",
+    "linkHomepage": "https://www.manhattan-marl.de/",
+    "linkInstagram": "https://www.instagram.com/manhattan_marl/"
   },
   "location04": {
     "name": "Dingden",
