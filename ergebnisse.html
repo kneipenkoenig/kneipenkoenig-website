@@ -106,7 +106,7 @@
 
     .loc-clip {
       width: 100%;
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 3 / 4;
       overflow: hidden;
     }
     .loc-clip img {
@@ -227,82 +227,13 @@
 
     <div class="locations-grid">
 
-      <!-- Location 01: Coesfeld -->
-      <a href="location01.html" class="loc-item">
-        <figure class="loc-figure grad-1">
-          <div class="loc-clip">
-            <img src="hero-bg.jpg" alt="Coesfeld" />
-          </div>
-        </figure>
-        <div class="loc-name">Coesfeld</div>
-        <div class="loc-sub">Gleisdrei, Burghof</div>
-      </a>
-
-      <!-- Location 02: Haltern -->
-      <a href="location02.html" class="loc-item">
-        <figure class="loc-figure grad-2">
-          <div class="loc-clip">
-            <img src="hero-bg.jpg" alt="Haltern am See" />
-          </div>
-        </figure>
-        <div class="loc-name">Haltern am See</div>
-        <div class="loc-sub">Lakeside Inn</div>
-      </a>
-
-      <!-- Location 03: Marl -->
-      <a href="location03.html" class="loc-item">
-        <figure class="loc-figure grad-3">
-          <div class="loc-clip">
-            <img src="hero-bg.jpg" alt="Marl" />
-          </div>
-        </figure>
-        <div class="loc-name">Marl</div>
-        <div class="loc-sub">Manhattan</div>
-      </a>
-
-      <!-- Location 04: Dingden -->
-      <a href="location04.html" class="loc-item">
-        <figure class="loc-figure grad-4">
-          <div class="loc-clip">
-            <img src="hero-bg.jpg" alt="Dingden" />
-          </div>
-        </figure>
-        <div class="loc-name">Dingden</div>
-        <div class="loc-sub">&nbsp;</div>
-      </a>
-
-      <!-- Location 05: Reken -->
-      <a href="location05.html" class="loc-item">
-        <figure class="loc-figure grad-5">
-          <div class="loc-clip">
-            <img src="hero-bg.jpg" alt="Reken" />
-          </div>
-        </figure>
-        <div class="loc-name">Reken</div>
-        <div class="loc-sub">&nbsp;</div>
-      </a>
-
-      <!-- Location 06: Lüdinghausen -->
-      <a href="location06.html" class="loc-item">
-        <figure class="loc-figure grad-6">
-          <div class="loc-clip">
-            <img src="hero-bg.jpg" alt="Lüdinghausen" />
-          </div>
-        </figure>
-        <div class="loc-name">Lüdinghausen</div>
-        <div class="loc-sub">&nbsp;</div>
-      </a>
-
-      <!-- Location 07: Datteln -->
-      <a href="location07.html" class="loc-item">
-        <figure class="loc-figure grad-7">
-          <div class="loc-clip">
-            <img src="hero-bg.jpg" alt="Datteln" />
-          </div>
-        </figure>
-        <div class="loc-name">Datteln</div>
-        <div class="loc-sub">&nbsp;</div>
-      </a>
+      <a href="location01.html" class="loc-item"><figure class="loc-figure grad-1"><div class="loc-clip"><img id="loc-img-location01" src="hero-bg.jpg" alt="Coesfeld" /></div></figure><div class="loc-name">Coesfeld</div><div class="loc-sub">Gleisdrei, Burghof</div></a>
+      <a href="location02.html" class="loc-item"><figure class="loc-figure grad-2"><div class="loc-clip"><img id="loc-img-location02" src="hero-bg.jpg" alt="Haltern am See" /></div></figure><div class="loc-name">Haltern am See</div><div class="loc-sub">Lakeside Inn</div></a>
+      <a href="location03.html" class="loc-item"><figure class="loc-figure grad-3"><div class="loc-clip"><img id="loc-img-location03" src="hero-bg.jpg" alt="Marl" /></div></figure><div class="loc-name">Marl</div><div class="loc-sub">Manhattan</div></a>
+      <a href="location04.html" class="loc-item"><figure class="loc-figure grad-4"><div class="loc-clip"><img id="loc-img-location04" src="hero-bg.jpg" alt="Dingden" /></div></figure><div class="loc-name">Dingden</div><div class="loc-sub">&nbsp;</div></a>
+      <a href="location05.html" class="loc-item"><figure class="loc-figure grad-5"><div class="loc-clip"><img id="loc-img-location05" src="hero-bg.jpg" alt="Reken" /></div></figure><div class="loc-name">Reken</div><div class="loc-sub">&nbsp;</div></a>
+      <a href="location06.html" class="loc-item"><figure class="loc-figure grad-6"><div class="loc-clip"><img id="loc-img-location06" src="hero-bg.jpg" alt="Lüdinghausen" /></div></figure><div class="loc-name">Lüdinghausen</div><div class="loc-sub">&nbsp;</div></a>
+      <a href="location07.html" class="loc-item"><figure class="loc-figure grad-7"><div class="loc-clip"><img id="loc-img-location07" src="hero-bg.jpg" alt="Datteln" /></div></figure><div class="loc-name">Datteln</div><div class="loc-sub">&nbsp;</div></a>
 
     </div>
   </div>
@@ -317,6 +248,20 @@
     function closeMobileNav() { mobileNav.classList.remove('open'); navToggleBtn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
     mobileClose.addEventListener('click', closeMobileNav);
     document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMobileNav));
+
+    // Bilder aus locations.json laden
+    fetch('locations.json?t=' + Date.now())
+      .then(r => r.ok ? r.json() : {})
+      .then(data => {
+        Object.keys(data).forEach(id => {
+          const d = data[id];
+          if (d && d.img) {
+            const img = document.getElementById('loc-img-' + id);
+            if (img) img.src = d.img;
+          }
+        });
+      })
+      .catch(() => {});
   </script>
 </body>
 </html>

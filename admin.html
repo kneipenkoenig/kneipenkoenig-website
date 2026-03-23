@@ -1402,22 +1402,60 @@ function renderLocations() {
   const form = document.getElementById('locationsForm');
   const spinner = document.getElementById('locSpinner');
   if (spinner) spinner.style.display = 'none';
-  form.innerHTML = LOCATIONS_DEF.map(loc => `
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
-      <div style="font-weight:700;font-size:0.95rem;margin-bottom:4px;">${loc.name}${loc.sub ? ` <span style="color:var(--muted);font-weight:400;font-size:0.82rem;">${loc.sub}</span>` : ''}</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">Seite: ${loc.id}.html</div>
-      <input class="caption-input" style="width:100%;" placeholder="iframe src URL (leer lassen = Platzhalter)" value="${(locData[loc.id]||'').replace(/"/g,'&quot;')}" oninput="locData['${loc.id}']=this.value" />
-    </div>
-  `).join('');
+  form.innerHTML = LOCATIONS_DEF.map(loc => {
+    const d = locData[loc.id] || {};
+    const imgSrc = d.img ? `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${d.img}` : '';
+    return `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="width:120px;height:160px;border-radius:10px;overflow:hidden;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;">
+          <img id="loc-img-${loc.id}" src="${imgSrc}" style="width:100%;height:100%;object-fit:cover;display:${imgSrc ? 'block' : 'none'};" alt="" />
+          ${!imgSrc ? `<span style="color:var(--muted);font-size:0.72rem;">Kein Bild</span>` : ''}
+        </div>
+        <label class="btn btn-ghost btn-sm" style="cursor:pointer;text-align:center;width:120px;">
+          Bild hochladen
+          <input type="file" accept="image/*" style="display:none;" onchange="locUpload('${loc.id}', this)" />
+        </label>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="font-weight:700;font-size:0.95rem;">${loc.name}${loc.sub ? ` <span style="color:var(--muted);font-weight:400;font-size:0.82rem;">${loc.sub}</span>` : ''}</div>
+        <div style="font-size:0.75rem;color:var(--muted);">Seite: ${loc.id}.html</div>
+        <label class="form-label" style="margin-top:4px;">iframe URL</label>
+        <input class="caption-input" style="width:100%;" placeholder="iframe src URL (leer = Platzhalter)" value="${(d.iframe||'').replace(/"/g,'&quot;')}" oninput="if(!locData['${loc.id}'])locData['${loc.id}']={};locData['${loc.id}'].iframe=this.value" />
+      </div>
+    </div>`;
+  }).join('');
 }
 
-async function saveLocations() {
+async function locUpload(locId, input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (!getToken()) { toast('Bitte erst Token einrichten', 'err'); return; }
+  try {
+    const ext = file.name.split('.').pop().toLowerCase();
+    const filename = `${locId}-${Date.now()}.${ext === 'jpeg' ? 'jpg' : ext}`;
+    const remotePath = `images/locations/${filename}`;
+    toast('Lade hoch…', 'ok');
+    const b64 = await compressImage(file, 1200, 0.82);
+    await ghPutBinary(remotePath, b64, `Location ${locId}: Bild hochgeladen`);
+    if (!locData[locId]) locData[locId] = {};
+    locData[locId].img = remotePath;
+    const img = document.getElementById(`loc-img-${locId}`);
+    img.src = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${remotePath}`;
+    img.style.display = 'block';
+    img.previousElementSibling && (img.previousElementSibling.style.display = 'none');
+    await saveLocations(true);
+    toast('Bild hochgeladen ✓', 'ok');
+  } catch(e) { toast('Fehler: ' + e.message, 'err'); }
+}
+
+async function saveLocations(silent = false) {
   if (!getToken()) { toast('Bitte erst Token einrichten', 'err'); return; }
   try {
     const sha = locSha || await getSha(LOCATIONS_JSON);
-    const res = await ghPut(LOCATIONS_JSON, JSON.stringify(locData, null, 2), 'Locations: iframes aktualisiert', sha);
+    const res = await ghPut(LOCATIONS_JSON, JSON.stringify(locData, null, 2), 'Locations: aktualisiert', sha);
     locSha = res.content.sha;
-    toast('Locations gespeichert ✓', 'ok');
+    if (!silent) toast('Locations gespeichert ✓', 'ok');
   } catch(e) { toast('Fehler: ' + e.message, 'err'); }
 }
 
