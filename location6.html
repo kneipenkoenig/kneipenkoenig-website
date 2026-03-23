@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="icon" type="image/png" href="images/logos/logo-blackbg.png" />
   <title>Ergebnisse Reken – Der Kneipenkönig</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kneipenkoenig.de/location6.html" />
+  <meta property="og:title" content="Ergebnisse Reken – Der Kneipenkönig" />
+  <meta property="og:description" content="Quiz-Ergebnisse und Ranglisten vom Kneipenkönig im Zum Moetken Reken." />
+  <meta property="og:image" content="https://kneipenkoenig.de/hero-bg.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="fonts/fonts.css" />
   <style>
     :root { --blue: #38b6ff; --text-primary: #fff; --text-secondary: rgba(255,255,255,0.55); }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -88,6 +93,24 @@
       .mobile-panel .results-iframe-wrap { display: block; }
       .mobile-panel .results-iframe-wrap iframe { height: 760px; }
     }
+
+    .loc-ext-links { display: flex; gap: 10px; margin-top: 14px; }
+    .loc-ext-link { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: rgba(255,255,255,0.55); transition: color 0.2s, background 0.2s, border-color 0.2s; text-decoration: none; }
+    .loc-ext-link:hover { color: #38b6ff; background: rgba(56,182,255,0.1); border-color: rgba(56,182,255,0.35); }
+    .next-quiz-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 14px; padding: 8px 14px;
+      background: rgba(56,182,255,0.08); border: 1px solid rgba(56,182,255,0.25);
+      border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+      color: rgba(255,255,255,0.7); transition: opacity 0.3s;
+    }
+    .next-quiz-badge .nq-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #38b6ff; flex-shrink: 0;
+      animation: nqPulse 1.8s ease-in-out infinite;
+    }
+    .next-quiz-badge .nq-label { color: #38b6ff; font-weight: 700; }
+    @keyframes nqPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
   </style>
 </head>
 <body>
@@ -102,7 +125,6 @@
       <li><a href="ergebnisse.html" class="active">Ergebnisse</a></li>
       <li><a href="index.html#buchung">Kontakt</a></li>
     </ul>
-    <a href="admin.html" class="nav-cta">Admin</a>
     <button class="nav-toggle" id="navToggle" aria-expanded="false"><span></span><span></span><span></span></button>
   </nav>
   <div class="mobile-nav" id="mobileNav">
@@ -121,6 +143,16 @@
       <div class="section-label">Ergebnisse</div>
       <h1 class="page-title">Reken</h1>
       <p class="page-sub">Zum Moetken</p>
+
+    <div class="loc-ext-links">
+      <a href="https://zum-moetken.de/" target="_blank" rel="noopener" class="loc-ext-link" title="Website">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </a>
+    </div>
+    </div>
+    <div id="next-quiz-badge" class="next-quiz-badge" style="display:none">
+      <span class="nq-dot"></span>
+      <span>Nächstes Quiz: <span class="nq-label" id="next-quiz-date">...</span></span>
     </div>
     <!-- Mobile Tab-Navigation -->
     <div class="mobile-tabs">
@@ -176,6 +208,23 @@
       document.querySelectorAll('.mobile-panel')[index].classList.add('active');
     }
 
+  // Nächstes Quiz laden
+  (function() {
+    const today = new Date().toISOString().split('T')[0];
+    fetch(`https://mqsxgzaliwzyghmgygea.supabase.co/rest/v1/quizes?location_id=eq.6&quiz_date=gte.${today}&order=quiz_date.asc&limit=1&select=quiz_date`, {
+      headers: {
+        'apikey': 'sb_publishable_n7-e_4YSOdzhdRPc6mKOgg_EF3jJqG6',
+        'Authorization': 'Bearer sb_publishable_n7-e_4YSOdzhdRPc6mKOgg_EF3jJqG6'
+      }
+    }).then(r => r.json()).then(data => {
+      if (data && data.length > 0) {
+        const d = new Date(data[0].quiz_date);
+        const opts = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+        document.getElementById('next-quiz-date').textContent = d.toLocaleDateString('de-DE', opts);
+        document.getElementById('next-quiz-badge').style.display = 'inline-flex';
+      }
+    }).catch(() => {});
+  })();
   </script>
 </body>
 </html>

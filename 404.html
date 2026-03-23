@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" href="images/logos/logo-blackbg.png" />
+  <title>404 – Seite nicht gefunden · Der Kneipenkönig</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="fonts/fonts.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      font-family: 'Open Sans', sans-serif;
+      color: #fff;
+      background: #000;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: url('hero-bg.jpg') center/cover no-repeat;
+      z-index: -2;
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.70);
+      z-index: -1;
+    }
+
+    .container {
+      padding: 40px 5%;
+      max-width: 600px;
+    }
+
+    .error-code {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(8rem, 20vw, 14rem);
+      line-height: 1;
+      color: #38b6ff;
+      opacity: 0.15;
+      letter-spacing: 0.05em;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .crown {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #38b6ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .label::before, .label::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: #38b6ff;
+    }
+
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      letter-spacing: 0.03em;
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: rgba(255,255,255,0.55);
+      font-size: 1rem;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      padding: 14px 28px;
+      background: #38b6ff;
+      color: #000;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: #7dd3fc; transform: translateY(-2px); }
+
+    .btn-secondary {
+      padding: 14px 28px;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.10); color: #fff; transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+  <div class="error-code">404</div>
+  <div class="container">
+    <div class="content">
+      <div class="label">Fehler 404</div>
+      <h1>Seite nicht gefunden</h1>
+      <p>Diese Seite existiert leider nicht – vielleicht wurde sie verschoben oder der Link ist fehlerhaft.<br>Kein Problem, wir bringen dich zurück ins Quiz.</p>
+      <div class="btn-group">
+        <a href="index.html" class="btn-primary">Zur Startseite</a>
+        <a href="ergebnisse.html" class="btn-secondary">Ergebnisse</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

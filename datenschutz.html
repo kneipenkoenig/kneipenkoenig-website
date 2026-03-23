@@ -3,18 +3,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <link rel="icon" type="image/png" href="images/logos/logo-blackbg.png" />
-<title>Impressum – Der Kneipenkönig</title>
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://kneipenkoenig.de/impressum.html" />
-  <meta property="og:title" content="Impressum – Der Kneipenkönig" />
-  <meta property="og:description" content="Impressum von Der Kneipenkönig – Lettevents, Michael Schülke, Coesfeld." />
-  <meta property="og:image" content="https://kneipenkoenig.de/hero-bg.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" href="images/logos/logo-blackbg.png" />
+<title>Datenschutz – Der Kneipenkönig</title>
+<meta name="description" content="Datenschutzerklärung des Kneipenkönig – Informationen zur Verarbeitung personenbezogener Daten gemäß DSGVO." />
+<meta name="robots" content="noindex" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://kneipenkoenig.de/datenschutz.html" />
+<meta property="og:title" content="Datenschutz – Der Kneipenkönig" />
+<meta property="og:description" content="Datenschutzerklärung gemäß DSGVO." />
+<meta property="og:image" content="https://kneipenkoenig.de/hero-bg.jpg" />
+<link rel="stylesheet" href="fonts/fonts.css" />
 <style>
   :root {
     --bg:            #ffffff;
@@ -72,16 +71,14 @@
   .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
   .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; transition: color 0.2s; }
   .nav-links a:hover { color: #38b6ff; }
-  .nav-cta { padding: 9px 20px; background: #38b6ff; color: #000; border-radius: 8px; font-weight: 700; font-size: 0.82rem; text-decoration: none; letter-spacing: 0.05em; text-transform: uppercase; transition: background 0.2s, transform 0.15s; }
-  .nav-cta:hover { background: #7dd3fc; transform: translateY(-1px); }
   .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
-  .nav-toggle span { width: 22px; height: 2px; background: var(--text-primary); border-radius: 2px; display: block; transition: transform 0.3s, opacity 0.3s; }
+  .nav-toggle span { width: 22px; height: 2px; background: var(--text-primary); border-radius: 2px; display: block; }
   .mobile-nav { display: none; position: fixed; inset: 0; z-index: 101; background: rgba(0,0,0,0.97); backdrop-filter: blur(24px); flex-direction: column; align-items: center; justify-content: center; gap: 28px; }
   .mobile-nav.open { display: flex; }
   .mobile-nav a { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; letter-spacing: 0.05em; color: rgba(255,255,255,0.55); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
   .mobile-nav a:hover { color: #38b6ff; }
   .mobile-nav-close { position: absolute; top: 22px; right: 5%; background: none; border: none; color: rgba(255,255,255,0.5); font-size: 1.8rem; cursor: pointer; }
-  @media (max-width: 768px) { .nav-links, .nav-cta { display: none; } .nav-toggle { display: flex; } }
+  @media (max-width: 768px) { .nav-links { display: none; } .nav-toggle { display: flex; } }
   @keyframes navLineRun { from { left: -30%; } to { left: 130%; } }
   .nav-line { position: fixed; top: 80px; left: 0; right: 0; height: 2px; z-index: 99; background: rgba(56,182,255,0.15); overflow: hidden; }
   .nav-line::after { content: ''; position: absolute; top: 0; width: 30%; height: 100%; background: linear-gradient(90deg, transparent 0%, #38b6ff 35%, #bfefff 50%, #38b6ff 65%, transparent 100%); animation: navLineRun 2.5s linear infinite; }
@@ -133,10 +130,17 @@
     border-bottom: 1px solid var(--border);
   }
 
-  .card p { color: var(--text-secondary); margin-bottom: 4px; }
+  .card h3 {
+    font-size: 0.9rem; font-weight: 700; color: var(--text-primary);
+    margin: 20px 0 6px;
+  }
+
+  .card p, .card li { color: var(--text-secondary); margin-bottom: 6px; font-size: 0.92rem; }
   .card p strong { color: var(--text-primary); font-weight: 700; }
   .card a { color: #38b6ff; text-decoration: none; }
   .card a:hover { text-decoration: underline; }
+  .card ul { padding-left: 20px; }
+  .card ul li { margin-bottom: 4px; }
 
   .notice {
     background: rgba(56,182,255,0.05);
@@ -175,7 +179,6 @@
     <li><a href="ergebnisse.html">Ergebnisse</a></li>
     <li><a href="index.html#buchung">Kontakt</a></li>
   </ul>
-  <a href="admin.html" class="nav-cta">Admin</a>
   <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
@@ -193,44 +196,75 @@
 
 <main>
   <div class="section-label">Rechtliches</div>
-  <h1>Impressum</h1>
+  <h1>Datenschutz</h1>
 
   <div class="card">
-    <h2>Angaben gemäß § 5 TMG</h2>
+    <h2>Verantwortlicher</h2>
     <p><strong>Michael Schülke</strong></p>
     <p>Lettevents</p>
     <p>Nikolaus-Groß-Str. 27</p>
     <p>48653 Coesfeld</p>
-    <p>Deutschland</p>
-  </div>
-
-  <div class="card">
-    <h2>Kontakt</h2>
-    <p><strong>Telefon:</strong> <a href="tel:+4915252796927">+49 1525 2796927</a></p>
     <p><strong>E-Mail:</strong> <a href="mailto:info@kneipenkoenig.de">info@kneipenkoenig.de</a></p>
+    <p><strong>Telefon:</strong> <a href="tel:+4915252796927">+49 1525 2796927</a></p>
   </div>
 
   <div class="card">
-    <h2>Verantwortlich für den Inhalt</h2>
-    <p>gemäß § 18 Abs. 2 MStV:</p>
-    <p style="margin-top:10px;"><strong>Michael Schülke</strong></p>
-    <p>Nikolaus-Groß-Str. 27</p>
-    <p>48653 Coesfeld</p>
+    <h2>Hosting</h2>
+    <p>Diese Website wird über <strong>GitHub Pages</strong> (GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA) gehostet und über <strong>Cloudflare</strong> (Cloudflare, Inc., 101 Townsend St., San Francisco, CA 94107, USA) ausgeliefert. Beim Aufruf der Website werden automatisch IP-Adresse, Browsertyp, Betriebssystem, Referrer und Uhrzeit des Zugriffs an die Server übertragen.</p>
+    <p style="margin-top:10px;">Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am sicheren und effizienten Betrieb der Website).</p>
+    <p>Datenschutzerklärung GitHub: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">docs.github.com</a></p>
+    <p>Datenschutzerklärung Cloudflare: <a href="https://www.cloudflare.com/de-de/privacypolicy/" target="_blank" rel="noopener">cloudflare.com</a></p>
+  </div>
+
+  <div class="card">
+    <h2>Kontaktformular</h2>
+    <p>Das Kontaktformular auf dieser Website wird über unseren eigenen Server <strong>manager.kneipenkoenig.work</strong> bereitgestellt. Wenn Sie das Formular nutzen, werden die von Ihnen eingegebenen Daten (Name, E-Mail-Adresse, Nachricht) an uns übermittelt und per E-Mail zugestellt.</p>
+    <p style="margin-top:10px;">Diese Daten werden ausschließlich zur Bearbeitung Ihrer Anfrage verwendet und nicht an Dritte weitergegeben. Sie werden gelöscht, sobald die Anfrage abschließend bearbeitet wurde.</p>
+    <p style="margin-top:10px;">Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Kommunikation).</p>
+  </div>
+
+  <div class="card">
+    <h2>Quiz-Ergebnisse (Supabase)</h2>
+    <p>Die Ergebnisseiten dieser Website laden Quiz-Daten über <strong>Supabase</strong> (Supabase Inc., 970 Toa Payoh North, #07-04, Singapore 318992). Supabase stellt eine Datenbankinfrastruktur bereit, über die Teamnamen, Punktestände und Quizdaten anonym abgerufen werden.</p>
+    <p style="margin-top:10px;">Es werden dabei keine personenbezogenen Daten verarbeitet – Teamnamen sind selbst gewählte Pseudonyme. Die Datenbankverbindung erfolgt ausschließlich lesend (anonym, ohne Anmeldung).</p>
+    <p style="margin-top:10px;">Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Darstellung von Spielergebnissen).</p>
+    <p>Datenschutzerklärung Supabase: <a href="https://supabase.com/privacy" target="_blank" rel="noopener">supabase.com/privacy</a></p>
+  </div>
+
+  <div class="card">
+    <h2>Google Fonts</h2>
+    <p>Diese Website verwendet Schriftarten von <strong>Google Fonts</strong> (Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA). Die Schriftarten werden von Google-Servern geladen, wobei Ihre IP-Adresse an Google übertragen wird.</p>
+    <p style="margin-top:10px;">Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO. Wenn Sie dies nicht wünschen, können Sie die Google-Font-Übertragung in Ihrem Browser blockieren – die Website verwendet dann systemseitig verfügbare Schriften.</p>
+    <p>Datenschutzerklärung Google: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a></p>
+  </div>
+
+  <div class="card">
+    <h2>Externe Links &amp; Dienste</h2>
+    <h3>Instagram</h3>
+    <p>Diese Website enthält Links zu Instagram (Meta Platforms Ireland Ltd., 4 Grand Canal Square, Dublin 2, Irland). Beim Klick auf einen Instagram-Link werden Sie auf die Instagram-Website weitergeleitet. Dabei gelten die Datenschutzbestimmungen von Instagram/Meta.</p>
+    <h3>WhatsApp</h3>
+    <p>Auf dieser Website sind Links zu unserem WhatsApp-Kanal und zur direkten WhatsApp-Kontaktaufnahme vorhanden (Meta Platforms Ireland Ltd.). Beim Klick verlassen Sie diese Website. Es gelten die Datenschutzbestimmungen von Meta/WhatsApp.</p>
+    <h3>Tickettailor</h3>
+    <p>Für die Ticketbuchung zu unseren Events verlinken wir auf <strong>Tickettailor</strong> (Tickettailor Ltd., London, UK). Es gelten die Datenschutzbestimmungen von Tickettailor.</p>
+  </div>
+
+  <div class="card">
+    <h2>Ihre Rechte</h2>
+    <p>Nach der DSGVO stehen Ihnen folgende Rechte zu:</p>
+    <ul style="margin-top: 10px;">
+      <li><strong>Auskunft</strong> (Art. 15 DSGVO): Sie können Auskunft über Ihre bei uns gespeicherten Daten verlangen.</li>
+      <li><strong>Berichtigung</strong> (Art. 16 DSGVO): Sie können die Berichtigung unrichtiger Daten verlangen.</li>
+      <li><strong>Löschung</strong> (Art. 17 DSGVO): Sie können die Löschung Ihrer Daten verlangen, sofern keine gesetzlichen Aufbewahrungspflichten bestehen.</li>
+      <li><strong>Einschränkung</strong> (Art. 18 DSGVO): Sie können die Einschränkung der Verarbeitung verlangen.</li>
+      <li><strong>Widerspruch</strong> (Art. 21 DSGVO): Sie können der Verarbeitung widersprechen, soweit diese auf Art. 6 Abs. 1 lit. f DSGVO beruht.</li>
+      <li><strong>Beschwerde</strong>: Sie haben das Recht, sich bei der Datenschutzaufsichtsbehörde zu beschweren. Zuständig ist die <a href="https://www.ldi.nrw.de" target="_blank" rel="noopener">Landesbeauftragte für Datenschutz und Informationsfreiheit NRW</a>.</li>
+    </ul>
+    <p style="margin-top:12px;">Zur Ausübung Ihrer Rechte wenden Sie sich bitte an: <a href="mailto:info@kneipenkoenig.de">info@kneipenkoenig.de</a></p>
   </div>
 
   <div class="notice">
-    <strong>Haftung für Inhalte</strong>
-    Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
-  </div>
-
-  <div class="notice">
-    <strong>Haftung für Links</strong>
-    Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.
-  </div>
-
-  <div class="notice">
-    <strong>Urheberrecht</strong>
-    Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+    <strong>Stand dieser Datenschutzerklärung</strong>
+    März 2026. Wir behalten uns vor, diese Datenschutzerklärung bei Änderungen der Rechtslage oder bei technischen Änderungen an unserer Website anzupassen.
   </div>
 </main>
 
@@ -239,9 +273,10 @@
   <span class="footer-sep">|</span>
   <a href="index.html">Startseite</a>
   <span class="footer-sep">|</span>
+  <a href="impressum.html">Impressum</a>
+  <span class="footer-sep">|</span>
   <a href="datenschutz.html">Datenschutz</a>
 </footer>
-
 
 <script>
   window.addEventListener('scroll', () => {

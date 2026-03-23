@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /kontakt-manager.html
+
+Sitemap: https://kneipenkoenig.de/sitemap.xml

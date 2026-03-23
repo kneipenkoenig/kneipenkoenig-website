@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="icon" type="image/png" href="images/logos/logo-blackbg.png" />
   <title>Ergebnisse Coesfeld-Lette – Der Kneipenkönig</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kneipenkoenig.de/location8.html" />
+  <meta property="og:title" content="Ergebnisse Coesfeld-Lette – Der Kneipenkönig" />
+  <meta property="og:description" content="Quiz-Ergebnisse und Ranglisten vom Kneipenkönig im Haus Zumbült Coesfeld-Lette." />
+  <meta property="og:image" content="https://kneipenkoenig.de/hero-bg.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="fonts/fonts.css" />
   <style>
     :root { --blue: #38b6ff; --text-primary: #fff; --text-secondary: rgba(255,255,255,0.55); }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -88,6 +93,24 @@
       .mobile-panel .results-iframe-wrap { display: block; }
       .mobile-panel .results-iframe-wrap iframe { height: 760px; }
     }
+
+    .loc-ext-links { display: flex; gap: 10px; margin-top: 14px; }
+    .loc-ext-link { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: rgba(255,255,255,0.55); transition: color 0.2s, background 0.2s, border-color 0.2s; text-decoration: none; }
+    .loc-ext-link:hover { color: #38b6ff; background: rgba(56,182,255,0.1); border-color: rgba(56,182,255,0.35); }
+    .next-quiz-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 14px; padding: 8px 14px;
+      background: rgba(56,182,255,0.08); border: 1px solid rgba(56,182,255,0.25);
+      border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+      color: rgba(255,255,255,0.7); transition: opacity 0.3s;
+    }
+    .next-quiz-badge .nq-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #38b6ff; flex-shrink: 0;
+      animation: nqPulse 1.8s ease-in-out infinite;
+    }
+    .next-quiz-badge .nq-label { color: #38b6ff; font-weight: 700; }
+    @keyframes nqPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
   </style>
 </head>
 <body>
@@ -102,7 +125,6 @@
       <li><a href="ergebnisse.html" class="active">Ergebnisse</a></li>
       <li><a href="index.html#buchung">Kontakt</a></li>
     </ul>
-    <a href="admin.html" class="nav-cta">Admin</a>
     <button class="nav-toggle" id="navToggle" aria-expanded="false"><span></span><span></span><span></span></button>
   </nav>
   <div class="mobile-nav" id="mobileNav">
@@ -121,6 +143,19 @@
       <div class="section-label">Ergebnisse</div>
       <h1 class="page-title">Coesfeld-Lette</h1>
       <p class="page-sub">Haus Zumbült</p>
+
+    <div class="loc-ext-links">
+      <a href="https://www.xn--haus-zumblt-1hb.de/" target="_blank" rel="noopener" class="loc-ext-link" title="Website">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </a>
+      <a href="https://www.instagram.com/hauszumbuelt/" target="_blank" rel="noopener" class="loc-ext-link" title="Instagram">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      </a>
+    </div>
+    </div>
+    <div id="next-quiz-badge" class="next-quiz-badge" style="display:none">
+      <span class="nq-dot"></span>
+      <span>Nächstes Quiz: <span class="nq-label" id="next-quiz-date">...</span></span>
     </div>
     <!-- Mobile Tab-Navigation -->
     <div class="mobile-tabs">
@@ -176,6 +211,23 @@
       document.querySelectorAll('.mobile-panel')[index].classList.add('active');
     }
 
+  // Nächstes Quiz laden
+  (function() {
+    const today = new Date().toISOString().split('T')[0];
+    fetch(`https://mqsxgzaliwzyghmgygea.supabase.co/rest/v1/quizes?location_id=eq.8&quiz_date=gte.${today}&order=quiz_date.asc&limit=1&select=quiz_date`, {
+      headers: {
+        'apikey': 'sb_publishable_n7-e_4YSOdzhdRPc6mKOgg_EF3jJqG6',
+        'Authorization': 'Bearer sb_publishable_n7-e_4YSOdzhdRPc6mKOgg_EF3jJqG6'
+      }
+    }).then(r => r.json()).then(data => {
+      if (data && data.length > 0) {
+        const d = new Date(data[0].quiz_date);
+        const opts = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+        document.getElementById('next-quiz-date').textContent = d.toLocaleDateString('de-DE', opts);
+        document.getElementById('next-quiz-badge').style.display = 'inline-flex';
+      }
+    }).catch(() => {});
+  })();
   </script>
 </body>
 </html>
