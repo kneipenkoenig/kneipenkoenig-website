@@ -30,7 +30,9 @@
   },
   "location06": {
     "name": "Lüdinghausen",
-    "sub": "Burghof / GleisDrei"
+    "sub": "Burghof / GleisDrei",
+    "linkInstagram": "https://www.instagram.com/burghof.luedinghausen/",
+    "img": "images/locations/location06-1774305701461.jpg"
   },
   "location07": {
     "name": "Datteln",
