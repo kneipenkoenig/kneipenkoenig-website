@@ -36,6 +36,8 @@
   },
   "location07": {
     "name": "Datteln",
-    "sub": "Johnny Canone"
+    "sub": "Johnny Canone",
+    "linkHomepage": "https://www.johnny-canone.de/",
+    "img": "images/locations/location07-1774305863553.jpg"
   }
 }
