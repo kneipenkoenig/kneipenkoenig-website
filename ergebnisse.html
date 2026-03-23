@@ -135,14 +135,25 @@
     }
     .loc-item:hover .loc-name { color: #38b6ff; }
 
-    /* Gradients per card */
-    .grad-1 { background: linear-gradient(to bottom, #c9ad66, #bd8122); }
-    .grad-2 { background: linear-gradient(to top,    #356778, #022641); }
-    .grad-3 { background: linear-gradient(to top,    #d5685a, #ba4344); }
-    .grad-4 { background: linear-gradient(to top,    #f7d578, #9b2a08); }
-    .grad-5 { background: linear-gradient(to bottom, #8c8a57, #6f7957); }
-    .grad-6 { background: linear-gradient(to bottom, #89a390, #324644); }
-    .grad-7 { background: linear-gradient(to bottom, #38b6ff, #0a3a5c); }
+    /* Gradients – alle im Site-Farbschema (Dunkel + Blau) */
+    @keyframes locGlow {
+      0%, 100% { box-shadow: 0 0 0 2px rgba(56,182,255,0.35), 0 0 18px rgba(56,182,255,0.12); }
+      50%       { box-shadow: 0 0 0 2px rgba(125,211,252,0.8), 0 0 32px rgba(56,182,255,0.35); }
+    }
+    .loc-figure {
+      animation: locGlow 3s ease-in-out infinite;
+    }
+    .loc-item:hover .loc-figure {
+      animation: none;
+      box-shadow: 0 0 0 2px #7dd3fc, 0 0 40px rgba(56,182,255,0.55);
+    }
+    .grad-1 { background: linear-gradient(135deg, #0d2137, #0a3a5c); }
+    .grad-2 { background: linear-gradient(135deg, #071e2e, #103550); }
+    .grad-3 { background: linear-gradient(135deg, #0a2540, #1a4a6e); }
+    .grad-4 { background: linear-gradient(135deg, #061828, #0d3048); }
+    .grad-5 { background: linear-gradient(135deg, #0f2d45, #1c4f72); }
+    .grad-6 { background: linear-gradient(135deg, #081c2e, #123558); }
+    .grad-7 { background: linear-gradient(135deg, #0a2a40, #164e78); }
 
     @media (max-width: 768px) {
       .locations-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
