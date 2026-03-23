@@ -63,34 +63,34 @@
     /* ── PAGE ── */
     .page-wrap {
       min-height: 100vh;
-      padding: 140px 5% 80px;
+      padding: 105px 5% 30px;
     }
-    .page-header { text-align: center; margin-bottom: 40px; }
+    .page-header { text-align: center; margin-bottom: 22px; }
     .section-label {
       display: inline-flex; align-items: center; gap: 10px;
       font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em;
-      text-transform: uppercase; color: #38b6ff; margin-bottom: 14px;
+      text-transform: uppercase; color: #38b6ff; margin-bottom: 10px;
     }
     .section-label::before { content: ''; display: block; width: 28px; height: 1px; background: #38b6ff; }
     .page-title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
       letter-spacing: 0.03em;
       line-height: 1;
     }
-    .page-desc { margin-top: 14px; color: var(--text-secondary); font-size: 1.05rem; }
+    .page-desc { margin-top: 10px; color: var(--text-secondary); font-size: 0.95rem; }
 
     /* ── LOCATIONS GRID ── */
     .locations-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      max-width: 860px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 1020px;
       margin: 0 auto;
     }
 
-    /* 7th item volle Breite */
-    .loc-item:nth-child(7) { grid-column: 1 / -1; max-width: 50%; justify-self: center; }
+    /* 7th item: mittlere Spalte (zentriert) */
+    .loc-item:nth-child(7) { grid-column: 2 / 3; }
 
     @keyframes locGlow {
       0%, 100% { box-shadow: 0 0 0 2px rgba(56,182,255,0.4), 0 0 16px rgba(56,182,255,0.1); }
@@ -104,7 +104,7 @@
       border-radius: 14px;
       overflow: hidden;
       position: relative;
-      aspect-ratio: 5 / 2;
+      aspect-ratio: 4 / 3;
       animation: locGlow 3s ease-in-out infinite;
       background: #0a1e30;
     }
@@ -163,7 +163,11 @@
       letter-spacing: 0.04em;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 680px) {
+      .locations-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .loc-item:nth-child(7) { grid-column: 1 / -1; max-width: 50%; justify-self: center; }
+    }
+    @media (max-width: 420px) {
       .locations-grid { grid-template-columns: 1fr; }
       .loc-item:nth-child(7) { grid-column: auto; max-width: 100%; }
     }
