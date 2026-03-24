@@ -334,15 +334,15 @@
       .intro-hero-cards   { flex: 0 0 360px; }
     }
 
-    /* ─── INTRO HERO ALT (Variante) ────────────────────── */
-    .intro-hero-alt {
+    /* ─── HERO V2 – Animierte Quiz-Demo ────────────────── */
+    .hero-v2 {
       position: relative;
       overflow: hidden;
       padding: 120px 0 100px;
       background: var(--bg-2);
       border-top: 1px solid var(--border);
     }
-    .intro-hero-alt-inner {
+    .hero-v2-inner {
       position: relative;
       z-index: 1;
       display: flex;
@@ -350,67 +350,244 @@
       justify-content: space-between;
       gap: 64px;
     }
-    .intro-hero-alt-text {
+    .hero-v2-text {
       flex: 1;
       min-width: 0;
       opacity: 0;
       animation: introFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
     }
-    .intro-hero-alt-device {
-      flex: 0 0 420px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    .hero-v2-device {
+      flex: 0 0 380px;
+      position: relative;
       opacity: 0;
       animation: introFadeRight 0.8s cubic-bezier(0.16,1,0.3,1) 0.35s forwards;
     }
-    .tablet-frame {
+
+    /* Tablet */
+    .tv2-tablet {
       position: relative;
-      width: 420px;
-      border-radius: 24px;
-      overflow: hidden;
+      background: #1a1a2e;
+      border-radius: 28px;
+      padding: 14px;
       box-shadow:
-        0 0 0 3px rgba(255,255,255,0.08),
-        0 0 60px rgba(56,182,255,0.25),
-        0 32px 80px rgba(0,0,0,0.5);
+        0 0 0 2px rgba(255,255,255,0.06),
+        0 0 80px rgba(56,182,255,0.2),
+        0 40px 100px rgba(0,0,0,0.6);
     }
-    .tablet-frame img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 24px;
+    .tv2-screen {
+      position: relative;
+      background: #0d0d1a;
+      border-radius: 16px;
+      overflow: hidden;
+      padding: 20px;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
     }
-    .tablet-pulse {
-      position: absolute;
-      bottom: 38%;
-      left: 55%;
+
+    /* Header */
+    .tv2-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .tv2-timer {
+      position: relative;
       width: 48px;
       height: 48px;
-      border-radius: 50%;
-      background: rgba(56,182,255,0.25);
-      animation: tabletPulse 2.5s ease-in-out infinite;
-      pointer-events: none;
     }
-    @keyframes tabletPulse {
-      0%, 100% { transform: scale(0.7); opacity: 0; }
-      40%      { transform: scale(1.4); opacity: 0.6; }
-      80%      { transform: scale(2.2); opacity: 0; }
+    .tv2-timer-ring {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
     }
-    .tablet-caption {
-      margin-top: 24px;
-      color: var(--blue);
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
+    .tv2-timer-progress {
+      transition: stroke-dashoffset 1s linear;
+    }
+    .tv2-timer-num {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+    .tv2-score {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .tv2-score-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.4);
+    }
+    .tv2-score-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      color: #38b6ff;
+      line-height: 1;
+    }
+
+    /* Frage */
+    .tv2-question {
+      font-size: 0.9rem;
+      color: #fff;
       text-align: center;
+      line-height: 1.5;
+      margin-bottom: 24px;
+      padding: 12px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      opacity: 0;
+      animation: tv2FadeIn 0.5s 0.8s forwards;
     }
+
+    /* Antworten */
+    .tv2-answers {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .tv2-answer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: all 0.3s;
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    .tv2-answer:nth-child(1) { animation: tv2SlideIn 0.4s 1.0s forwards; }
+    .tv2-answer:nth-child(2) { animation: tv2SlideIn 0.4s 1.15s forwards; }
+    .tv2-answer:nth-child(3) { animation: tv2SlideIn 0.4s 1.3s forwards; }
+    .tv2-answer:nth-child(4) { animation: tv2SlideIn 0.4s 1.45s forwards; }
+
+    .tv2-answer-letter {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .tv2-answer[data-color="#c0392b"] .tv2-answer-letter { background: #c0392b; }
+    .tv2-answer[data-color="#2980b9"] .tv2-answer-letter { background: #2980b9; }
+    .tv2-answer[data-color="#27ae60"] .tv2-answer-letter { background: #27ae60; }
+    .tv2-answer[data-color="#d4a017"] .tv2-answer-letter { background: #d4a017; }
+
+    .tv2-answer-text {
+      color: rgba(255,255,255,0.85);
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-align: left;
+    }
+    .tv2-answer.selected {
+      background: rgba(56,182,255,0.2);
+      box-shadow: 0 0 20px rgba(56,182,255,0.15);
+      transform: scale(1.02);
+    }
+    .tv2-answer.correct {
+      background: rgba(39,174,96,0.3);
+      box-shadow: 0 0 24px rgba(39,174,96,0.2);
+    }
+    .tv2-answer.wrong {
+      background: rgba(192,57,43,0.2);
+      opacity: 0.5;
+    }
+
+    /* Ergebnis Overlay */
+    .tv2-result {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(13,13,26,0.92);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+      z-index: 5;
+    }
+    .tv2-result.show {
+      opacity: 1;
+    }
+    .tv2-result-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #27ae60;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #fff;
+      margin-bottom: 12px;
+      transform: scale(0);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .tv2-result.show .tv2-result-icon {
+      transform: scale(1);
+    }
+    .tv2-result-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: #fff;
+      letter-spacing: 0.04em;
+    }
+    .tv2-result-points {
+      color: #38b6ff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-top: 4px;
+    }
+
+    /* Cursor */
+    .tv2-cursor {
+      position: absolute;
+      bottom: 140px;
+      right: 60px;
+      opacity: 0;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+      pointer-events: none;
+      z-index: 10;
+      transition: all 0.8s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    /* Animationen */
+    @keyframes tv2FadeIn {
+      to { opacity: 1; }
+    }
+    @keyframes tv2SlideIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+
     @media (max-width: 900px) {
-      .intro-hero-alt        { padding: 100px 0 80px; }
-      .intro-hero-alt-inner  { flex-direction: column; text-align: center; align-items: center; gap: 40px; }
-      .intro-hero-alt-text   { order: 1; }
-      .intro-hero-alt-text .intro-hero-desc { margin-left: auto; margin-right: auto; }
-      .intro-hero-alt-device { order: 2; flex: 0 0 auto; width: 100%; max-width: 360px; }
-      .tablet-frame          { width: 100%; }
+      .hero-v2          { padding: 100px 0 80px; }
+      .hero-v2-inner    { flex-direction: column; text-align: center; align-items: center; gap: 40px; }
+      .hero-v2-text     { order: 1; }
+      .hero-v2-text .intro-hero-desc { margin-left: auto; margin-right: auto; }
+      .hero-v2-device   { order: 2; flex: 0 0 auto; width: 100%; max-width: 340px; }
+    }
+    @media (max-width: 480px) {
+      .tv2-screen       { padding: 14px; min-height: 360px; }
+      .tv2-answer       { padding: 10px 12px; }
+      .tv2-question     { font-size: 0.8rem; }
     }
 
     /* ─── HERO ──────────────────────────────────────────── */
@@ -2060,12 +2237,12 @@
     </div>
   </section>
 
-  <!-- ═══════════ INTRO HERO ALT (Variante) ═══════════ -->
-  <section class="intro-hero-alt">
+  <!-- ═══════════ INTRO HERO ALT (Variante B – animierte Quiz-Demo) ═══════════ -->
+  <section class="hero-v2">
     <div class="container">
-      <div class="intro-hero-alt-inner">
+      <div class="hero-v2-inner">
 
-        <div class="intro-hero-alt-text">
+        <div class="hero-v2-text">
           <span class="section-label">Das Quiz-Erlebnis in NRW</span>
           <h2 class="intro-hero-title">Der<br><span class="accent">Kneipenkönig</span></h2>
           <p class="intro-hero-desc">
@@ -2077,12 +2254,62 @@
           </a>
         </div>
 
-        <div class="intro-hero-alt-device">
-          <div class="tablet-frame">
-            <img src="images/home/1-1774190578458.jpg" alt="Digitales Quiz-Interface auf dem Tablet" />
-            <div class="tablet-pulse"></div>
+        <div class="hero-v2-device">
+          <!-- Tablet Rahmen -->
+          <div class="tv2-tablet">
+            <div class="tv2-screen" id="tv2Screen">
+              <!-- Header: Timer + Punkte -->
+              <div class="tv2-header">
+                <div class="tv2-timer" id="tv2Timer">
+                  <svg viewBox="0 0 36 36" class="tv2-timer-ring">
+                    <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+                    <circle cx="18" cy="18" r="15.9" fill="none" stroke="#38b6ff" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="0" stroke-linecap="round" class="tv2-timer-progress" id="tv2TimerProgress"/>
+                  </svg>
+                  <span class="tv2-timer-num" id="tv2TimerNum">25</span>
+                </div>
+                <div class="tv2-score">
+                  <span class="tv2-score-label">Punkte</span>
+                  <span class="tv2-score-value" id="tv2ScoreValue">38</span>
+                </div>
+              </div>
+
+              <!-- Frage -->
+              <div class="tv2-question" id="tv2Question">
+                Was wurde laut einer internationalen Umfrage als einer der häufigsten Streitgründe in Beziehungen genannt?
+              </div>
+
+              <!-- Antworten -->
+              <div class="tv2-answers" id="tv2Answers">
+                <button class="tv2-answer" data-letter="A" data-color="#c0392b">
+                  <span class="tv2-answer-letter">A</span>
+                  <span class="tv2-answer-text">Das Fernsehprogramm</span>
+                </button>
+                <button class="tv2-answer" data-letter="B" data-color="#2980b9">
+                  <span class="tv2-answer-letter">B</span>
+                  <span class="tv2-answer-text">Zu wenig Kommunikation</span>
+                </button>
+                <button class="tv2-answer" data-letter="C" data-color="#27ae60">
+                  <span class="tv2-answer-letter">C</span>
+                  <span class="tv2-answer-text">Die Klobrille</span>
+                </button>
+                <button class="tv2-answer" data-letter="D" data-color="#d4a017">
+                  <span class="tv2-answer-letter">D</span>
+                  <span class="tv2-answer-text">Chihuahua</span>
+                </button>
+              </div>
+
+              <!-- Ergebnis-Overlay -->
+              <div class="tv2-result" id="tv2Result">
+                <div class="tv2-result-icon">&#10003;</div>
+                <div class="tv2-result-text">Richtig!</div>
+                <div class="tv2-result-points">+12 Punkte</div>
+              </div>
+            </div>
           </div>
-          <p class="tablet-caption">Dein Tablet. Deine Antwort. Dein Sieg.</p>
+          <!-- Fingerzeiger-Cursor Animation -->
+          <div class="tv2-cursor" id="tv2Cursor">
+            <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M6.5 1.5c0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5v10.214l5.714-3.3a1.5 1.5 0 0 1 2.05.549l.001.002a1.5 1.5 0 0 1-.549 2.049L10.5 15.5v5a1.5 1.5 0 0 1-3 0v-5L3.786 11.014a1.5 1.5 0 0 1-.549-2.049l.001-.002a1.5 1.5 0 0 1 2.05-.549L8 10.5V1.5z" opacity="0.9"/></svg>
+          </div>
         </div>
 
       </div>
@@ -2690,6 +2917,140 @@
         if (iframe) iframe.style.height = e.data.height + 'px';
       }
     });
+
+    // ── Hero V2: Animierte Quiz-Demo ────────────────────────────
+    (function() {
+      const screen = document.getElementById('tv2Screen');
+      if (!screen) return;
+
+      const timerNum = document.getElementById('tv2TimerNum');
+      const timerProgress = document.getElementById('tv2TimerProgress');
+      const scoreValue = document.getElementById('tv2ScoreValue');
+      const answers = document.querySelectorAll('.tv2-answer');
+      const result = document.getElementById('tv2Result');
+      const cursor = document.getElementById('tv2Cursor');
+      const question = document.getElementById('tv2Question');
+
+      const questions = [
+        {
+          q: 'Was wurde laut einer internationalen Umfrage als einer der häufigsten Streitgründe in Beziehungen genannt?',
+          a: ['Das Fernsehprogramm', 'Zu wenig Kommunikation', 'Die Klobrille', 'Chihuahua'],
+          correct: 0
+        },
+        {
+          q: 'Welches Land hat die meisten Zeitzonen?',
+          a: ['Russland', 'USA', 'Frankreich', 'China'],
+          correct: 2
+        },
+        {
+          q: 'Wie viele Herzen hat ein Oktopus?',
+          a: ['1', '2', '3', '8'],
+          correct: 2
+        }
+      ];
+
+      let currentQ = 0;
+      let timer = 25;
+      let timerInterval;
+
+      function resetAnimation() {
+        // Reset
+        answers.forEach(a => {
+          a.classList.remove('selected', 'correct', 'wrong');
+          a.style.opacity = '0';
+          a.style.transform = 'translateX(30px)';
+          a.style.animation = 'none';
+        });
+        result.classList.remove('show');
+        cursor.style.opacity = '0';
+        question.style.opacity = '0';
+        question.style.animation = 'none';
+        timer = 25;
+        timerNum.textContent = '25';
+        timerProgress.style.strokeDashoffset = '0';
+
+        // Load question
+        const q = questions[currentQ % questions.length];
+        question.textContent = q.q;
+        answers.forEach((a, i) => {
+          a.querySelector('.tv2-answer-text').textContent = q.a[i];
+        });
+
+        // Start sequence
+        setTimeout(() => {
+          question.style.animation = 'tv2FadeIn 0.5s forwards';
+
+          answers.forEach((a, i) => {
+            setTimeout(() => {
+              a.style.animation = 'tv2SlideIn 0.4s forwards';
+            }, 200 + i * 150);
+          });
+
+          // Start timer countdown
+          setTimeout(() => {
+            timerInterval = setInterval(() => {
+              timer--;
+              timerNum.textContent = timer;
+              timerProgress.style.strokeDashoffset = (100 - (timer / 25) * 100).toString();
+              if (timer <= 0) clearInterval(timerInterval);
+            }, 1000);
+          }, 500);
+
+          // Show cursor and select answer
+          const correctIdx = q.correct;
+          setTimeout(() => {
+            // Position cursor near the correct answer
+            const answerRect = answers[correctIdx];
+            cursor.style.opacity = '1';
+            cursor.style.bottom = (180 - correctIdx * 52) + 'px';
+            cursor.style.right = '80px';
+          }, 2500);
+
+          setTimeout(() => {
+            // Tap animation
+            cursor.style.transform = 'scale(0.85)';
+            setTimeout(() => { cursor.style.transform = 'scale(1)'; }, 150);
+
+            // Select answer
+            answers[correctIdx].classList.add('selected');
+          }, 3200);
+
+          setTimeout(() => {
+            // Reveal correct
+            clearInterval(timerInterval);
+            answers[correctIdx].classList.remove('selected');
+            answers[correctIdx].classList.add('correct');
+            answers.forEach((a, i) => {
+              if (i !== correctIdx) a.classList.add('wrong');
+            });
+            cursor.style.opacity = '0';
+          }, 4200);
+
+          setTimeout(() => {
+            // Show result
+            result.classList.add('show');
+            // Count up score
+            let s = 38 + currentQ * 12;
+            let target = s + 12;
+            scoreValue.textContent = s;
+            const countUp = setInterval(() => {
+              s++;
+              scoreValue.textContent = s;
+              if (s >= target) clearInterval(countUp);
+            }, 40);
+          }, 5000);
+
+          setTimeout(() => {
+            currentQ++;
+            resetAnimation();
+          }, 7500);
+
+        }, 300);
+      }
+
+      // Start after page load
+      setTimeout(resetAnimation, 1500);
+    })();
 
     // ── Intro Hero Cards ───────────────────────────────────────
     fetch('intro-hero.json')
