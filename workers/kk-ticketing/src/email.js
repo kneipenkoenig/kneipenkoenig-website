@@ -127,6 +127,7 @@ export async function sendConfirmationEmail(env, { order, event }) {
       },
       body: JSON.stringify({
         from: `Der Kneipenkönig <${fromEmail}>`,
+        reply_to: 'info@kneipenkoenig.de',
         to: [order.customer_email],
         subject: `Buchung bestätigt: ${event.title} – ${order.order_number}`,
         html,
@@ -200,6 +201,7 @@ export async function sendWaitlistNotification(env, { email, name, event }) {
       },
       body: JSON.stringify({
         from: `Der Kneipenkönig <${fromEmail}>`,
+        reply_to: 'info@kneipenkoenig.de',
         to: [email],
         subject: `Platz frei: ${event.title} – Jetzt buchen!`,
         html,
