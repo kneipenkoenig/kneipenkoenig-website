@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" href="images/logos/logo-blackbg.png" />
+<title>Buchung bestätigt – Der Kneipenkönig</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Buchung bestätigt – Der Kneipenkönig" />
+<meta property="og:image" content="https://kneipenkoenig.de/hero-bg.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: rgba(0,0,0,0.04);
+    --border: rgba(0,0,0,0.10);
+    --border-blue: rgba(56,182,255,0.40);
+    --blue: #38b6ff;
+    --text-primary: #000;
+    --text-secondary: rgba(0,0,0,0.55);
+    --text-muted: rgba(0,0,0,0.38);
+  }
+  html.dark {
+    --bg: rgba(0,0,0,0.30);
+    --surface: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.09);
+    --border-blue: rgba(56,182,255,0.35);
+    --text-primary: #fff;
+    --text-secondary: rgba(255,255,255,0.55);
+    --text-muted: rgba(255,255,255,0.35);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  html.dark body::before {
+    content: ''; position: fixed; inset: 0;
+    background: url('hero-bg.jpg') center center / cover no-repeat;
+    z-index: -2; pointer-events: none;
+  }
+  html.dark body::after {
+    content: ''; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: -1; pointer-events: none;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 5%; display: flex; align-items: center; justify-content: space-between; transition: background 0.4s; border-bottom: 1px solid transparent; }
+  .nav.scrolled { background: rgba(0,0,0,0.88); backdrop-filter: blur(20px); border-color: var(--border); }
+  .nav-logo { font-family: 'Open Sans', sans-serif; font-weight: 800; font-size: 1.35rem; text-decoration: none; display: flex; align-items: center; line-height: 1; }
+  .nav-logo .der { color: #fff; }
+  .nav-logo .kneipen { color: #38b6ff; }
+  .nav-logo-img { height: 28px; width: auto; mix-blend-mode: screen; margin-right: 8px; }
+  .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+  .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: #38b6ff; }
+  @media (max-width: 768px) { .nav-links { display: none; } }
+  @keyframes navLineRun { from { left: -30%; } to { left: 130%; } }
+  .nav-line { position: fixed; top: 80px; left: 0; right: 0; height: 2px; z-index: 99; background: rgba(56,182,255,0.15); overflow: hidden; }
+  .nav-line::after { content: ''; position: absolute; top: 0; width: 30%; height: 100%; background: linear-gradient(90deg, transparent 0%, #38b6ff 35%, #bfefff 50%, #38b6ff 65%, transparent 100%); animation: navLineRun 2.5s linear infinite; }
+
+  /* MAIN */
+  main {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 140px 5% 100px;
+    text-align: center;
+  }
+
+  .confirm-icon {
+    width: 80px; height: 80px;
+    margin: 0 auto 24px;
+    background: rgba(52,211,153,0.12);
+    border: 2px solid rgba(52,211,153,0.4);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 4rem);
+    line-height: 1;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  .confirm-sub {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    margin-bottom: 40px;
+  }
+
+  .confirm-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    text-align: left;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .confirm-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(56,182,255,0.5), transparent);
+  }
+
+  .confirm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .confirm-row:last-child { border-bottom: none; }
+  .confirm-label { font-size: 0.85rem; color: var(--text-secondary); }
+  .confirm-value { font-weight: 700; color: var(--text-primary); font-size: 0.95rem; }
+  .confirm-value.blue { color: #38b6ff; }
+  .confirm-value.big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.06em;
+    color: #38b6ff;
+  }
+
+  .qr-section {
+    margin: 32px 0;
+    text-align: center;
+  }
+  .qr-section canvas {
+    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .qr-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+    font-weight: 600;
+  }
+
+  .confirm-note {
+    background: rgba(56,182,255,0.06);
+    border: 1px solid rgba(56,182,255,0.15);
+    border-radius: 14px;
+    padding: 18px 24px;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+
+  .btn-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    background: #38b6ff;
+    color: #000;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-home:hover { background: #7dd3fc; transform: translateY(-1px); }
+
+  .loading-state {
+    padding: 60px 0;
+    color: var(--text-muted);
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px 5%;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+  }
+  footer a { color: #38b6ff; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="navbar">
+  <a href="index.html" class="nav-logo">
+    <img src="images/logos/logo-blackbg.png" class="nav-logo-img" alt="" /><span class="der">DER</span><span class="kneipen">KNEIPENKÖNIG</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#events">Events</a></li>
+    <li><a href="ergebnisse.html">Ergebnisse</a></li>
+    <li><a href="index.html#buchung">Kontakt</a></li>
+  </ul>
+</nav>
+<div class="nav-line"></div>
+
+<main id="mainContent">
+  <div class="loading-state" id="loadingState">Buchung wird geladen…</div>
+</main>
+
+<footer>
+  © 2026 Der Kneipenkönig · Lettevents
+  <span style="margin:0 8px; opacity:0.4;">|</span>
+  <a href="index.html">Startseite</a>
+  <span style="margin:0 8px; opacity:0.4;">|</span>
+  <a href="datenschutz.html">Datenschutz</a>
+</footer>
+
+<!-- QR-Code Bibliothek (klein, standalone) -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+<script>
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  const SB_URL = 'https://mqsxgzaliwzyghmgygea.supabase.co';
+  const SB_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xc3hnemFsaXd6eWdobWd5Z2VhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk2MjIxOTQsImV4cCI6MjA1NTE5ODE5NH0.hFoBOn0F_uFHaRMSfMFSMCxB06FWAhj5RzGFqXK-N1Y';
+  const DE_MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  const DE_DAYS = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+
+  async function loadConfirmation() {
+    const params = new URLSearchParams(window.location.search);
+    const orderNumber = params.get('order');
+    const main = document.getElementById('mainContent');
+
+    if (!orderNumber) {
+      main.innerHTML = `
+        <div class="confirm-icon" style="background:rgba(239,68,68,0.12); border-color:rgba(239,68,68,0.4);">❌</div>
+        <h1>Keine Buchung</h1>
+        <p class="confirm-sub">Es wurde keine Bestellnummer übergeben.</p>
+        <a href="index.html#events" class="btn-home">Zurück zu den Events</a>`;
+      return;
+    }
+
+    try {
+      // Order laden (mit Event-Daten)
+      const res = await fetch(
+        `${SB_URL}/rest/v1/orders?select=*,events(title,venue_name,start_date)&order_number=eq.${orderNumber}`,
+        {
+          headers: {
+            'apikey': SB_SERVICE_KEY,
+            'Authorization': `Bearer ${SB_SERVICE_KEY}`,
+            'Accept': 'application/vnd.pgrst.object+json',
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error('Order nicht gefunden');
+      const order = await res.json();
+      const event = order.events;
+      const d = event ? new Date(event.start_date) : null;
+
+      const paymentLabels = { stripe: 'Kreditkarte', paypal: 'PayPal', bar: 'Barzahlung vor Ort', free: 'Kostenlos' };
+      const statusLabels = { paid: 'Bezahlt ✓', pending: 'Ausstehend', cancelled: 'Storniert', refunded: 'Erstattet' };
+
+      main.innerHTML = `
+        <div class="confirm-icon">✓</div>
+        <h1>Buchung bestätigt!</h1>
+        <p class="confirm-sub">Dein Platz ist gesichert. Wir freuen uns auf dich!</p>
+
+        <div class="confirm-card">
+          <div class="confirm-row">
+            <span class="confirm-label">Bestellnummer</span>
+            <span class="confirm-value big">${order.order_number}</span>
+          </div>
+          ${event ? `
+          <div class="confirm-row">
+            <span class="confirm-label">Event</span>
+            <span class="confirm-value">${event.title}</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Datum</span>
+            <span class="confirm-value">${d ? `${DE_DAYS[d.getDay()]}, ${d.getDate()}. ${DE_MONTHS[d.getMonth()]} ${d.getFullYear()}` : ''}</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Location</span>
+            <span class="confirm-value">${event.venue_name || ''}</span>
+          </div>` : ''}
+          <div class="confirm-row">
+            <span class="confirm-label">Team</span>
+            <span class="confirm-value blue">${order.team_name || '–'}</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Tickets</span>
+            <span class="confirm-value">${order.quantity}×</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Betrag</span>
+            <span class="confirm-value">${parseFloat(order.total_amount).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Zahlung</span>
+            <span class="confirm-value">${paymentLabels[order.payment_method] || order.payment_method}</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Status</span>
+            <span class="confirm-value" style="color: ${order.payment_status === 'paid' ? '#34d399' : '#eab308'}">${statusLabels[order.payment_status] || order.payment_status}</span>
+          </div>
+        </div>
+
+        <div class="qr-section">
+          <canvas id="qrCanvas"></canvas>
+          <div class="qr-label">QR-Code für den Check-in vor Ort</div>
+        </div>
+
+        <div class="confirm-note">
+          <strong>Wichtig:</strong> Zeig diesen QR-Code beim Einlass vor. Eine Bestätigung wurde an <strong>${order.customer_email}</strong> gesendet.
+          ${order.payment_method === 'bar' ? '<br><br>Bitte bezahle den Betrag vor Ort bei der Anmeldung.' : ''}
+        </div>
+
+        <a href="index.html" class="btn-home">Zur Startseite</a>`;
+
+      // QR-Code generieren
+      if (typeof QRCode !== 'undefined') {
+        const qrData = JSON.stringify({
+          order: order.order_number,
+          id: order.id,
+          team: order.team_name,
+          qty: order.quantity,
+        });
+        QRCode.toCanvas(document.getElementById('qrCanvas'), qrData, {
+          width: 200,
+          margin: 2,
+          color: { dark: '#000', light: '#fff' },
+        });
+      }
+
+    } catch (err) {
+      console.error(err);
+      main.innerHTML = `
+        <div class="confirm-icon" style="background:rgba(239,68,68,0.12); border-color:rgba(239,68,68,0.4);">❌</div>
+        <h1>Buchung nicht gefunden</h1>
+        <p class="confirm-sub">Die Bestellung <strong>${orderNumber}</strong> konnte nicht geladen werden. Bitte prüfe deine E-Mail für die Bestätigung.</p>
+        <a href="index.html#events" class="btn-home">Zurück zu den Events</a>`;
+    }
+  }
+
+  loadConfirmation();
+</script>
+</body>
+</html>

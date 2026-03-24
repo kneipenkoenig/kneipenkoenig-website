@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" href="images/logos/logo-blackbg.png" />
+<title>Tickets – Der Kneipenkönig</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="stylesheet" href="fonts/fonts.css" />
+<style>
+  :root {
+    --bg: #ffffff; --bg-2: #f8f9fa;
+    --surface: rgba(0,0,0,0.04); --surface-hover: rgba(0,0,0,0.07);
+    --border: rgba(0,0,0,0.10); --border-blue: rgba(56,182,255,0.40);
+    --blue: #38b6ff; --text-primary: #000;
+    --text-secondary: rgba(0,0,0,0.55); --text-muted: rgba(0,0,0,0.38);
+  }
+  html.dark {
+    --bg: rgba(0,0,0,0.30); --bg-2: rgba(0,0,0,0.60);
+    --surface: rgba(255,255,255,0.05); --surface-hover: rgba(255,255,255,0.09);
+    --border: rgba(255,255,255,0.09); --border-blue: rgba(56,182,255,0.35);
+    --text-primary: #fff; --text-secondary: rgba(255,255,255,0.55);
+    --text-muted: rgba(255,255,255,0.35);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  html.dark body::before { content:''; position:fixed; inset:0; background:url('hero-bg.jpg') center/cover no-repeat; z-index:-2; pointer-events:none; }
+  html.dark body::after { content:''; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:-1; pointer-events:none; }
+
+  body { background:var(--bg); color:var(--text-primary); font-family:'Open Sans',sans-serif; font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased; }
+
+  /* NAV */
+  .nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:18px 5%; display:flex; align-items:center; justify-content:space-between; transition:background 0.4s; border-bottom:1px solid transparent; }
+  .nav.scrolled { background:rgba(0,0,0,0.88); backdrop-filter:blur(20px); border-color:var(--border); }
+  .nav-logo { font-family:'Open Sans',sans-serif; font-weight:800; font-size:1.35rem; text-decoration:none; display:flex; align-items:center; line-height:1; }
+  .nav-logo .der { color:#fff; } .nav-logo .kneipen { color:#38b6ff; }
+  .nav-logo-img { height:28px; width:auto; mix-blend-mode:screen; margin-right:8px; }
+  @keyframes navLineRun { from{left:-30%} to{left:130%} }
+  .nav-line { position:fixed; top:80px; left:0; right:0; height:2px; z-index:99; background:rgba(56,182,255,0.15); overflow:hidden; }
+  .nav-line::after { content:''; position:absolute; top:0; width:30%; height:100%; background:linear-gradient(90deg,transparent 0%,#38b6ff 35%,#bfefff 50%,#38b6ff 65%,transparent 100%); animation:navLineRun 2.5s linear infinite; }
+
+  /* DEV BANNER */
+  .dev-banner { background:rgba(234,179,8,0.15); border:1px solid rgba(234,179,8,0.4); color:#eab308; text-align:center; padding:10px 20px; font-size:0.85rem; font-weight:600; margin:100px 5% 0; border-radius:12px; }
+
+  /* MAIN */
+  .container { max-width:1100px; margin:0 auto; padding:30px 5% 60px; }
+  .section-label { font-size:0.72rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#38b6ff; display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .section-label::before { content:''; display:block; width:28px; height:2px; background:#38b6ff; flex-shrink:0; }
+  .section-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(2.2rem,5vw,3.8rem); line-height:1; margin-bottom:48px; }
+
+  /* EVENT CARDS */
+  .events-grid { display:flex; flex-direction:column; gap:14px; }
+
+  .event-card { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:24px; padding:22px 28px; border:1px solid var(--border); border-radius:14px; background:var(--surface); transition:border-color 0.3s,background 0.3s,transform 0.3s; cursor:pointer; position:relative; }
+  .event-card:hover { border-color:var(--border-blue); background:var(--surface-hover); transform:translateX(4px); }
+
+  .event-date-block { text-align:center; min-width:58px; padding-left:16px; }
+  .event-date-day { font-family:'Bebas Neue',sans-serif; font-size:2.1rem; line-height:1; color:#38b6ff; }
+  .event-date-month { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted); font-weight:600; margin-top:2px; }
+
+  .event-info { min-width:0; }
+  .event-title { font-weight:600; font-size:1rem; color:var(--text-primary); margin-bottom:4px; }
+  .event-location { font-size:0.85rem; color:var(--text-secondary); display:flex; align-items:center; gap:5px; }
+
+  .event-meta { display:flex; align-items:center; gap:14px; flex-shrink:0; }
+  .event-time { font-size:0.83rem; color:var(--text-muted); font-weight:600; }
+  .event-price { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:#38b6ff; }
+
+  .badge { display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border-radius:100px; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; }
+  .badge-sold { background:rgba(239,68,68,0.10); color:#f87171; border:1px solid rgba(239,68,68,0.2); }
+  .badge-available { background:rgba(52,211,153,0.10); color:#34d399; border:1px solid rgba(52,211,153,0.2); }
+  .badge-special { background:rgba(56,182,255,0.10); color:#38b6ff; border:1px solid var(--border-blue); }
+
+  .event-card.card-available { background:rgba(52,211,153,0.12); border-color:rgba(52,211,153,0.4); }
+  .event-card.card-low { background:rgba(234,179,8,0.12); border-color:rgba(234,179,8,0.4); }
+  .event-card.card-sold { background:rgba(239,68,68,0.12); border-color:rgba(239,68,68,0.4); }
+  .event-card.card-available:hover { background:rgba(52,211,153,0.18); }
+  .event-card.card-low:hover { background:rgba(234,179,8,0.18); }
+  .event-card.card-sold:hover { background:rgba(239,68,68,0.18); }
+
+  .event-avail-icon { position:absolute; top:8px; left:10px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; }
+  .event-avail-icon svg { width:100%; height:100%; }
+
+  .events-empty { padding:48px 32px; text-align:center; border:1px dashed var(--border); border-radius:14px; color:var(--text-muted); font-size:0.95rem; }
+  .events-empty strong { display:block; color:var(--text-secondary); font-size:1.05rem; margin-bottom:6px; }
+
+  /* CHECKOUT MODAL */
+  .checkout-overlay { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:20px; }
+  .checkout-overlay.open { display:flex; }
+  .checkout-modal { background:rgba(20,20,35,0.95); border:1px solid var(--border); border-radius:20px; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; position:relative; }
+
+  .checkout-head { padding:28px 32px 20px; border-bottom:1px solid var(--border); background:linear-gradient(135deg,rgba(56,182,255,0.10),transparent); }
+  .checkout-head-event { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; color:var(--text-primary); line-height:1.2; }
+  .checkout-head-venue { font-size:0.85rem; color:var(--text-secondary); margin-top:4px; }
+  .checkout-head-date { display:inline-flex; align-items:center; gap:6px; margin-top:8px; font-size:0.8rem; font-weight:600; color:#38b6ff; background:rgba(56,182,255,0.10); padding:4px 12px; border-radius:100px; }
+  .checkout-close { position:absolute; top:18px; right:18px; background:rgba(255,255,255,0.08); border:1px solid var(--border); border-radius:8px; color:var(--text-secondary); width:36px; height:36px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; cursor:pointer; transition:background 0.2s; }
+  .checkout-close:hover { background:rgba(255,255,255,0.15); color:#fff; }
+
+  .checkout-body { padding:24px 32px 32px; }
+  .checkout-field { margin-bottom:16px; }
+  .checkout-field label { display:block; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-secondary); margin-bottom:6px; }
+  .checkout-field input, .checkout-field select { width:100%; padding:12px 16px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:10px; color:var(--text-primary); font-size:0.95rem; font-family:'Open Sans',sans-serif; transition:border-color 0.2s; outline:none; }
+  .checkout-field input:focus, .checkout-field select:focus { border-color:#38b6ff; }
+  .checkout-field input::placeholder { color:var(--text-muted); }
+  .checkout-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+  .checkout-discount-row { display:grid; grid-template-columns:1fr auto; gap:8px; align-items:end; }
+  .checkout-discount-btn { padding:12px 16px; background:rgba(56,182,255,0.10); border:1px solid rgba(56,182,255,0.3); border-radius:10px; color:#38b6ff; font-size:0.85rem; font-weight:600; cursor:pointer; transition:background 0.2s; white-space:nowrap; }
+  .checkout-discount-btn:hover { background:rgba(56,182,255,0.2); }
+  .checkout-discount-msg { font-size:0.8rem; margin-top:6px; font-weight:600; }
+  .checkout-discount-msg.valid { color:#34d399; } .checkout-discount-msg.invalid { color:#f87171; }
+
+  .checkout-divider { height:1px; background:var(--border); margin:20px 0; }
+  .checkout-payment-label { font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-secondary); margin-bottom:10px; }
+  .checkout-payment-methods { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:20px; }
+  .checkout-pm { padding:14px 8px; background:rgba(255,255,255,0.04); border:2px solid var(--border); border-radius:12px; text-align:center; cursor:pointer; transition:border-color 0.2s,background 0.2s; color:var(--text-secondary); font-size:0.8rem; font-weight:600; }
+  .checkout-pm:hover { background:rgba(255,255,255,0.08); }
+  .checkout-pm.selected { border-color:#38b6ff; background:rgba(56,182,255,0.10); color:#38b6ff; }
+  .checkout-pm-icon { font-size:1.5rem; margin-bottom:4px; display:block; }
+
+  .checkout-total { display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-top:1px solid var(--border); margin-bottom:16px; }
+  .checkout-total-label { font-size:0.9rem; font-weight:600; color:var(--text-secondary); }
+  .checkout-total-amount { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; color:#38b6ff; }
+
+  .checkout-submit { width:100%; padding:16px; background:#38b6ff; color:#000; border:none; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; transition:background 0.2s,transform 0.15s; font-family:'Open Sans',sans-serif; }
+  .checkout-submit:hover { background:#7dd3fc; transform:translateY(-1px); }
+  .checkout-submit:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+  .checkout-footer-note { text-align:center; font-size:0.75rem; color:var(--text-muted); margin-top:12px; }
+
+  .waitlist-info { text-align:center; padding:16px 0; }
+  .waitlist-badge { display:inline-block; background:rgba(239,68,68,0.12); color:#f87171; border:1px solid rgba(239,68,68,0.25); padding:6px 16px; border-radius:100px; font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px; }
+  .waitlist-info p { color:var(--text-secondary); font-size:0.9rem; }
+
+  footer { text-align:center; padding:40px 5%; color:var(--text-muted); font-size:0.82rem; border-top:1px solid var(--border); }
+  footer a { color:#38b6ff; text-decoration:none; }
+
+  @media (max-width:600px) {
+    .event-card { grid-template-columns:auto 1fr; gap:16px; padding:16px 20px; }
+    .event-meta { grid-column:1/-1; justify-content:flex-end; }
+    .checkout-head,.checkout-body { padding-left:20px; padding-right:20px; }
+    .checkout-row { grid-template-columns:1fr; }
+    .checkout-payment-methods { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="navbar">
+  <a href="index.html" class="nav-logo">
+    <img src="images/logos/logo-blackbg.png" class="nav-logo-img" alt="" /><span class="der">DER</span><span class="kneipen">KNEIPENKÖNIG</span>
+  </a>
+</nav>
+<div class="nav-line"></div>
+
+<div class="dev-banner">
+  🚧 Testumgebung – Diese Seite ist nicht öffentlich verlinkt. Ticketing-System in Entwicklung.
+</div>
+
+<div class="container">
+  <span class="section-label">Tickets</span>
+  <h1 class="section-title">Kommende Events</h1>
+  <div class="events-grid" id="eventsContainer">
+    <div class="events-empty"><strong>Events werden geladen…</strong></div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="checkout-overlay" id="checkoutOverlay">
+  <div class="checkout-modal">
+    <button class="checkout-close" id="checkoutClose" aria-label="Schließen">✕</button>
+    <div class="checkout-head">
+      <div class="checkout-head-event" id="coEventTitle"></div>
+      <div class="checkout-head-venue" id="coVenue"></div>
+      <div class="checkout-head-date" id="coDate"></div>
+    </div>
+    <div class="checkout-body" id="checkoutForm">
+      <div class="checkout-field"><label for="coTeam">Teamname</label><input type="text" id="coTeam" placeholder="z.B. Die Schlauberger" /></div>
+      <div class="checkout-row">
+        <div class="checkout-field"><label for="coName">Name</label><input type="text" id="coName" placeholder="Vor- und Nachname" /></div>
+        <div class="checkout-field"><label for="coPhone">Telefon (optional)</label><input type="tel" id="coPhone" placeholder="+49 ..." /></div>
+      </div>
+      <div class="checkout-field"><label for="coEmail">E-Mail</label><input type="email" id="coEmail" placeholder="deine@email.de" /></div>
+      <div class="checkout-row">
+        <div class="checkout-field"><label for="coQty">Anzahl Tickets</label>
+          <select id="coQty"><option value="1">1 Ticket</option><option value="2">2 Tickets</option><option value="3">3 Tickets</option><option value="4">4 Tickets</option><option value="5">5 Tickets</option></select>
+        </div>
+        <div class="checkout-field">
+          <div class="checkout-discount-row">
+            <div><label for="coDiscount">Rabattcode</label><input type="text" id="coDiscount" placeholder="Code eingeben" /></div>
+            <button class="checkout-discount-btn" id="coDiscountBtn">Prüfen</button>
+          </div>
+          <div class="checkout-discount-msg" id="coDiscountMsg"></div>
+        </div>
+      </div>
+      <div class="checkout-divider"></div>
+      <div class="checkout-payment-label" id="coPayLabel">Zahlungsmethode</div>
+      <div class="checkout-payment-methods" id="coPaymentMethods">
+        <div class="checkout-pm selected" data-method="stripe"><span class="checkout-pm-icon">💳</span>Kreditkarte</div>
+        <div class="checkout-pm" data-method="paypal"><span class="checkout-pm-icon">🅿️</span>PayPal</div>
+        <div class="checkout-pm" data-method="bar"><span class="checkout-pm-icon">💶</span>Barzahlung</div>
+      </div>
+      <div class="checkout-total"><span class="checkout-total-label">Gesamt</span><span class="checkout-total-amount" id="coTotal">0,00 €</span></div>
+      <button class="checkout-submit" id="coSubmit">Jetzt buchen</button>
+      <div class="checkout-footer-note">Sichere Zahlung via Stripe / PayPal</div>
+    </div>
+    <div class="checkout-body" id="waitlistForm" style="display:none">
+      <div class="waitlist-info">
+        <div class="waitlist-badge">Ausverkauft</div>
+        <p>Dieses Event ist leider ausverkauft. Trag dich in die Warteliste ein!</p>
+      </div>
+      <div class="checkout-field"><label for="wlName">Name</label><input type="text" id="wlName" placeholder="Vor- und Nachname" /></div>
+      <div class="checkout-field"><label for="wlEmail">E-Mail</label><input type="email" id="wlEmail" placeholder="deine@email.de" /></div>
+      <div class="checkout-field"><label for="wlTeam">Teamname (optional)</label><input type="text" id="wlTeam" placeholder="z.B. Die Schlauberger" /></div>
+      <button class="checkout-submit" id="wlSubmit">Auf die Warteliste</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  © 2026 Der Kneipenkönig · Lettevents
+  <span style="margin:0 8px;opacity:0.4;">|</span>
+  <a href="index.html">Startseite</a>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20); });
+
+  const SB_URL = 'https://mqsxgzaliwzyghmgygea.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xc3hnemFsaXd6eWdobWd5Z2VhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk2MjIxOTQsImV4cCI6MjA1NTE5ODE5NH0.hFoBOn0F_uFHaRMSfMFSMCxB06FWAhj5RzGFqXK-N1Y';
+  const WORKER_URL = 'https://kk-ticketing.kneipenkoenig.workers.dev';
+  const DE_MONTHS = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+  const DE_DAYS = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+
+  let eventsCache = [];
+
+  function buildBadge(status) {
+    if (status === 'low') return '<span class="badge badge-special">Letzte Plätze</span>';
+    if (status === 'sold') return '<span class="badge badge-sold">Ausverkauft</span>';
+    return '<span class="badge badge-available">Verfügbar</span>';
+  }
+
+  function getStatus(ev) {
+    if (ev.available <= 0) return 'sold';
+    if (ev.available <= 5) return 'low';
+    return 'available';
+  }
+
+  function buildEventCard(ev, index) {
+    const d = new Date(ev.start_date);
+    const day = d.getDate();
+    const month = DE_MONTHS[d.getMonth()];
+    const time = d.toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
+    const pinSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+    const status = getStatus(ev);
+    const cardColor = status === 'available' ? ' card-available' : status === 'low' ? ' card-low' : ' card-sold';
+    const iconSvg = status === 'available'
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>'
+      : status === 'low'
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="#eab308"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+    const priceLabel = ev.price > 0 ? `<span class="event-price">${parseFloat(ev.price).toLocaleString('de-DE',{style:'currency',currency:'EUR'})}</span>` : '<span class="event-price">Kostenlos</span>';
+
+    return `<div class="event-card${cardColor}" onclick="openCheckout('${ev.id}')" role="listitem">
+      <span class="event-avail-icon">${iconSvg}</span>
+      <div class="event-date-block"><div class="event-date-day">${day}</div><div class="event-date-month">${month}</div></div>
+      <div class="event-info">
+        <div class="event-title">${ev.title}</div>
+        ${ev.venue_name ? `<div class="event-location">${pinSvg}${ev.venue_name}</div>` : ''}
+      </div>
+      <div class="event-meta">
+        <span class="event-time">${time} Uhr</span>
+        ${priceLabel}
+        ${buildBadge(status)}
+      </div>
+    </div>`;
+  }
+
+  async function loadEvents() {
+    const container = document.getElementById('eventsContainer');
+    try {
+      const now = new Date().toISOString();
+      const res = await fetch(
+        `${SB_URL}/rest/v1/events?select=id,title,description,venue_name,venue_address,start_date,end_date,price,currency,max_tickets,ticket_types(id,name,price)&status=eq.published&start_date=gte.${now}&order=start_date.asc&limit=20`,
+        { headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` } }
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const events = await res.json();
+
+      const eventsWithAvail = await Promise.all(events.map(async (ev) => {
+        try {
+          const avRes = await fetch(`${WORKER_URL}/availability/${ev.id}`);
+          if (avRes.ok) { const d = await avRes.json(); ev.available = d.available ?? ev.max_tickets; }
+          else ev.available = ev.max_tickets;
+        } catch { ev.available = ev.max_tickets; }
+        return ev;
+      }));
+
+      eventsCache = eventsWithAvail;
+      if (!eventsWithAvail.length) {
+        container.innerHTML = '<div class="events-empty"><strong>Keine anstehenden Events</strong>Schau bald wieder vorbei!</div>';
+      } else {
+        container.innerHTML = eventsWithAvail.map((ev, i) => buildEventCard(ev, i)).join('');
+      }
+    } catch (err) {
+      console.error('Events laden:', err);
+      container.innerHTML = '<div class="events-empty"><strong>Events konnten nicht geladen werden</strong>Bitte versuche es gleich noch einmal.</div>';
+    }
+  }
+
+  loadEvents();
+
+  // ── CHECKOUT ──
+  let currentEvent = null, currentDiscount = null, selectedPayment = 'stripe';
+  const overlay = document.getElementById('checkoutOverlay');
+
+  function openCheckout(eventId) {
+    const ev = eventsCache.find(e => e.id === eventId);
+    if (!ev) return;
+    currentEvent = ev; currentDiscount = null;
+    selectedPayment = ev.price > 0 ? 'stripe' : 'free';
+
+    const d = new Date(ev.start_date);
+    document.getElementById('coEventTitle').textContent = ev.title;
+    document.getElementById('coVenue').textContent = ev.venue_name + (ev.venue_address ? ' · ' + ev.venue_address : '');
+    document.getElementById('coDate').textContent = `${DE_DAYS[d.getDay()]}, ${d.getDate()}. ${DE_MONTHS[d.getMonth()]} ${d.getFullYear()} · ${d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})} Uhr`;
+
+    const isSoldOut = ev.available <= 0;
+    document.getElementById('checkoutForm').style.display = isSoldOut ? 'none' : 'block';
+    document.getElementById('waitlistForm').style.display = isSoldOut ? 'block' : 'none';
+
+    const pmC = document.getElementById('coPaymentMethods');
+    const pmL = document.getElementById('coPayLabel');
+    if (ev.price <= 0) { pmC.style.display = 'none'; pmL.style.display = 'none'; }
+    else { pmC.style.display = 'grid'; pmL.style.display = 'block'; }
+
+    document.getElementById('coDiscount').value = '';
+    document.getElementById('coDiscountMsg').textContent = '';
+    document.getElementById('coQty').value = '1';
+    document.querySelectorAll('.checkout-pm').forEach(el => el.classList.toggle('selected', el.dataset.method === selectedPayment));
+    updateTotal();
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCheckout() { overlay.classList.remove('open'); document.body.style.overflow = ''; }
+  document.getElementById('checkoutClose').addEventListener('click', closeCheckout);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeCheckout(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCheckout(); });
+
+  document.getElementById('coPaymentMethods').addEventListener('click', e => {
+    const pm = e.target.closest('.checkout-pm');
+    if (!pm) return;
+    selectedPayment = pm.dataset.method;
+    document.querySelectorAll('.checkout-pm').forEach(el => el.classList.toggle('selected', el === pm));
+  });
+
+  document.getElementById('coQty').addEventListener('change', updateTotal);
+
+  function updateTotal() {
+    if (!currentEvent) return;
+    const qty = parseInt(document.getElementById('coQty').value) || 1;
+    let total = currentEvent.price * qty;
+    if (currentDiscount) {
+      if (currentDiscount.type === 'percent') total *= (1 - currentDiscount.value / 100);
+      else total = Math.max(0, total - currentDiscount.value);
+    }
+    document.getElementById('coTotal').textContent = Math.round(total * 100 / 100).toLocaleString('de-DE', { style:'currency', currency:'EUR' });
+  }
+
+  document.getElementById('coDiscountBtn').addEventListener('click', async () => {
+    const code = document.getElementById('coDiscount').value.trim();
+    const msg = document.getElementById('coDiscountMsg');
+    if (!code) { msg.textContent = ''; return; }
+    try {
+      const res = await fetch(`${WORKER_URL}/validate-discount`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({code, event_id:currentEvent.id}) });
+      const data = await res.json();
+      if (data.valid) {
+        currentDiscount = data;
+        msg.textContent = `✓ Rabatt: -${data.type === 'percent' ? data.value + '%' : data.value.toFixed(2) + ' €'}`;
+        msg.className = 'checkout-discount-msg valid';
+      } else { currentDiscount = null; msg.textContent = `✗ ${data.reason}`; msg.className = 'checkout-discount-msg invalid'; }
+      updateTotal();
+    } catch { msg.textContent = '✗ Fehler'; msg.className = 'checkout-discount-msg invalid'; }
+  });
+
+  document.getElementById('coSubmit').addEventListener('click', async () => {
+    const btn = document.getElementById('coSubmit');
+    const name = document.getElementById('coName').value.trim();
+    const email = document.getElementById('coEmail').value.trim();
+    if (!name || !email) { alert('Bitte Name und E-Mail ausfüllen.'); return; }
+
+    btn.disabled = true; btn.textContent = 'Wird verarbeitet…';
+    try {
+      const pm = currentEvent.price <= 0 ? 'free' : selectedPayment;
+      const res = await fetch(`${WORKER_URL}/checkout`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          event_id: currentEvent.id,
+          ticket_type_id: currentEvent.ticket_types?.[0]?.id || null,
+          quantity: parseInt(document.getElementById('coQty').value) || 1,
+          customer_name: name, customer_email: email,
+          customer_phone: document.getElementById('coPhone').value.trim() || null,
+          team_name: document.getElementById('coTeam').value.trim() || null,
+          payment_method: pm,
+          discount_code: document.getElementById('coDiscount').value.trim() || null,
+          success_url: `${location.origin}/buchung-bestaetigt.html?order={ORDER}`,
+          cancel_url: location.href,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) { alert(data.error || 'Fehler'); btn.disabled = false; btn.textContent = 'Jetzt buchen'; return; }
+      if (data.checkout_url) { window.location.href = data.checkout_url; return; }
+      window.location.href = `buchung-bestaetigt.html?order=${data.order_number}`;
+    } catch { alert('Verbindungsfehler.'); btn.disabled = false; btn.textContent = 'Jetzt buchen'; }
+  });
+
+  document.getElementById('wlSubmit').addEventListener('click', async () => {
+    const btn = document.getElementById('wlSubmit');
+    const name = document.getElementById('wlName').value.trim();
+    const email = document.getElementById('wlEmail').value.trim();
+    if (!name || !email) { alert('Bitte Name und E-Mail ausfüllen.'); return; }
+    btn.disabled = true; btn.textContent = 'Wird eingetragen…';
+    try {
+      const res = await fetch(`${SB_URL}/rest/v1/waitlist`, {
+        method:'POST', headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body: JSON.stringify({ event_id:currentEvent.id, name, email, team_name:document.getElementById('wlTeam').value.trim()||null }),
+      });
+      if (res.ok) {
+        document.getElementById('waitlistForm').innerHTML = `<div class="waitlist-info"><div style="font-size:2.5rem;margin-bottom:12px;">✓</div><p style="color:var(--text-primary);font-weight:600;font-size:1.1rem;">Du bist auf der Warteliste!</p><p style="margin-top:8px;">Wir benachrichtigen dich an <strong>${email}</strong>.</p></div>`;
+      } else { alert('Fehler.'); btn.disabled = false; btn.textContent = 'Auf die Warteliste'; }
+    } catch { alert('Verbindungsfehler.'); btn.disabled = false; btn.textContent = 'Auf die Warteliste'; }
+  });
+</script>
+</body>
+</html>
