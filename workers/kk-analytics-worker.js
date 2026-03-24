@@ -1,11 +1,8 @@
 // Cloudflare Worker: Analytics Proxy für Der Kneipenkönig Admin
-// Deployment: Cloudflare Dashboard → Workers & Pages → Create → "Start with Hello World"
-//             → Code einfügen → Deploy
-// Danach: Settings → Variables → CF_API_TOKEN und CF_ZONE_ID als Secrets hinzufügen
+// Free-Plan: max 1 Tag pro Query → wir splitten in Tages-Abfragen
 
 export default {
   async fetch(request, env) {
-    // CORS
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         headers: {
@@ -17,7 +14,7 @@ export default {
     }
 
     const url = new URL(request.url);
-    const days = parseInt(url.searchParams.get('days') || '7', 10);
+    const days = Math.min(parseInt(url.searchParams.get('days') || '7', 10), 90);
 
     const CF_API_TOKEN = env.CF_API_TOKEN;
     const CF_ZONE_ID = env.CF_ZONE_ID;
@@ -26,27 +23,53 @@ export default {
       return jsonResp({ error: 'CF_API_TOKEN oder CF_ZONE_ID nicht konfiguriert' }, 500);
     }
 
-    const now = new Date();
-    const curEnd = now.toISOString();
-    const curStart = new Date(now - days * 86400000).toISOString();
-    const prevEnd = curStart;
-    const prevStart = new Date(now - days * 2 * 86400000).toISOString();
-
     try {
-      // Parallel: aktuelle Periode, Vorperiode, Timeline, Top Pages
-      const [curData, prevData, timelineData, topPagesData] = await Promise.all([
-        cfQuery(CF_API_TOKEN, CF_ZONE_ID, curStart, curEnd, 'summary'),
-        cfQuery(CF_API_TOKEN, CF_ZONE_ID, prevStart, prevEnd, 'summary'),
-        cfQuery(CF_API_TOKEN, CF_ZONE_ID, curStart, curEnd, 'timeline', days),
-        cfQuery(CF_API_TOKEN, CF_ZONE_ID, curStart, curEnd, 'topPages'),
+      const now = new Date();
+      // Tages-Ranges für aktuelle Periode
+      const curRanges = buildDayRanges(now, days);
+      // Tages-Ranges für Vorperiode
+      const prevRanges = buildDayRanges(new Date(now - days * 86400000), days);
+
+      // Alle Tages-Abfragen parallel (Summary + TopPages für aktuelle, Summary für Vorperiode)
+      const curSummaryPromises = curRanges.map(r =>
+        cfQueryDay(CF_API_TOKEN, CF_ZONE_ID, r.start, r.end, 'summary')
+      );
+      const prevSummaryPromises = prevRanges.map(r =>
+        cfQueryDay(CF_API_TOKEN, CF_ZONE_ID, r.start, r.end, 'summary')
+      );
+      const curTopPagesPromises = curRanges.map(r =>
+        cfQueryDay(CF_API_TOKEN, CF_ZONE_ID, r.start, r.end, 'topPages')
+      );
+
+      const [curSummaries, prevSummaries, curTopPages] = await Promise.all([
+        Promise.all(curSummaryPromises),
+        Promise.all(prevSummaryPromises),
+        Promise.all(curTopPagesPromises),
       ]);
 
-      return jsonResp({
-        current: curData,
-        previous: prevData,
-        timeline: timelineData,
-        topPages: topPagesData,
-      });
+      // Aggregiere Summary
+      const current = aggregateSummary(curSummaries);
+      const previous = aggregateSummary(prevSummaries);
+
+      // Timeline aus täglichen Summaries
+      const timeline = curSummaries.map((s, i) => ({
+        label: curRanges[i].start.split('T')[0],
+        count: s.pageviews,
+      }));
+
+      // Aggregiere Top Pages
+      const pageMap = {};
+      for (const dayPages of curTopPages) {
+        for (const p of dayPages) {
+          pageMap[p.path] = (pageMap[p.path] || 0) + p.count;
+        }
+      }
+      const topPages = Object.entries(pageMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 15)
+        .map(([path, count]) => ({ path, count }));
+
+      return jsonResp({ current, previous, timeline, topPages });
 
     } catch (e) {
       return jsonResp({ error: e.message }, 500);
@@ -54,7 +77,23 @@ export default {
   },
 };
 
-async function cfQuery(token, zoneId, start, end, type, days) {
+function buildDayRanges(endDate, days) {
+  const ranges = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const start = new Date(endDate);
+    start.setUTCDate(start.getUTCDate() - i - 1);
+    start.setUTCHours(0, 0, 0, 0);
+    const end = new Date(start);
+    end.setUTCDate(end.getUTCDate() + 1);
+    ranges.push({
+      start: start.toISOString(),
+      end: end.toISOString(),
+    });
+  }
+  return ranges;
+}
+
+async function cfQueryDay(token, zoneId, start, end, type) {
   const endpoint = 'https://api.cloudflare.com/client/v4/graphql';
 
   let query;
@@ -72,29 +111,13 @@ async function cfQuery(token, zoneId, start, end, type, days) {
         }
       }
     }`;
-  } else if (type === 'timeline') {
-    const dimension = days <= 1 ? 'datetimeHour' : 'date';
-    query = `{
-      viewer {
-        zones(filter: {zoneTag: "${zoneId}"}) {
-          httpRequestsAdaptiveGroups(
-            filter: {datetime_geq: "${start}", datetime_lt: "${end}", clientRequestHTTPHost: "kneipenkoenig.de"}
-            limit: 500
-            orderBy: [${dimension}_ASC]
-          ) {
-            count
-            dimensions { ${dimension} }
-          }
-        }
-      }
-    }`;
   } else if (type === 'topPages') {
     query = `{
       viewer {
         zones(filter: {zoneTag: "${zoneId}"}) {
           httpRequestsAdaptiveGroups(
             filter: {datetime_geq: "${start}", datetime_lt: "${end}", clientRequestHTTPHost: "kneipenkoenig.de"}
-            limit: 20
+            limit: 50
             orderBy: [count_DESC]
           ) {
             count
@@ -127,23 +150,24 @@ async function cfQuery(token, zoneId, start, end, type, days) {
       visitors += g.sum?.visits || 0;
     }
     return { pageviews, bandwidth, visitors };
-  } else if (type === 'timeline') {
-    return groups.map(g => ({
-      label: g.dimensions?.datetimeHour || g.dimensions?.date || '',
-      count: g.count,
-    }));
   } else if (type === 'topPages') {
-    // Aggregiere gleiche Pfade
     const map = {};
     for (const g of groups) {
       const p = g.dimensions?.clientRequestPath || '/';
       map[p] = (map[p] || 0) + g.count;
     }
-    return Object.entries(map)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 15)
-      .map(([path, count]) => ({ path, count }));
+    return Object.entries(map).map(([path, count]) => ({ path, count }));
   }
+}
+
+function aggregateSummary(summaries) {
+  let pageviews = 0, bandwidth = 0, visitors = 0;
+  for (const s of summaries) {
+    pageviews += s.pageviews || 0;
+    bandwidth += s.bandwidth || 0;
+    visitors += s.visitors || 0;
+  }
+  return { pageviews, bandwidth, visitors };
 }
 
 function jsonResp(data, status = 200) {
