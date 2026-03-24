@@ -1,6 +1,7 @@
 import { createSupabaseClient } from './supabase.js';
 import { createCheckoutSession, verifyWebhookSignature as verifyStripe } from './stripe.js';
 import { createOrder as createPayPalOrder, captureOrder as capturePayPal, verifyWebhookSignature as verifyPayPal } from './paypal.js';
+import { sendConfirmationEmail, sendWaitlistNotification } from './email.js';
 
 // ── Helpers ──────────────────────────────────────────────
 
@@ -257,9 +258,10 @@ async function handleCheckout(env, request) {
     });
   }
 
-  // Kostenlose oder Barzahlung → direkt bestätigt
+  // Kostenlose oder Barzahlung → direkt bestätigt + E-Mail
   if (totalAmount === 0) {
     await db.update('orders', [`id=eq.${order.id}`], { payment_status: 'paid' });
+    await sendConfirmationEmail(env, { order: { ...order, order_number: orderNumber, total_amount: 0, payment_method: 'free' }, event });
     return json({
       success: true,
       order_number: orderNumber,
@@ -271,6 +273,7 @@ async function handleCheckout(env, request) {
   }
 
   if (payment_method === 'bar') {
+    await sendConfirmationEmail(env, { order: { ...order, order_number: orderNumber, total_amount: totalAmount, payment_method: 'bar' }, event });
     return json({
       success: true,
       order_number: orderNumber,
@@ -349,10 +352,15 @@ async function handlePayPalCapture(env, request) {
     });
 
     if (orders.length) {
+      const o = orders[0];
+      try {
+        const ev = await db.query('events', { filters: [`id=eq.${o.event_id}`], single: true });
+        await sendConfirmationEmail(env, { order: o, event: ev });
+      } catch { /* E-Mail-Fehler nicht kritisch */ }
       return json({
         success: true,
-        order_number: orders[0].order_number,
-        order_id: orders[0].id,
+        order_number: o.order_number,
+        order_id: o.id,
         message: 'Zahlung erfolgreich',
       });
     }
@@ -382,10 +390,18 @@ async function handleStripeWebhook(env, request) {
       const paymentId = session.payment_intent;
 
       if (orderNumber) {
-        await db.update('orders', [`order_number=eq.${orderNumber}`], {
+        const updatedOrders = await db.update('orders', [`order_number=eq.${orderNumber}`], {
           payment_status: 'paid',
           payment_id: paymentId,
         });
+        // Bestätigungs-E-Mail senden
+        if (updatedOrders.length) {
+          const o = updatedOrders[0];
+          try {
+            const ev = await db.query('events', { filters: [`id=eq.${o.event_id}`], single: true });
+            await sendConfirmationEmail(env, { order: o, event: ev });
+          } catch { /* E-Mail-Fehler nicht kritisch */ }
+        }
       }
       break;
     }
@@ -402,7 +418,7 @@ async function handleStripeWebhook(env, request) {
             payment_status: 'refunded',
           });
           // Warteliste benachrichtigen
-          await notifyWaitlist(db, orders[0].event_id);
+          await notifyWaitlist(env, db, orders[0].event_id);
         }
       }
       break;
@@ -443,7 +459,7 @@ async function handlePayPalWebhook(env, request) {
           await db.update('orders', [`payment_id=eq.${orderId}`], {
             payment_status: 'refunded',
           });
-          await notifyWaitlist(db, orders[0].event_id);
+          await notifyWaitlist(env, db, orders[0].event_id);
         }
       }
       break;
@@ -456,12 +472,10 @@ async function handlePayPalWebhook(env, request) {
 
 // ── Warteliste benachrichtigen ───────────────────────────
 
-async function notifyWaitlist(db, eventId) {
-  // Prüfen ob jetzt Plätze frei sind
+async function notifyWaitlist(env, db, eventId) {
   const available = await db.rpc('available_tickets', { p_event_id: eventId });
   if (available <= 0) return;
 
-  // Erste Person auf der Warteliste finden die noch nicht benachrichtigt wurde
   const waiters = await db.query('waitlist', {
     filters: [`event_id=eq.${eventId}`, 'notified=eq.false'],
     order: 'created_at.asc',
@@ -469,9 +483,10 @@ async function notifyWaitlist(db, eventId) {
   });
 
   if (waiters.length) {
-    // Als benachrichtigt markieren (E-Mail-Versand muss separat implementiert werden)
     await db.update('waitlist', [`id=eq.${waiters[0].id}`], { notified: true });
-    // TODO: E-Mail an waiters[0].email senden (z.B. via Resend, SendGrid, etc.)
-    console.log(`Waitlist notification: ${waiters[0].email} for event ${eventId}`);
+    try {
+      const event = await db.query('events', { filters: [`id=eq.${eventId}`], single: true });
+      await sendWaitlistNotification(env, { email: waiters[0].email, name: waiters[0].name, event });
+    } catch { /* nicht kritisch */ }
   }
 }
