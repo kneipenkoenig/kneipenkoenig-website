@@ -334,6 +334,85 @@
       .intro-hero-cards   { flex: 0 0 360px; }
     }
 
+    /* ─── INTRO HERO ALT (Variante) ────────────────────── */
+    .intro-hero-alt {
+      position: relative;
+      overflow: hidden;
+      padding: 120px 0 100px;
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+    }
+    .intro-hero-alt-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 64px;
+    }
+    .intro-hero-alt-text {
+      flex: 1;
+      min-width: 0;
+      opacity: 0;
+      animation: introFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+    }
+    .intro-hero-alt-device {
+      flex: 0 0 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      animation: introFadeRight 0.8s cubic-bezier(0.16,1,0.3,1) 0.35s forwards;
+    }
+    .tablet-frame {
+      position: relative;
+      width: 420px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 3px rgba(255,255,255,0.08),
+        0 0 60px rgba(56,182,255,0.25),
+        0 32px 80px rgba(0,0,0,0.5);
+    }
+    .tablet-frame img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 24px;
+    }
+    .tablet-pulse {
+      position: absolute;
+      bottom: 38%;
+      left: 55%;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(56,182,255,0.25);
+      animation: tabletPulse 2.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes tabletPulse {
+      0%, 100% { transform: scale(0.7); opacity: 0; }
+      40%      { transform: scale(1.4); opacity: 0.6; }
+      80%      { transform: scale(2.2); opacity: 0; }
+    }
+    .tablet-caption {
+      margin-top: 24px;
+      color: var(--blue);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    @media (max-width: 900px) {
+      .intro-hero-alt        { padding: 100px 0 80px; }
+      .intro-hero-alt-inner  { flex-direction: column; text-align: center; align-items: center; gap: 40px; }
+      .intro-hero-alt-text   { order: 1; }
+      .intro-hero-alt-text .intro-hero-desc { margin-left: auto; margin-right: auto; }
+      .intro-hero-alt-device { order: 2; flex: 0 0 auto; width: 100%; max-width: 360px; }
+      .tablet-frame          { width: 100%; }
+    }
+
     /* ─── HERO ──────────────────────────────────────────── */
     .hero {
       position: relative;
@@ -1975,6 +2054,35 @@
 
         <div class="intro-hero-cards" id="introHeroCards" aria-hidden="true">
           <!-- wird per JS aus intro-hero.json geladen -->
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ INTRO HERO ALT (Variante) ═══════════ -->
+  <section class="intro-hero-alt">
+    <div class="container">
+      <div class="intro-hero-alt-inner">
+
+        <div class="intro-hero-alt-text">
+          <span class="section-label">Das Quiz-Erlebnis in NRW</span>
+          <h2 class="intro-hero-title">Der<br><span class="accent">Kneipenkönig</span></h2>
+          <p class="intro-hero-desc">
+            Kneipenquiz 2.0 – Dein digitales Quiz-Abenteuer, live in ausgewählten Locations und ideal für Teambuildings und Firmen-Events – wo Wissen, Glück und Poker-Talent zum Sieg führen. Spannung, Lachen und echte Gemeinschaft garantiert.
+          </p>
+          <a href="#buchung" class="btn-primary">
+            Jetzt anfragen
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <div class="intro-hero-alt-device">
+          <div class="tablet-frame">
+            <img src="images/home/1-1774190578458.jpg" alt="Digitales Quiz-Interface auf dem Tablet" />
+            <div class="tablet-pulse"></div>
+          </div>
+          <p class="tablet-caption">Dein Tablet. Deine Antwort. Dein Sieg.</p>
         </div>
 
       </div>
