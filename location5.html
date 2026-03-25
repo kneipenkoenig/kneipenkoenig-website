@@ -165,31 +165,31 @@
     </div>
     <div class="mobile-panel active">
       <div class="results-iframe-wrap">
-        <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/results.html?location=5" style="width:100%;height:760px;border:none;display:block;" allowfullscreen></iframe>
+        <iframe src="https://scoremaster.kneipenkoenig.de/embed/results.html?location=5" style="width:100%;max-width:600px;border:none;border-radius:8px;min-height:400px;display:block;" loading="lazy" allowfullscreen></iframe>
       </div>
     </div>
     <div class="mobile-panel">
       <div class="results-iframe-wrap">
-        <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/ranking.html?location=5" style="width:100%;height:760px;border:none;display:block;" allowfullscreen></iframe>
+        <iframe src="https://scoremaster.kneipenkoenig.de/embed/ranking.html?location=5" style="width:100%;max-width:600px;border:none;border-radius:8px;min-height:400px;display:block;" loading="lazy" allowfullscreen></iframe>
       </div>
     </div>
     <div class="mobile-panel">
       <div class="results-iframe-wrap">
-        <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/ranking.html?location=5&alltime=1" style="width:100%;height:760px;border:none;display:block;" allowfullscreen></iframe>
+        <iframe src="https://scoremaster.kneipenkoenig.de/embed/ranking.html?location=5&alltime=1" style="width:100%;max-width:600px;border:none;border-radius:8px;min-height:400px;display:block;" loading="lazy" allowfullscreen></iframe>
       </div>
     </div>
 
     <!-- Desktop-Layout -->
     <div class="results-grid">
       <div class="results-iframe-wrap">
-        <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/results.html?location=5" style="width:100%;height:760px;border:none;display:block;" allowfullscreen></iframe>
+        <iframe src="https://scoremaster.kneipenkoenig.de/embed/results.html?location=5" style="width:100%;max-width:600px;border:none;border-radius:8px;min-height:400px;display:block;" loading="lazy" allowfullscreen></iframe>
       </div>
       <div class="results-iframe-wrap">
-        <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/ranking.html?location=5" style="width:100%;height:760px;border:none;display:block;" allowfullscreen></iframe>
+        <iframe src="https://scoremaster.kneipenkoenig.de/embed/ranking.html?location=5" style="width:100%;max-width:600px;border:none;border-radius:8px;min-height:400px;display:block;" loading="lazy" allowfullscreen></iframe>
       </div>
     </div>
     <div class="results-iframe-wrap results-alltime" style="margin-top:20px;">
-      <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/ranking.html?location=5&alltime=1" style="width:100%;height:760px;border:none;display:block;" allowfullscreen></iframe>
+      <iframe src="https://scoremaster.kneipenkoenig.de/embed/ranking.html?location=5&alltime=1" style="width:100%;max-width:600px;border:none;border-radius:8px;min-height:400px;display:block;" loading="lazy" allowfullscreen></iframe>
     </div>
   </div>
 
@@ -229,5 +229,14 @@
     }).catch(() => {});
   })();
   </script>
+<script>
+window.addEventListener("message",function(e){
+  if(e.data&&e.data.type==="kk-embed-resize"){
+    document.querySelectorAll("iframe").forEach(function(f){
+      if(f.contentWindow===e.source) f.style.height=e.data.height+"px";
+    });
+  }
+});
+</script>
 </body>
 </html>
