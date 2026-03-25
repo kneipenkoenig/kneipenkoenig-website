@@ -52,13 +52,12 @@
 
     /* ── CONTENT ── */
     .content-wrap {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.09);
+      background: transparent;
+      border: none;
       border-radius: 16px;
       overflow: hidden;
-      backdrop-filter: blur(8px);
     }
-    .content-wrap iframe { width: 100%; min-height: 800px; border: none; display: block; }
+    .content-wrap iframe { width: 100%; min-height: 800px; border: none; display: block; background: transparent; }
     .back-bottom { margin-top: 32px; }
   </style>
 </head>
@@ -98,7 +97,7 @@
     </div>
 
     <div id="battleContent" class="content-wrap">
-      <iframe src="https://kneipenkoenig.github.io/kneipenkoenig-scoremaster/embed/battle.html" allowfullscreen></iframe>
+      <iframe src="https://scoremaster.kneipenkoenig.de/embed/battle.html" allowfullscreen></iframe>
     </div>
 
     <a href="ergebnisse.html" class="back-link back-bottom">← Zurück zu den Ergebnissen</a>
