@@ -1,0 +1,16 @@
+[
+  {
+    "id": "hof1",
+    "name": "Ewige Tabelle",
+    "description": "Die besten Teams aller Zeiten im Gesamtranking",
+    "icon": "🏆",
+    "link": "ewige-tabelle.html"
+  },
+  {
+    "id": "hof2",
+    "name": "Kneipenkönig-Battle",
+    "description": "Location gegen Location – wer hat die schlausten Teams?",
+    "icon": "⚔️",
+    "link": "kk-battle.html"
+  }
+]
