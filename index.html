@@ -1676,11 +1676,26 @@
     }
     .testimonials-dot.active { background: #38b6ff; transform: scale(1.3); }
     @media (max-width: 768px) {
-      .testimonial-inner { grid-template-columns: 1fr; padding: 32px 24px; gap: 24px; }
-      .testimonial-stats { flex-direction: row; min-width: unset; }
-      .testimonial-stat { flex: 1; }
-      .testimonial-text { font-size: 1rem; }
+      .testimonials-section { padding: 80px 0 60px; }
+      .testimonials-carousel-wrap { margin-top: 32px; }
+      .testimonial-inner { grid-template-columns: 1fr; padding: 32px 24px; gap: 20px; }
+      .testimonial-stats { flex-direction: row; min-width: unset; flex-wrap: wrap; }
+      .testimonial-stat { flex: 1; min-width: 80px; padding: 10px 12px; }
+      .testimonial-stat-value { font-size: 1.4rem; }
+      .testimonial-stat-label { font-size: 0.65rem; }
+      .testimonial-text { font-size: 0.95rem; line-height: 1.65; margin-bottom: 20px; }
       .testimonial-quote-icon { left: 18px; top: 24px; }
+      .testimonial-card { padding: 0 16px; }
+    }
+    @media (max-width: 400px) {
+      .testimonial-inner { padding: 24px 18px; gap: 16px; }
+      .testimonial-text { font-size: 0.88rem; line-height: 1.6; margin-bottom: 16px; }
+      .testimonial-stats { gap: 8px; }
+      .testimonial-stat { padding: 8px 10px; }
+      .testimonial-stat-value { font-size: 1.2rem; }
+      .testimonial-name { font-size: 0.9rem; }
+      .testimonial-avatar { width: 40px; height: 40px; font-size: 1.1rem; }
+      .testimonial-card { padding: 0 10px; }
     }
 
     /* ─── INSTAGRAM FEED ────────────────────────────────── */
@@ -2042,7 +2057,7 @@
       <li><a href="#events">Kommende Events</a></li>
       <li><a href="#instagram">Letzte Events</a></li>
       <li><a href="ergebnisse.html">Ergebnisse</a></li>
-      <li><a href="#buchung">Kontakt</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
     </ul>
     <a href="admin.html" class="nav-cta" style="display:none;">Admin</a>
     <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false">
@@ -2275,7 +2290,7 @@
           </div>
         </div>
 
-        <div class="indie-form-card reveal reveal-delay-2" id="kontaktFormWrap" style="padding:0; overflow:hidden; background:transparent; border:none; box-shadow:none; min-height:500px; position:relative;">
+        <div class="indie-form-card reveal reveal-delay-2" id="kontakt" style="padding:0; overflow:hidden; background:transparent; border:none; box-shadow:none; min-height:500px; position:relative;">
           <iframe
             id="kontaktIframe"
             src="https://manager.kneipenkoenig.de/kontakt.html?embed=true"
@@ -2357,7 +2372,7 @@
             <li><a href="#formate">Der Kneipenkönig</a></li>
             <li><a href="#events">Kommende Events</a></li>
             <li><a href="#instagram">Letzte Events</a></li>
-            <li><a href="#buchung">Kontakt</a></li>
+            <li><a href="#kontakt">Kontakt</a></li>
           </ul>
         </div>
 
