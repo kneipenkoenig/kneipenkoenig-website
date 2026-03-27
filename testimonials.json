@@ -1,5 +1,25 @@
 [
   {
+    "name": "Alex Schäpers",
+    "rolle": "Stammgast, Lette",
+    "text": "Der Kneipenkönig ist ein Muss für alle Quizfreunde! Eine perfekte Mischung aus Wissen, Glück und Spaß. Auch nach über 20 Teilnahmen immer noch super unterhaltsam - Ich kann das nächste Mal kaum erwarten :-)",
+    "foto": "alex-schaepers.jpg",
+    "stats": [
+      {
+        "wert": "Beliebtheit",
+        "label": "1000"
+      },
+      {
+        "wert": ">20",
+        "label": "Teilnahmen"
+      },
+      {
+        "wert": ">20",
+        "label": "Bier am Abend"
+      }
+    ]
+  },
+  {
     "name": "Peter Schulze-Lutum",
     "rolle": "Teilnehmer",
     "text": "Ein Abend mit dem Kneipenkönig bedeutet Spannung und Spaß garantiert - selbst wenn man am Ende auf dem letzten Platz der Tabelle landet! Habe schon mehrfach mit verschiedenen Freunden teilgenommen und kann es nur weiterempfehlen. Die wortgewandte Moderation, gute Stimmung und knifflige Quizfragen und Spiele sorgen für einen unterhaltsamen Abend.",
