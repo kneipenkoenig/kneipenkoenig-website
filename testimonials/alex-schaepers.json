@@ -1,0 +1,20 @@
+{
+  "name": "Alex Schäpers",
+  "rolle": "Stammgast, Lette",
+  "text": "Der Kneipenkönig ist ein Muss für alle Quizfreunde! Eine perfekte Mischung aus Wissen, Glück und Spaß. Auch nach über 20 Teilnahmen immer noch super unterhaltsam - Ich kann das nächste Mal kaum erwarten :-)",
+  "foto": "alex-schaepers.jpg",
+  "stats": [
+    {
+      "wert": "Beliebtheit",
+      "label": "1000"
+    },
+    {
+      "wert": ">20",
+      "label": "Teilnahmen"
+    },
+    {
+      "wert": ">20",
+      "label": "Bier am Abend"
+    }
+  ]
+}
