@@ -1620,6 +1620,13 @@
       color: #000;
       flex-shrink: 0;
     }
+    .testimonial-avatar-link { cursor: pointer; flex-shrink: 0; transition: transform 0.2s, box-shadow 0.2s; border-radius: 50%; }
+    .testimonial-avatar-link:hover { transform: scale(1.12); box-shadow: 0 0 16px rgba(56,182,255,0.35); }
+    .testimonial-avatar-link img { display: block; }
+    .tl-lightbox { position:fixed; inset:0; z-index:10000; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.75); backdrop-filter:blur(10px); opacity:0; transition:opacity 0.25s; cursor:pointer; }
+    .tl-lightbox.tl-show { opacity:1; }
+    .tl-lightbox img { max-width:280px; max-height:280px; border-radius:50%; object-fit:cover; box-shadow:0 16px 60px rgba(0,0,0,0.6),0 0 40px rgba(56,182,255,0.15); border:3px solid rgba(56,182,255,0.4); transform:scale(0.85); transition:transform 0.3s cubic-bezier(0.16,1,0.3,1); }
+    .tl-lightbox.tl-show img { transform:scale(1); }
     .testimonial-name { font-weight: 700; font-size: 1rem; }
     .testimonial-role { font-size: 0.83rem; color: var(--text-muted); margin-top: 2px; }
     .testimonial-stats {
@@ -2908,9 +2915,25 @@
 
     function avatarHtml(t) {
       if (t.foto) {
-        return `<img src="testimonials/fotos/${t.foto}" alt="${t.name}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.outerHTML='<div class=\\'testimonial-avatar\\'>${initials(t.name)}</div>'" />`;
+        return `<a class="testimonial-avatar-link" onclick="openAvatarLightbox('testimonials/fotos/${t.foto}','${t.name.replace(/'/g,"\\'")}');return false;" title="${t.name}"><img src="testimonials/fotos/${t.foto}" alt="${t.name}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;" onerror="this.parentElement.outerHTML='<div class=\\'testimonial-avatar\\'>${initials(t.name)}</div>'" /></a>`;
       }
       return `<div class="testimonial-avatar">${initials(t.name)}</div>`;
+    }
+
+    function openAvatarLightbox(src, name) {
+      let lb = document.getElementById('tlLightbox');
+      if (!lb) {
+        lb = document.createElement('div');
+        lb.id = 'tlLightbox';
+        lb.className = 'tl-lightbox';
+        lb.onclick = function() { lb.classList.remove('tl-show'); setTimeout(() => lb.style.display = 'none', 300); };
+        lb.innerHTML = '<img />';
+        document.body.appendChild(lb);
+      }
+      lb.querySelector('img').src = src;
+      lb.querySelector('img').alt = name;
+      lb.style.display = 'flex';
+      requestAnimationFrame(() => lb.classList.add('tl-show'));
     }
 
     function buildSlides() {
