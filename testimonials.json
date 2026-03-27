@@ -44,7 +44,20 @@
     "rolle": "B.I.E.R.F.A.R.M.E.R.",
     "text": "Wir waren mittlerweile bestimmt 10 mal beim Kneipenquiz in Lüdinghausen dabei – und was \nsoll ich sagen: Es ist jedes Mal wieder ein echtes Highlight!\nDie Mischung aus spannenden Fragen, entspannter Atmosphäre und einem perfekt organisierten \nAblauf macht einfach richtig Spaß. Egal ob man als Quiz-Profi kommt oder einfach nur einen \nunterhaltsamen Abend mit Freunden verbringen möchte – hier kommt wirklich jeder auf seine \nKosten. Besonders begeistert uns immer wieder die Vielfalt der Themen und die kreative Art, wie \ndie Quizrunden gestaltet sind.\nMan merkt sofort, wie viel Herzblut hinter dem Ganzen steckt. Die Moderation ist locker, witzig \nund sorgt dafür, dass man sich von Anfang an wohlfühlt. Gleichzeitig bleibt es durchgehend \nspannend – der Ehrgeiz wird geweckt, aber der Spaß steht immer im Vordergrund.\nFür uns ist das Kneipenquiz inzwischen ein fester Termin im Kalender geworden. Wir freuen uns \njedes Mal aufs Neue darauf und können es wirklich jedem nur wärmstens empfehlen. Wer einen \ntollen Abend erleben möchte, ist hier genau richtig!",
     "foto": "benjamin-janke.jpg",
-    "stats": []
+    "stats": [
+      {
+        "wert": "Teamgeist-Level",
+        "label": "98%"
+      },
+      {
+        "wert": "Zweifel-Rate",
+        "label": "36%"
+      },
+      {
+        "wert": "Nachdurst-Potenzial",
+        "label": "110%"
+      }
+    ]
   },
   {
     "name": "Björn Lemsch",
