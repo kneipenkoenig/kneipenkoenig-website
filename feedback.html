@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" href="images/logos/logo-blackbg.png" />
+  <title>Feedback – Der Kneipenkönig</title>
+  <link rel="stylesheet" href="fonts/fonts.css" />
+  <style>
+    :root { --blue: #38b6ff; --text-primary: #fff; --text-secondary: rgba(255,255,255,0.55); --text-muted: rgba(255,255,255,0.35); --border: rgba(255,255,255,0.09); --surface: rgba(255,255,255,0.04); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Open Sans', sans-serif; color: var(--text-primary); background: #000; -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
+    body::before { content: ''; position: fixed; inset: 0; background: url('hero-bg.jpg') center/cover no-repeat; z-index: -2; }
+    body::after  { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.62); z-index: -1; }
+
+    .fb-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
+    .fb-card { width: 100%; max-width: 480px; background: rgba(18,18,22,0.92); border: 1px solid var(--border); border-radius: 20px; padding: 36px 28px; backdrop-filter: blur(20px); }
+
+    .fb-logo { text-align: center; margin-bottom: 24px; }
+    .fb-logo img { height: 36px; mix-blend-mode: screen; }
+    .fb-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; text-align: center; letter-spacing: 0.03em; margin-bottom: 6px; }
+    .fb-sub { text-align: center; color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 28px; }
+    .fb-event-name { text-align: center; color: #38b6ff; font-weight: 700; font-size: 0.9rem; margin-bottom: 24px; }
+
+    /* Rating 1-10 */
+    .fb-section { margin-bottom: 24px; }
+    .fb-label { font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .rating-row { display: flex; gap: 6px; }
+    .rating-btn {
+      flex: 1; height: 44px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text-muted); font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem; cursor: pointer; transition: all 0.2s;
+    }
+    .rating-btn:hover { border-color: rgba(56,182,255,0.3); color: #fff; }
+    .rating-btn.selected { background: #38b6ff; color: #000; border-color: #38b6ff; }
+    .rating-labels { display: flex; justify-content: space-between; margin-top: 4px; }
+    .rating-labels span { font-size: 0.65rem; color: var(--text-muted); }
+
+    /* Kommentar */
+    .fb-textarea {
+      width: 100%; min-height: 80px; padding: 12px 14px; border-radius: 10px;
+      background: var(--surface); border: 1px solid var(--border); color: #fff;
+      font-family: 'Open Sans', sans-serif; font-size: 0.9rem; resize: vertical;
+      transition: border-color 0.2s;
+    }
+    .fb-textarea:focus { outline: none; border-color: #38b6ff; }
+    .fb-textarea::placeholder { color: var(--text-muted); }
+
+    /* Team Dropdown */
+    .fb-select {
+      width: 100%; padding: 12px 14px; border-radius: 10px;
+      background: var(--surface); border: 1px solid var(--border); color: #fff;
+      font-family: 'Open Sans', sans-serif; font-size: 0.9rem;
+    }
+    .fb-select option { background: #111; }
+
+    /* Submit */
+    .fb-submit {
+      width: 100%; padding: 14px; border-radius: 10px; border: none;
+      background: #38b6ff; color: #000; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: background 0.2s, transform 0.15s;
+      font-family: 'Open Sans', sans-serif;
+    }
+    .fb-submit:hover { background: #7dd3fc; transform: translateY(-1px); }
+    .fb-submit:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+    /* Thank you */
+    .fb-thanks { display: none; text-align: center; }
+    .fb-thanks-icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .fb-thanks-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; margin-bottom: 8px; }
+    .fb-thanks-text { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px; line-height: 1.6; }
+    .fb-google-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--surface); color: #fff; font-weight: 700; font-size: 0.88rem;
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+    }
+    .fb-google-btn:hover { border-color: #38b6ff; background: rgba(56,182,255,0.05); }
+    .fb-home-link { display: block; margin-top: 16px; color: var(--text-muted); font-size: 0.82rem; transition: color 0.2s; }
+    .fb-home-link:hover { color: #38b6ff; }
+
+    .fb-error { display: none; padding: 12px; border-radius: 8px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #fca5a5; font-size: 0.85rem; margin-bottom: 16px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="fb-wrap">
+  <div class="fb-card">
+    <div class="fb-logo"><img src="images/logos/logo-blackbg.png" alt="Der Kneipenkönig" /></div>
+
+    <!-- FORM -->
+    <div id="fbForm">
+      <div class="fb-title">Wie war's?</div>
+      <div class="fb-sub">Bewerte den heutigen Quizabend</div>
+      <div class="fb-event-name" id="fbEventName"></div>
+
+      <div class="fb-error" id="fbError"></div>
+
+      <div class="fb-section">
+        <div class="fb-label">Gesamtbewertung</div>
+        <div class="rating-row" id="ratingRow"></div>
+        <div class="rating-labels"><span>Schlecht</span><span>Perfekt</span></div>
+      </div>
+
+      <div class="fb-section">
+        <div class="fb-label">Dein Team (optional)</div>
+        <select class="fb-select" id="fbTeam">
+          <option value="">– Kein Team ausgewählt –</option>
+        </select>
+      </div>
+
+      <div class="fb-section">
+        <div class="fb-label">Kommentar (optional)</div>
+        <textarea class="fb-textarea" id="fbComment" placeholder="Was hat dir gefallen? Was können wir besser machen?" maxlength="500"></textarea>
+      </div>
+
+      <button class="fb-submit" id="fbSubmit" onclick="submitFeedback()">Bewertung abschicken</button>
+    </div>
+
+    <!-- THANKS -->
+    <div class="fb-thanks" id="fbThanks">
+      <div class="fb-thanks-icon">🎉</div>
+      <div class="fb-thanks-title">Danke für dein Feedback!</div>
+      <div class="fb-thanks-text">Deine Bewertung hilft uns, den Kneipenkönig noch besser zu machen.</div>
+      <a href="https://g.page/r/kneipenkoenig/review" target="_blank" rel="noopener" class="fb-google-btn" id="fbGoogleBtn" style="display:none;">
+        ⭐ Lass uns eine Google-Bewertung da!
+      </a>
+      <a href="index.html" class="fb-home-link">← Zurück zur Startseite</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SB_URL = 'https://mqsxgzaliwzyghmgygea.supabase.co/rest/v1';
+  const SB_KEY = 'sb_publishable_n7-e_4YSOdzhdRPc6mKOgg_EF3jJqG6';
+  const sbH = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' };
+
+  const params = new URLSearchParams(window.location.search);
+  const quizId = params.get('event') || params.get('quiz');
+  let selectedRating = 0;
+
+  // Rating buttons 1-10
+  const ratingRow = document.getElementById('ratingRow');
+  for (let i = 1; i <= 10; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'rating-btn';
+    btn.textContent = i;
+    btn.addEventListener('click', () => {
+      selectedRating = i;
+      ratingRow.querySelectorAll('.rating-btn').forEach((b, j) => {
+        b.classList.toggle('selected', j < i);
+      });
+    });
+    ratingRow.appendChild(btn);
+  }
+
+  // Load quiz info + teams
+  (async function init() {
+    if (!quizId) {
+      document.getElementById('fbEventName').textContent = 'Allgemeines Feedback';
+      return;
+    }
+
+    try {
+      // Quiz-Info laden
+      const quizRes = await fetch(SB_URL + '/quizes?select=quiz_name,quiz_date,location_id&quiz_id=eq.' + quizId, { headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY } });
+      const quizData = await quizRes.json();
+      if (quizData.length) {
+        const q = quizData[0];
+        const date = q.quiz_date ? new Date(q.quiz_date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
+        document.getElementById('fbEventName').textContent = date;
+      }
+
+      // Teams des Quiz laden
+      const teamsRes = await fetch(SB_URL + '/quiz_teams?select=team_id,teams(team_name)&quiz_id=eq.' + quizId + '&order=position', { headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY } });
+      const teamsData = await teamsRes.json();
+      const select = document.getElementById('fbTeam');
+      teamsData.forEach(qt => {
+        if (qt.teams?.team_name) {
+          const opt = document.createElement('option');
+          opt.value = qt.team_id;
+          opt.textContent = qt.teams.team_name;
+          select.appendChild(opt);
+        }
+      });
+    } catch(_) {}
+
+    // Check if already submitted
+    const stored = localStorage.getItem('kk_fb_' + quizId);
+    if (stored) {
+      document.getElementById('fbForm').style.display = 'none';
+      document.getElementById('fbThanks').style.display = 'block';
+    }
+  })();
+
+  async function submitFeedback() {
+    if (!selectedRating) {
+      showError('Bitte gib eine Bewertung von 1-10 ab.');
+      return;
+    }
+
+    const btn = document.getElementById('fbSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Wird gesendet...';
+
+    const payload = {
+      quiz_id: quizId ? parseInt(quizId) : null,
+      rating: selectedRating,
+      team_id: document.getElementById('fbTeam').value ? parseInt(document.getElementById('fbTeam').value) : null,
+      comment: document.getElementById('fbComment').value.trim() || null
+    };
+
+    try {
+      const res = await fetch(SB_URL + '/feedback', {
+        method: 'POST',
+        headers: sbH,
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error('Fehler beim Speichern');
+
+      if (quizId) localStorage.setItem('kk_fb_' + quizId, '1');
+      document.getElementById('fbForm').style.display = 'none';
+      document.getElementById('fbThanks').style.display = 'block';
+
+    } catch(e) {
+      showError('Feedback konnte nicht gespeichert werden. Bitte versuche es erneut.');
+      btn.disabled = false;
+      btn.textContent = 'Bewertung abschicken';
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('fbError');
+    el.textContent = msg;
+    el.style.display = 'block';
+    setTimeout(() => el.style.display = 'none', 4000);
+  }
+</script>
+</body>
+</html>
