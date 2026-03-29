@@ -3410,50 +3410,7 @@
     }, { threshold: 0.5 });
     document.querySelectorAll('.stat-count[data-target]').forEach(el => countObs.observe(el));
 
-    // ── Frage des Tages ──
-    (async function loadQuizWidget() {
-      try {
-        const data = await fetch('quiz-des-tages.json').then(r => r.json());
-        // Tagesbasis: gleiche Frage für alle Besucher am selben Tag
-        const dayIndex = Math.floor(Date.now() / 86400000) % data.length;
-        const q = data[dayIndex];
-        const letters = ['A', 'B', 'C', 'D'];
-        document.getElementById('qwQuestion').textContent = q.frage;
-        const optEl = document.getElementById('qwOptions');
-        const answered = localStorage.getItem('kk_quiz_day') === String(dayIndex);
-        optEl.innerHTML = q.optionen.map((opt, i) => `
-          <button class="quiz-widget-opt${answered && i === q.antwort ? ' correct' : ''}${answered && i !== q.antwort ? ' disabled' : ''}" data-i="${i}" ${answered ? 'disabled' : ''}>
-            <span class="opt-letter">${letters[i]}</span> ${opt}
-          </button>`).join('');
-        if (answered) {
-          const res = document.getElementById('qwResult');
-          res.style.display = 'block';
-          res.className = 'quiz-widget-result correct-result';
-          res.textContent = q.info;
-        }
-        optEl.querySelectorAll('.quiz-widget-opt:not([disabled])').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const idx = +btn.dataset.i;
-            const correct = idx === q.antwort;
-            localStorage.setItem('kk_quiz_day', String(dayIndex));
-            optEl.querySelectorAll('.quiz-widget-opt').forEach((b, j) => {
-              b.classList.add('disabled');
-              b.disabled = true;
-              if (j === q.antwort) b.classList.add('correct');
-              else if (j === idx && !correct) b.classList.add('wrong');
-            });
-            const res = document.getElementById('qwResult');
-            res.style.display = 'block';
-            res.className = 'quiz-widget-result ' + (correct ? 'correct-result' : 'wrong-result');
-            res.textContent = correct ? '✓ Richtig! ' + q.info : '✗ Leider falsch. ' + q.info;
-          });
-        });
-      } catch(e) {
-        console.warn('Quiz-Widget Fehler:', e);
-        const s = document.querySelector('.quiz-widget-section');
-        if (s) s.style.display = 'none';
-      }
-    })();
+    // Frage des Tages → eigenes Script-Tag (siehe unten)
 
     // ── Bingo grid ────────────────────────────────────────────
     (function() {
@@ -3582,6 +3539,53 @@ function acceptCookies(level) {
   localStorage.setItem('kk_cookies', level);
   document.getElementById('cookieBanner').style.display = 'none';
 }
+</script>
+
+<script>
+// ── Frage des Tages (isoliertes Script) ──
+(async function() {
+  try {
+    const res = await fetch('quiz-des-tages.json');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const dayIndex = Math.floor(Date.now() / 86400000) % data.length;
+    const q = data[dayIndex];
+    const letters = ['A', 'B', 'C', 'D'];
+    document.getElementById('qwQuestion').textContent = q.frage;
+    const optEl = document.getElementById('qwOptions');
+    const answered = localStorage.getItem('kk_quiz_day') === String(dayIndex);
+    optEl.innerHTML = q.optionen.map(function(opt, i) {
+      return '<button class="quiz-widget-opt' + (answered && i === q.antwort ? ' correct' : '') + (answered && i !== q.antwort ? ' disabled' : '') + '" data-i="' + i + '"' + (answered ? ' disabled' : '') + '><span class="opt-letter">' + letters[i] + '</span> ' + opt + '</button>';
+    }).join('');
+    if (answered) {
+      var r = document.getElementById('qwResult');
+      r.style.display = 'block';
+      r.className = 'quiz-widget-result correct-result';
+      r.textContent = q.info;
+    }
+    optEl.querySelectorAll('.quiz-widget-opt:not([disabled])').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = +btn.dataset.i;
+        var correct = idx === q.antwort;
+        localStorage.setItem('kk_quiz_day', String(dayIndex));
+        optEl.querySelectorAll('.quiz-widget-opt').forEach(function(b, j) {
+          b.classList.add('disabled');
+          b.disabled = true;
+          if (j === q.antwort) b.classList.add('correct');
+          else if (j === idx && !correct) b.classList.add('wrong');
+        });
+        var r = document.getElementById('qwResult');
+        r.style.display = 'block';
+        r.className = 'quiz-widget-result ' + (correct ? 'correct-result' : 'wrong-result');
+        r.textContent = (correct ? '\u2713 Richtig! ' : '\u2717 Leider falsch. ') + q.info;
+      });
+    });
+  } catch(e) {
+    console.warn('Quiz-Widget:', e);
+    var s = document.querySelector('.quiz-widget-section');
+    if (s) s.style.display = 'none';
+  }
+})();
 </script>
 
 </body>
