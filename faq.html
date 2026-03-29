@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" href="images/logos/logo-blackbg.png" />
+  <meta name="description" content="Häufige Fragen zum Kneipenkönig – Alles zu Teamgröße, Anmeldung, Ablauf, Preisen und mehr." />
+  <title>FAQ – Der Kneipenkönig</title>
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kneipenkoenig.de/faq.html" />
+  <meta property="og:title" content="FAQ – Der Kneipenkönig" />
+  <meta property="og:description" content="Häufige Fragen zum Kneipenkönig – Alles zu Teamgröße, Anmeldung, Ablauf, Preisen und mehr." />
+  <meta property="og:image" content="https://kneipenkoenig.de/hero-bg.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="fonts/fonts.css" />
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Wie groß darf ein Team sein?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ein Team besteht aus 3 bis 6 Spielern. So bleibt es fair und jeder kommt zu Wort." }
+      },
+      {
+        "@type": "Question",
+        "name": "Muss ich mein Team vorher anmelden?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja, eine Anmeldung vorab ist erforderlich, da die Plätze begrenzt sind. Du kannst dich über unsere Website oder den Ticket-Link anmelden." }
+      },
+      {
+        "@type": "Question",
+        "name": "Was kostet die Teilnahme?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Der Eintritt variiert je nach Location und Event, liegt aber in der Regel bei 3–5 € pro Person. Die genauen Preise findest du bei den jeweiligen Events." }
+      },
+      {
+        "@type": "Question",
+        "name": "Brauche ich Vorwissen?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Nein! Die Fragen decken viele Themen ab – von Allgemeinwissen über Musik bis hin zu lustigen Schätzfragen. Es geht vor allem um Spaß und Teamwork." }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie lange dauert ein Quiz-Abend?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ein Quiz-Abend dauert in der Regel 2 bis 2,5 Stunden, je nach Anzahl der Runden und Teilnehmer." }
+      },
+      {
+        "@type": "Question",
+        "name": "Kann ich auch ein privates Event buchen?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja! Ob Firmenfeier, Geburtstag oder JGA – wir kommen zu dir und gestalten ein individuelles Quiz. Ab 25 Personen, überall in NRW." }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root { --blue: #38b6ff; --text-primary: #fff; --text-secondary: rgba(255,255,255,0.55); --text-muted: rgba(255,255,255,0.35); --border: rgba(255,255,255,0.09); --surface: rgba(255,255,255,0.04); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body { font-family: 'Open Sans', sans-serif; color: var(--text-primary); background: #000; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    body::before { content: ''; position: fixed; inset: 0; background: url('hero-bg.jpg') center/cover no-repeat; z-index: -2; }
+    body::after  { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.62); z-index: -1; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAV ── */
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 18px 5%; transition: background 0.3s, backdrop-filter 0.3s; }
+    .nav.scrolled { background: rgba(0,0,0,0.85); backdrop-filter: blur(18px); }
+    .nav-logo { font-family: 'Open Sans', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none; display: flex; align-items: center; }
+    .nav-logo .der { color: #fff; } .nav-logo .kneipen { color: #38b6ff; }
+    .nav-logo-img { height: 28px; width: auto; mix-blend-mode: screen; margin-right: 8px; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: #38b6ff; }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .nav-toggle span { width: 22px; height: 2px; background: var(--text-primary); border-radius: 2px; display: block; }
+    .mobile-nav { display: none; position: fixed; inset: 0; z-index: 101; background: rgba(0,0,0,0.97); backdrop-filter: blur(24px); flex-direction: column; align-items: center; justify-content: center; gap: 28px; }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; letter-spacing: 0.05em; color: rgba(255,255,255,0.55); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+    .mobile-nav a:hover { color: #38b6ff; }
+    .mobile-nav-close { position: absolute; top: 22px; right: 5%; background: none; border: none; color: rgba(255,255,255,0.5); font-size: 1.8rem; cursor: pointer; }
+    @media (max-width: 768px) { .nav-links { display: none; } .nav-toggle { display: flex; } }
+    @keyframes navLineRun { from { left: -30%; } to { left: 130%; } }
+    .nav-line { position: fixed; top: 80px; left: 0; right: 0; height: 2px; z-index: 99; background: rgba(56,182,255,0.15); overflow: hidden; }
+    .nav-line::after { content: ''; position: absolute; top: 0; width: 30%; height: 100%; background: linear-gradient(90deg, transparent 0%, #38b6ff 35%, #bfefff 50%, #38b6ff 65%, transparent 100%); animation: navLineRun 2.5s linear infinite; }
+
+    /* ── PAGE ── */
+    .page-wrap { min-height: 100vh; padding: 120px 5% 60px; max-width: 860px; margin: 0 auto; }
+    .section-label { display: inline-flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #38b6ff; margin-bottom: 10px; }
+    .section-label::before { content: ''; display: block; width: 28px; height: 1px; background: #38b6ff; }
+    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 5vw, 4rem); letter-spacing: 0.03em; margin-bottom: 12px; }
+    .page-sub { color: var(--text-secondary); margin-bottom: 48px; font-size: 1rem; line-height: 1.6; }
+
+    /* ── FAQ ── */
+    .faq-item { border: 1px solid var(--border); border-radius: 14px; margin-bottom: 12px; overflow: hidden; background: var(--surface); backdrop-filter: blur(10px); }
+    .faq-question { width: 100%; padding: 20px 24px; background: none; border: none; color: var(--text-primary); font-family: 'Open Sans', sans-serif; font-size: 1rem; font-weight: 700; text-align: left; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; transition: color 0.2s; }
+    .faq-question:hover { color: #38b6ff; }
+    .faq-question svg { flex-shrink: 0; transition: transform 0.3s; color: var(--text-muted); }
+    .faq-item.open .faq-question svg { transform: rotate(180deg); color: #38b6ff; }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease; }
+    .faq-item.open .faq-answer { max-height: 300px; }
+    .faq-answer-inner { padding: 0 24px 20px; color: var(--text-secondary); font-size: 0.92rem; line-height: 1.7; }
+
+    .faq-cta { margin-top: 48px; padding: 32px; background: var(--surface); border: 1px solid rgba(56,182,255,0.15); border-radius: 14px; text-align: center; backdrop-filter: blur(10px); }
+    .faq-cta p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 16px; }
+    .faq-cta a { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: #38b6ff; color: #000; border-radius: 8px; font-weight: 700; font-size: 0.9rem; transition: background 0.2s, transform 0.15s; }
+    .faq-cta a:hover { background: #7dd3fc; transform: translateY(-1px); }
+
+    .footer-mini { text-align: center; padding: 32px 5%; color: var(--text-muted); font-size: 0.8rem; }
+    .footer-mini a { color: var(--text-secondary); transition: color 0.2s; }
+    .footer-mini a:hover { color: #38b6ff; }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="navbar" aria-label="Hauptnavigation">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logos/logo-blackbg.png" class="nav-logo-img" alt="" /><span class="der">DER</span><span class="kneipen">KNEIPENKÖNIG</span>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html#formate">Der Kneipenkönig</a></li>
+      <li><a href="index.html#events">Kommende Events</a></li>
+      <li><a href="index.html#instagram">Letzte Events</a></li>
+      <li><a href="ergebnisse.html">Ergebnisse</a></li>
+      <li><a href="index.html#kontakt">Kontakt</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-nav" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Menü schließen">&#10005;</button>
+    <a href="index.html#formate"   class="mobile-link">Der Kneipenkönig</a>
+    <a href="index.html#events"    class="mobile-link">Kommende Events</a>
+    <a href="index.html#instagram" class="mobile-link">Letzte Events</a>
+    <a href="ergebnisse.html"      class="mobile-link">Ergebnisse</a>
+    <a href="index.html#kontakt"   class="mobile-link">Kontakt</a>
+  </div>
+  <div class="nav-line" aria-hidden="true"></div>
+
+  <div class="page-wrap">
+    <div class="section-label">Hilfe</div>
+    <h1 class="page-title">Häufige Fragen</h1>
+    <p class="page-sub">Alles, was du über den Kneipenkönig wissen musst – von der Anmeldung bis zum Quiz-Abend.</p>
+
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Was ist der Kneipenkönig?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Der Kneipenkönig ist ein interaktives Pub Quiz, bei dem Teams gegeneinander antreten. Mit Tablets, Buzzern und einem Live-Moderator wird jeder Abend zu einem einzigartigen Erlebnis – und zwar in eurer Lieblingskneipe!
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Wie groß darf ein Team sein?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Ein Team besteht aus 3 bis 6 Spielern. So bleibt es fair und jeder kommt zu Wort. Ihr könnt natürlich auch mit weniger oder mehr Leuten kommen – fragt einfach vorher nach.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Muss ich mein Team vorher anmelden?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Ja, eine Anmeldung vorab ist erforderlich, da die Plätze begrenzt sind. Du kannst dich direkt über unsere Website bei den <a href="index.html#events" style="color:#38b6ff;">kommenden Events</a> anmelden.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Was kostet die Teilnahme?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Der Eintritt variiert je nach Location und Event, liegt aber in der Regel bei 3–5 € pro Person. Die genauen Preise findest du bei den jeweiligen Events.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Brauche ich Vorwissen?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Nein! Die Fragen decken viele Themen ab – von Allgemeinwissen über Musik bis hin zu lustigen Schätzfragen. Es geht vor allem um Spaß und Teamwork. Expertenwissen ist nicht nötig.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Wie lange dauert ein Quiz-Abend?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Ein Quiz-Abend dauert in der Regel 2 bis 2,5 Stunden. Das beinhaltet mehrere Runden mit verschiedenen Kategorien, kleine Pausen und natürlich die Siegerehrung am Ende.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Wo finden die Events statt?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Aktuell sind wir in 7 Locations in NRW unterwegs: Coesfeld-Lette, Haltern am See, Marl, Dingden, Reken, Lüdinghausen und Datteln. Alle Details zu den Locations findest du auf der <a href="ergebnisse.html" style="color:#38b6ff;">Ergebnisseite</a>.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Kann ich auch ein privates Event buchen?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Ja! Ob Firmenfeier, Weihnachtsfeier, Geburtstag oder JGA – wir kommen zu euch und gestalten ein individuelles Quiz-Erlebnis. Ab 25 Personen, überall in NRW. Mehr Infos auf der <a href="indie.html" style="color:#38b6ff;">Indie-Seite</a> oder direkt über das <a href="index.html#kontakt" style="color:#38b6ff;">Kontaktformular</a>.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Was ist der Bingokönig?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Der Bingokönig ist unser Bingo-Format: Zahlen-Bingo, Musik-Bingo und Quiz-Bingo in einem Event. Live-Moderation, coole Sounds und jede Menge Spannung bis zur letzten Zahl. Mehr dazu auf der <a href="bingokoenig.html" style="color:#38b6ff;">Bingokönig-Seite</a>.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Gibt es etwas zu gewinnen?
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Ja! Bei jedem Event gibt es Preise für die besten Teams. Außerdem sammelt ihr Punkte für die Ewige Tabelle und könnt euch am Ende der Saison den Titel „Kneipenkönig" sichern.
+        </div></div>
+      </div>
+
+    </div>
+
+    <div class="faq-cta">
+      <p>Deine Frage war nicht dabei? Schreib uns!</p>
+      <a href="index.html#kontakt">Kontakt aufnehmen</a>
+    </div>
+  </div>
+
+  <div class="footer-mini">
+    <p>© 2026 Der Kneipenkönig &middot; <a href="datenschutz.html">Datenschutz</a> &middot; <a href="impressum.html">Impressum</a></p>
+  </div>
+
+  <script>
+    // Nav scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 30); });
+
+    // Mobile nav
+    const navToggleBtn = document.getElementById('navToggle');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileNavClose');
+    navToggleBtn.addEventListener('click', () => { mobileNav.classList.add('open'); navToggleBtn.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; });
+    function closeMobileNav() { mobileNav.classList.remove('open'); navToggleBtn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
+    mobileClose.addEventListener('click', closeMobileNav);
+    document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMobileNav));
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        // close all
+        document.querySelectorAll('.faq-item.open').forEach(el => {
+          el.classList.remove('open');
+          el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+        });
+        // toggle current
+        if (!isOpen) {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

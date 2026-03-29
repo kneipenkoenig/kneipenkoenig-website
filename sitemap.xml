@@ -74,6 +74,30 @@
   </url>
 
   <url>
+    <loc>https://kneipenkoenig.de/kk-battle.html</loc>
+    <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://kneipenkoenig.de/ewige-tabelle.html</loc>
+    <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://kneipenkoenig.de/faq.html</loc>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://kneipenkoenig.de/galerie.html</loc>
+    <priority>0.6</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
     <loc>https://kneipenkoenig.de/impressum.html</loc>
     <priority>0.3</priority>
     <changefreq>yearly</changefreq>

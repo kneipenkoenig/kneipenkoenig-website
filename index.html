@@ -14,6 +14,40 @@
   <meta property="og:image" content="https://kneipenkoenig.de/hero-bg.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
 
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://mqsxgzaliwzyghmgygea.supabase.co" crossorigin />
+
+  <!-- JSON-LD: LocalBusiness -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EntertainmentBusiness",
+    "name": "Der Kneipenkönig",
+    "alternateName": "Lettevents",
+    "url": "https://kneipenkoenig.de",
+    "logo": "https://kneipenkoenig.de/images/logos/logo-blackbg.png",
+    "image": "https://kneipenkoenig.de/hero-bg.jpg",
+    "description": "Das interaktive Pub Quiz für dich und deine Freunde. Live-Events in NRW, private Feiern und Bingo-Abende.",
+    "email": "info@kneipenkoenig.de",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Coesfeld",
+      "postalCode": "48653",
+      "addressRegion": "NRW",
+      "addressCountry": "DE"
+    },
+    "areaServed": {
+      "@type": "State",
+      "name": "Nordrhein-Westfalen"
+    },
+    "sameAs": [
+      "https://www.facebook.com/derkneipenkoenig",
+      "https://www.instagram.com/derkneipenkoenig/"
+    ],
+    "priceRange": "€€"
+  }
+  </script>
+
   <link rel="stylesheet" href="fonts/fonts.css" />
 
   <style>
@@ -2431,7 +2465,7 @@
         <nav class="footer-legal" aria-label="Rechtliches">
           <a href="datenschutz.html">Datenschutz</a>
           <a href="impressum.html">Impressum</a>
-          <a href="#">Cookie-Einstellungen</a>
+          <a href="#" onclick="document.getElementById('cookieBanner').style.display='flex';localStorage.removeItem('kk_cookies');return false;">Cookie-Einstellungen</a>
         </nav>
       </div>
     </div>
@@ -2516,6 +2550,32 @@
         </a>`;
     }
 
+    function injectEventJsonLd(events) {
+      const existing = document.getElementById('event-jsonld');
+      if (existing) existing.remove();
+      const items = events.filter(ev => ev.date).map(ev => {
+        const d = ev.date; // format: YYYY-MM-DD
+        const t = ev.time || '19:00';
+        return {
+          "@type": "Event",
+          "name": ev.name,
+          "startDate": d + 'T' + t,
+          "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+          "eventStatus": "https://schema.org/EventScheduled",
+          "location": { "@type": "Place", "name": ev.venue || "Location in NRW", "address": { "@type": "PostalAddress", "addressRegion": "NRW", "addressCountry": "DE" } },
+          "organizer": { "@type": "Organization", "name": "Der Kneipenkönig", "url": "https://kneipenkoenig.de" },
+          "offers": { "@type": "Offer", "url": ev.url || "https://kneipenkoenig.de", "availability": ev.available === false ? "https://schema.org/SoldOut" : "https://schema.org/InStock", "priceCurrency": "EUR" },
+          "image": "https://kneipenkoenig.de/hero-bg.jpg"
+        };
+      });
+      if (!items.length) return;
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.id = 'event-jsonld';
+      script.textContent = JSON.stringify(items);
+      document.head.appendChild(script);
+    }
+
     function renderEvents(events) {
       const container = document.getElementById('eventsContainer');
       if (!events.length) {
@@ -2524,6 +2584,7 @@
       }
       container.innerHTML = events.map((ev, i) => buildEventCard(ev, i)).join('');
       container.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+      injectEventJsonLd(events);
     }
 
     async function loadTicketTailorEvents() {
@@ -3310,6 +3371,30 @@
     </div>
   </div>
 </div>
+
+<!-- ═══════════ COOKIE BANNER ═══════════ -->
+<div id="cookieBanner" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:10000; background:rgba(12,12,16,0.97); border-top:1px solid rgba(56,182,255,0.2); padding:20px 5%; backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); align-items:center; justify-content:center; gap:16px; flex-wrap:wrap;">
+  <p style="flex:1; min-width:280px; font-size:0.88rem; color:rgba(255,255,255,0.7); line-height:1.5; margin:0;">
+    Wir verwenden Cookies und externe Dienste (Supabase, LightWidget) für Funktionalität und Darstellung.
+    <a href="datenschutz.html" style="color:#38b6ff; text-decoration:underline;">Mehr erfahren</a>
+  </p>
+  <div style="display:flex; gap:10px; flex-shrink:0;">
+    <button onclick="acceptCookies('essential')" style="padding:10px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:transparent; color:#fff; font-size:0.82rem; font-weight:600; cursor:pointer; transition:background 0.2s;">Nur notwendige</button>
+    <button onclick="acceptCookies('all')" style="padding:10px 24px; border-radius:8px; border:none; background:#38b6ff; color:#000; font-size:0.82rem; font-weight:700; cursor:pointer; transition:background 0.2s;">Alle akzeptieren</button>
+  </div>
+</div>
+<script>
+(function(){
+  var consent = localStorage.getItem('kk_cookies');
+  if (!consent) {
+    document.getElementById('cookieBanner').style.display = 'flex';
+  }
+})();
+function acceptCookies(level) {
+  localStorage.setItem('kk_cookies', level);
+  document.getElementById('cookieBanner').style.display = 'none';
+}
+</script>
 
 </body>
 </html>
