@@ -1905,69 +1905,66 @@
     }
 
     /* ─── QUIZ WIDGET ──────────────────────────────────── */
-    .quiz-widget-section { padding: 80px 0; background: var(--bg); }
-    .quiz-widget {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(56,182,255,0.15);
-      border-radius: 20px;
-      padding: 36px 32px;
-      backdrop-filter: blur(10px);
+    /* ─── QUIZ WIDGET (Sticky Button + Overlay) ────────── */
+    .quiz-fab {
+      position: fixed; bottom: 24px; right: 24px; z-index: 90;
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 20px; border-radius: 100px;
+      background: rgba(56,182,255,0.15); border: 1px solid rgba(56,182,255,0.3);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      color: #38b6ff; font-weight: 700; font-size: 0.82rem;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.3s;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
     }
-    .quiz-widget-header { margin-bottom: 24px; }
+    .quiz-fab:hover { background: rgba(56,182,255,0.25); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(56,182,255,0.15); }
+    .quiz-fab-icon { font-size: 1.2rem; }
+    .quiz-fab.answered { background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.3); color: #22c55e; }
+
+    .quiz-overlay {
+      display: none; position: fixed; bottom: 80px; right: 24px; z-index: 91;
+      width: 380px; max-width: calc(100vw - 48px);
+      background: rgba(12,12,16,0.97); border: 1px solid rgba(56,182,255,0.2);
+      border-radius: 20px; padding: 28px 24px;
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+      transform: translateY(10px) scale(0.95); opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s;
+    }
+    .quiz-overlay.open { display: block; transform: translateY(0) scale(1); opacity: 1; }
+    .quiz-overlay-close { position: absolute; top: 12px; right: 14px; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 1.2rem; cursor: pointer; }
     .quiz-widget-badge {
-      display: inline-block;
-      background: rgba(56,182,255,0.12);
-      color: #38b6ff;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 5px 12px;
-      border-radius: 100px;
-      margin-bottom: 14px;
+      display: inline-block; background: rgba(56,182,255,0.12); color: #38b6ff;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 100px; margin-bottom: 12px;
     }
     .quiz-widget-question {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.6rem;
-      letter-spacing: 0.02em;
-      line-height: 1.2;
-      color: var(--text-primary);
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem;
+      letter-spacing: 0.02em; line-height: 1.2; color: #fff; margin-bottom: 16px;
     }
-    .quiz-widget-options { display: grid; gap: 10px; }
+    .quiz-widget-options { display: grid; gap: 8px; }
     .quiz-widget-opt {
-      padding: 14px 18px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: rgba(255,255,255,0.02);
-      color: var(--text-secondary);
-      font-size: 0.92rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
+      background: rgba(255,255,255,0.02); color: var(--text-secondary);
+      font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: 10px;
     }
     .quiz-widget-opt:hover { border-color: rgba(56,182,255,0.3); color: #fff; background: rgba(56,182,255,0.05); }
     .quiz-widget-opt .opt-letter {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      background: rgba(56,182,255,0.1);
-      color: #38b6ff;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1rem;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: rgba(56,182,255,0.1); color: #38b6ff;
+      font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .quiz-widget-opt.correct { border-color: #22c55e; background: rgba(34,197,94,0.08); color: #22c55e; }
     .quiz-widget-opt.correct .opt-letter { background: rgba(34,197,94,0.15); color: #22c55e; }
     .quiz-widget-opt.wrong { border-color: #ef4444; background: rgba(239,68,68,0.05); color: #ef4444; opacity: 0.6; }
     .quiz-widget-opt.disabled { pointer-events: none; }
-    .quiz-widget-result { margin-top: 16px; padding: 14px 18px; border-radius: 10px; font-size: 0.88rem; line-height: 1.5; }
+    .quiz-widget-result { margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; line-height: 1.5; }
     .quiz-widget-result.correct-result { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: #86efac; }
     .quiz-widget-result.wrong-result { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); color: #fca5a5; }
-    .quiz-widget-footer { margin-top: 16px; font-size: 0.78rem; color: var(--text-muted); text-align: center; }
-    @media (max-width: 480px) { .quiz-widget { padding: 24px 18px; } .quiz-widget-question { font-size: 1.3rem; } }
+    .quiz-widget-footer { margin-top: 12px; font-size: 0.72rem; color: var(--text-muted); text-align: center; }
+    @media (max-width: 480px) { .quiz-overlay { bottom: 72px; right: 16px; } .quiz-fab { bottom: 16px; right: 16px; padding: 10px 16px; font-size: 0.75rem; } }
 
     /* ─── EVENT COUNTDOWN ───────────────────────────────── */
     .event-countdown {
@@ -2368,20 +2365,18 @@
     </div>
   </section>
 
-  <!-- ═══════════ FRAGE DES TAGES ═══════════ -->
-  <section class="quiz-widget-section" aria-labelledby="quiz-widget-title">
-    <div class="container" style="max-width:680px;">
-      <div class="quiz-widget reveal">
-        <div class="quiz-widget-header">
-          <span class="quiz-widget-badge">Frage des Tages</span>
-          <h3 class="quiz-widget-question" id="qwQuestion"></h3>
-        </div>
-        <div class="quiz-widget-options" id="qwOptions"></div>
-        <div class="quiz-widget-result" id="qwResult" style="display:none;"></div>
-        <div class="quiz-widget-footer">Teste dein Wissen – jeden Tag eine neue Frage!</div>
-      </div>
-    </div>
-  </section>
+  <!-- ═══════════ FRAGE DES TAGES (Sticky) ═══════════ -->
+  <div class="quiz-fab" id="quizFab" onclick="toggleQuizOverlay()" style="display:none;">
+    <span class="quiz-fab-icon">&#129300;</span> Frage des Tages
+  </div>
+  <div class="quiz-overlay" id="quizOverlay">
+    <button class="quiz-overlay-close" onclick="toggleQuizOverlay()">&#10005;</button>
+    <span class="quiz-widget-badge">Frage des Tages</span>
+    <h3 class="quiz-widget-question" id="qwQuestion"></h3>
+    <div class="quiz-widget-options" id="qwOptions"></div>
+    <div class="quiz-widget-result" id="qwResult" style="display:none;"></div>
+    <div class="quiz-widget-footer">Jeden Tag eine neue Frage!</div>
+  </div>
 
   <!-- ═══════════ INSTAGRAM ═══════════ -->
   <section class="instagram" id="instagram" aria-labelledby="instagram-title">
@@ -3542,18 +3537,30 @@ function acceptCookies(level) {
 </script>
 
 <script>
-// ── Frage des Tages (isoliertes Script) ──
+// ── Frage des Tages (Sticky FAB + Overlay) ──
+var quizOverlayOpen = false;
+function toggleQuizOverlay() {
+  quizOverlayOpen = !quizOverlayOpen;
+  var ov = document.getElementById('quizOverlay');
+  if (quizOverlayOpen) {
+    ov.style.display = 'block';
+    requestAnimationFrame(function() { ov.classList.add('open'); });
+  } else {
+    ov.classList.remove('open');
+    setTimeout(function() { ov.style.display = 'none'; }, 300);
+  }
+}
 (async function() {
   try {
-    const res = await fetch('quiz-des-tages.json');
+    var res = await fetch('quiz-des-tages.json');
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    const dayIndex = Math.floor(Date.now() / 86400000) % data.length;
-    const q = data[dayIndex];
-    const letters = ['A', 'B', 'C', 'D'];
+    var data = await res.json();
+    var dayIndex = Math.floor(Date.now() / 86400000) % data.length;
+    var q = data[dayIndex];
+    var letters = ['A', 'B', 'C', 'D'];
     document.getElementById('qwQuestion').textContent = q.frage;
-    const optEl = document.getElementById('qwOptions');
-    const answered = localStorage.getItem('kk_quiz_day') === String(dayIndex);
+    var optEl = document.getElementById('qwOptions');
+    var answered = localStorage.getItem('kk_quiz_day') === String(dayIndex);
     optEl.innerHTML = q.optionen.map(function(opt, i) {
       return '<button class="quiz-widget-opt' + (answered && i === q.antwort ? ' correct' : '') + (answered && i !== q.antwort ? ' disabled' : '') + '" data-i="' + i + '"' + (answered ? ' disabled' : '') + '><span class="opt-letter">' + letters[i] + '</span> ' + opt + '</button>';
     }).join('');
@@ -3562,6 +3569,7 @@ function acceptCookies(level) {
       r.style.display = 'block';
       r.className = 'quiz-widget-result correct-result';
       r.textContent = q.info;
+      document.getElementById('quizFab').classList.add('answered');
     }
     optEl.querySelectorAll('.quiz-widget-opt:not([disabled])').forEach(function(btn) {
       btn.addEventListener('click', function() {
@@ -3578,12 +3586,12 @@ function acceptCookies(level) {
         r.style.display = 'block';
         r.className = 'quiz-widget-result ' + (correct ? 'correct-result' : 'wrong-result');
         r.textContent = (correct ? '\u2713 Richtig! ' : '\u2717 Leider falsch. ') + q.info;
+        document.getElementById('quizFab').classList.add('answered');
       });
     });
+    document.getElementById('quizFab').style.display = 'flex';
   } catch(e) {
     console.warn('Quiz-Widget:', e);
-    var s = document.querySelector('.quiz-widget-section');
-    if (s) s.style.display = 'none';
   }
 })();
 </script>
