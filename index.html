@@ -679,7 +679,7 @@
 
     .formats-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px;
     }
 
@@ -723,7 +723,6 @@
     .format-card--live .format-card-glow   { background: rgba(239,68,68,0.15); }
     .format-card--indie .format-card-glow  { background: rgba(56,182,255,0.15); }
     .format-card--online .format-card-glow { background: rgba(16,185,129,0.15); }
-    .format-card--namensfinder .format-card-glow { background: rgba(245,158,11,0.15); }
 
     .format-icon {
       width: 52px; height: 52px;
@@ -1971,7 +1970,7 @@
 
     /* ─── RESPONSIVE ────────────────────────────────────── */
     @media (max-width: 1024px) {
-      .formats-grid      { grid-template-columns: repeat(2, 1fr); max-width: 720px; margin: 0 auto; }
+      .formats-grid      { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
       .events-past-grid  { grid-template-columns: repeat(2,1fr); }
       .bingo-inner       { grid-template-columns: 1fr; }
       .bingo-visual      { display: none; }
@@ -1981,7 +1980,6 @@
       .footer-grid       { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 768px) {
-      .formats-grid { grid-template-columns: 1fr; max-width: 520px; }
       .nav-links, .nav-cta { display: none; }
       .nav-toggle { display: flex; }
       .hero-stats { gap: 24px; }
@@ -2162,7 +2160,7 @@
     <div class="container">
       <div class="formats-header">
         <span class="section-label reveal">Spielformate</span>
-        <h2 class="section-title reveal reveal-delay-1" id="formats-title">Vier Wege<br>zu spielen</h2>
+        <h2 class="section-title reveal reveal-delay-1" id="formats-title">Drei Wege<br>zu spielen</h2>
         <p class="section-desc reveal reveal-delay-2">Ob Kneipenabend, Firmenfeier oder Vereinsjubiläum – der Kneipenkönig hat das passende Format.</p>
       </div>
 
@@ -2218,22 +2216,6 @@
           <a href="bingokoenig.html" class="format-cta">Mehr erfahren →</a>
         </div>
 
-        <div class="format-card format-card--namensfinder reveal reveal-delay-3">
-          <div class="format-card-glow"></div>
-          <div class="format-icon" aria-hidden="true">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20"/><path d="M9 4v4"/><path d="M15 4v4"/><path d="M7 12h2"/><path d="M11 12h2"/><path d="M15 12h2"/><path d="M7 16h10"/></svg>
-          </div>
-          <div class="format-tag">Tool</div>
-          <div class="format-name">Namensfinder</div>
-          <p class="format-desc">Dir fehlt noch ein kreativer Spieler- oder Teamname? Lass den Würfel entscheiden und finde den perfekten Namen.</p>
-          <ul class="format-features">
-            <li>10 lustige Namen per Klick</li>
-            <li>Spieler- oder Teamname</li>
-            <li>Immer neue Vorschläge</li>
-            <li>Inspiration für euren Quizabend</li>
-          </ul>
-          <a href="namensfinder.html" class="format-cta">Ausprobieren →</a>
-        </div>
       </div>
     </div>
   </section>
