@@ -1964,6 +1964,11 @@
     .quiz-widget-result.correct-result { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: #86efac; }
     .quiz-widget-result.wrong-result { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); color: #fca5a5; }
     .quiz-widget-footer { margin-top: 12px; font-size: 0.72rem; color: var(--text-muted); text-align: center; }
+    .quiz-vote-bar { position: absolute; top: 0; left: 0; bottom: 0; border-radius: 8px; transition: width 0.6s ease; z-index: 0; }
+    .quiz-widget-opt.voted { position: relative; }
+    .quiz-widget-opt.voted > * { position: relative; z-index: 1; }
+    .quiz-vote-pct { margin-left: auto; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; min-width: 38px; text-align: right; }
+    .quiz-vote-total { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; }
     @media (max-width: 480px) { .quiz-overlay { bottom: 72px; right: 16px; } .quiz-fab { bottom: 16px; right: 16px; padding: 10px 16px; font-size: 0.75rem; } }
 
     /* ─── EVENT COUNTDOWN ───────────────────────────────── */
@@ -3550,6 +3555,36 @@ function toggleQuizOverlay() {
     setTimeout(function() { ov.style.display = 'none'; }, 300);
   }
 }
+var QDV_URL = 'https://mqsxgzaliwzyghmgygea.supabase.co/rest/v1/quiz_daily_votes';
+var QDV_KEY = 'sb_publishable_n7-e_4YSOdzhdRPc6mKOgg_EF3jJqG6';
+var QDV_H = { 'apikey': QDV_KEY, 'Authorization': 'Bearer ' + QDV_KEY };
+
+function showVoteResults(dayIndex, optCount, correctIdx) {
+  fetch(QDV_URL + '?select=answer&day_index=eq.' + dayIndex, { headers: QDV_H })
+    .then(function(r) { return r.json(); })
+    .then(function(votes) {
+      var counts = [0, 0, 0, 0];
+      votes.forEach(function(v) { if (v.answer >= 0 && v.answer < 4) counts[v.answer]++; });
+      var total = votes.length;
+      if (!total) return;
+      var btns = document.querySelectorAll('#qwOptions .quiz-widget-opt');
+      btns.forEach(function(btn, i) {
+        if (i >= optCount) return;
+        var pct = Math.round((counts[i] / total) * 100);
+        var isCorrect = i === correctIdx;
+        var barColor = isCorrect ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)';
+        btn.classList.add('voted');
+        btn.insertAdjacentHTML('beforeend', '<span class="quiz-vote-pct">' + pct + '%</span>');
+        btn.insertAdjacentHTML('afterbegin', '<div class="quiz-vote-bar" style="width:0;background:' + barColor + ';"></div>');
+        setTimeout(function() {
+          btn.querySelector('.quiz-vote-bar').style.width = pct + '%';
+        }, 50);
+      });
+      var footer = document.querySelector('.quiz-widget-footer');
+      if (footer) footer.innerHTML = total + ' Stimme' + (total !== 1 ? 'n' : '') + ' abgegeben';
+    }).catch(function() {});
+}
+
 (async function() {
   try {
     var res = await fetch('quiz-des-tages.json');
@@ -3570,6 +3605,7 @@ function toggleQuizOverlay() {
       r.className = 'quiz-widget-result correct-result';
       r.textContent = q.info;
       document.getElementById('quizFab').classList.add('answered');
+      showVoteResults(dayIndex, q.optionen.length, q.antwort);
     }
     optEl.querySelectorAll('.quiz-widget-opt:not([disabled])').forEach(function(btn) {
       btn.addEventListener('click', function() {
@@ -3587,6 +3623,14 @@ function toggleQuizOverlay() {
         r.className = 'quiz-widget-result ' + (correct ? 'correct-result' : 'wrong-result');
         r.textContent = (correct ? '\u2713 Richtig! ' : '\u2717 Leider falsch. ') + q.info;
         document.getElementById('quizFab').classList.add('answered');
+        // Stimme speichern + Ergebnisse anzeigen
+        fetch(QDV_URL, {
+          method: 'POST',
+          headers: Object.assign({}, QDV_H, { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' }),
+          body: JSON.stringify({ day_index: dayIndex, answer: idx })
+        }).then(function() {
+          showVoteResults(dayIndex, q.optionen.length, q.antwort);
+        }).catch(function() {});
       });
     });
     document.getElementById('quizFab').style.display = 'flex';
