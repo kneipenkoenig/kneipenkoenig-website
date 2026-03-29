@@ -12,5 +12,12 @@
     "description": "Location gegen Location – wer hat die schlausten Teams?",
     "icon": "⚔️",
     "link": "kk-battle.html"
+  },
+  {
+    "id": "hof3",
+    "name": "Namensroulette",
+    "description": "Finde den perfekten Spieler- oder Teamnamen fürs Quiz",
+    "icon": "🎲",
+    "link": "namensfinder.html"
   }
 ]
