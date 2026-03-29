@@ -1904,6 +1904,93 @@
       .instagram-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     }
 
+    /* ─── QUIZ WIDGET ──────────────────────────────────── */
+    .quiz-widget-section { padding: 80px 0; background: var(--bg); }
+    .quiz-widget {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(56,182,255,0.15);
+      border-radius: 20px;
+      padding: 36px 32px;
+      backdrop-filter: blur(10px);
+    }
+    .quiz-widget-header { margin-bottom: 24px; }
+    .quiz-widget-badge {
+      display: inline-block;
+      background: rgba(56,182,255,0.12);
+      color: #38b6ff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 100px;
+      margin-bottom: 14px;
+    }
+    .quiz-widget-question {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .quiz-widget-options { display: grid; gap: 10px; }
+    .quiz-widget-opt {
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.02);
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .quiz-widget-opt:hover { border-color: rgba(56,182,255,0.3); color: #fff; background: rgba(56,182,255,0.05); }
+    .quiz-widget-opt .opt-letter {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(56,182,255,0.1);
+      color: #38b6ff;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .quiz-widget-opt.correct { border-color: #22c55e; background: rgba(34,197,94,0.08); color: #22c55e; }
+    .quiz-widget-opt.correct .opt-letter { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .quiz-widget-opt.wrong { border-color: #ef4444; background: rgba(239,68,68,0.05); color: #ef4444; opacity: 0.6; }
+    .quiz-widget-opt.disabled { pointer-events: none; }
+    .quiz-widget-result { margin-top: 16px; padding: 14px 18px; border-radius: 10px; font-size: 0.88rem; line-height: 1.5; }
+    .quiz-widget-result.correct-result { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: #86efac; }
+    .quiz-widget-result.wrong-result { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); color: #fca5a5; }
+    .quiz-widget-footer { margin-top: 16px; font-size: 0.78rem; color: var(--text-muted); text-align: center; }
+    @media (max-width: 480px) { .quiz-widget { padding: 24px 18px; } .quiz-widget-question { font-size: 1.3rem; } }
+
+    /* ─── EVENT COUNTDOWN ───────────────────────────────── */
+    .event-countdown {
+      background: rgba(56,182,255,0.05);
+      border: 1px solid rgba(56,182,255,0.15);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .countdown-label { font-size: 0.78rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+    .countdown-grid { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .countdown-unit { display: flex; flex-direction: column; align-items: center; min-width: 52px; }
+    .countdown-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; color: #38b6ff; line-height: 1; }
+    .countdown-text { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+    .countdown-sep { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: rgba(56,182,255,0.3); padding-bottom: 14px; }
+    .countdown-event { font-size: 0.85rem; color: var(--text-secondary); margin-top: 10px; }
+    @media (max-width: 480px) {
+      .countdown-num { font-size: 1.8rem; }
+      .countdown-unit { min-width: 42px; }
+      .countdown-sep { font-size: 1.5rem; }
+    }
+
     /* ─── SKELETON LOADING ──────────────────────────────── */
     @keyframes shimmer {
       0%   { background-position: -600px 0; }
@@ -2230,6 +2317,20 @@
         </div>
       </div>
 
+      <div id="eventCountdown" class="event-countdown" style="display:none;">
+        <div class="countdown-label">Nächstes Quiz in</div>
+        <div class="countdown-grid">
+          <div class="countdown-unit"><span class="countdown-num" id="cdDays">0</span><span class="countdown-text">Tage</span></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><span class="countdown-num" id="cdHours">0</span><span class="countdown-text">Std</span></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><span class="countdown-num" id="cdMins">0</span><span class="countdown-text">Min</span></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><span class="countdown-num" id="cdSecs">0</span><span class="countdown-text">Sek</span></div>
+        </div>
+        <div class="countdown-event" id="cdEventName"></div>
+      </div>
+
       <div id="eventsContainer" role="list" aria-live="polite" aria-label="Kommende Events"></div>
       <div id="eventsError" class="events-error" style="display:none"></div>
 
@@ -2248,21 +2349,36 @@
     <div class="container">
       <div class="stats-grid" role="list">
         <div class="stat-item reveal" role="listitem">
-          <div class="stat-number"><span class="stat-suffix">&gt;</span><span class="stat-count" data-target="500">500</span></div>
+          <div class="stat-number"><span class="stat-count" id="statTeams" data-target="1400">0</span></div>
           <div class="stat-label">Teams insgesamt</div>
         </div>
         <div class="stat-item reveal reveal-delay-1" role="listitem">
-          <div class="stat-number"><span class="stat-count" data-target="7">7</span></div>
-          <div class="stat-label">Locations in NRW</div>
+          <div class="stat-number"><span class="stat-count" id="statQuizzes" data-target="150">0</span></div>
+          <div class="stat-label">Quiz-Abende</div>
         </div>
         <div class="stat-item reveal reveal-delay-2" role="listitem">
-          <div class="stat-number"><span class="stat-count" data-target="35">35</span></div>
-          <div class="stat-label">Quizkategorien</div>
+          <div class="stat-number"><span class="stat-count" id="statTeilnahmen" data-target="2400">0</span></div>
+          <div class="stat-label">Teilnahmen</div>
         </div>
         <div class="stat-item reveal reveal-delay-3" role="listitem">
-          <div class="stat-number"><span class="stat-suffix" style="font-size:40%;letter-spacing:0.05em;margin-right:3px;">ÜBER</span><span class="stat-count" data-target="2000">2000</span></div>
-          <div class="stat-label">Fragen</div>
+          <div class="stat-number"><span class="stat-count" data-target="7">0</span></div>
+          <div class="stat-label">Locations in NRW</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FRAGE DES TAGES ═══════════ -->
+  <section class="quiz-widget-section" aria-labelledby="quiz-widget-title">
+    <div class="container" style="max-width:680px;">
+      <div class="quiz-widget reveal">
+        <div class="quiz-widget-header">
+          <span class="quiz-widget-badge">Frage des Tages</span>
+          <h3 class="quiz-widget-question" id="qwQuestion"></h3>
+        </div>
+        <div class="quiz-widget-options" id="qwOptions"></div>
+        <div class="quiz-widget-result" id="qwResult" style="display:none;"></div>
+        <div class="quiz-widget-footer">Teste dein Wissen – jeden Tag eine neue Frage!</div>
       </div>
     </div>
   </section>
@@ -2586,6 +2702,31 @@
       container.innerHTML = events.map((ev, i) => buildEventCard(ev, i)).join('');
       container.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
       injectEventJsonLd(events);
+      startCountdown(events);
+    }
+
+    function startCountdown(events) {
+      const next = events.find(ev => ev.date && ev.available !== false);
+      if (!next) return;
+      const cd = document.getElementById('eventCountdown');
+      const target = new Date(next.date + 'T' + (next.time || '19:00'));
+      if (isNaN(target) || target <= Date.now()) return;
+      cd.style.display = 'block';
+      document.getElementById('cdEventName').textContent = next.name || '';
+      function tick() {
+        const diff = target - Date.now();
+        if (diff <= 0) { cd.style.display = 'none'; return; }
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        document.getElementById('cdDays').textContent = d;
+        document.getElementById('cdHours').textContent = String(h).padStart(2, '0');
+        document.getElementById('cdMins').textContent = String(m).padStart(2, '0');
+        document.getElementById('cdSecs').textContent = String(s).padStart(2, '0');
+        requestAnimationFrame(() => setTimeout(tick, 1000));
+      }
+      tick();
     }
 
     async function loadTicketTailorEvents() {
@@ -3267,6 +3408,71 @@
       });
     }, { threshold: 0.5 });
     document.querySelectorAll('.stat-count[data-target]').forEach(el => countObs.observe(el));
+
+    // ── Live-Statistik aus Supabase ──
+    (async function loadLiveStats() {
+      const SB = 'https://mqsxgzaliwzyghmgygea.supabase.co/rest/v1';
+      const KEY = CO_SB_KEY;
+      const h = { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY, 'Prefer': 'count=exact' };
+      try {
+        const [rTeams, rQuizzes, rTeilnahmen] = await Promise.all([
+          fetch(SB + '/teams?select=team_id&limit=0', { headers: h }),
+          fetch(SB + '/quizes?select=quiz_id&limit=0', { headers: h }),
+          fetch(SB + '/quiz_teams?select=quiz_team_id&limit=0', { headers: h })
+        ]);
+        const parse = r => { const cr = r.headers.get('content-range'); return cr ? parseInt(cr.split('/')[1]) : 0; };
+        const teams = parse(rTeams);
+        const quizzes = parse(rQuizzes);
+        const teilnahmen = parse(rTeilnahmen);
+        if (teams) { const el = document.getElementById('statTeams'); el.dataset.target = teams; }
+        if (quizzes) { const el = document.getElementById('statQuizzes'); el.dataset.target = quizzes; }
+        if (teilnahmen) { const el = document.getElementById('statTeilnahmen'); el.dataset.target = teilnahmen; }
+      } catch(_) {}
+    })();
+
+    // ── Frage des Tages ──
+    (async function loadQuizWidget() {
+      try {
+        const data = await fetch('quiz-des-tages.json').then(r => r.json());
+        // Tagesbasis: gleiche Frage für alle Besucher am selben Tag
+        const dayIndex = Math.floor(Date.now() / 86400000) % data.length;
+        const q = data[dayIndex];
+        const letters = ['A', 'B', 'C', 'D'];
+        document.getElementById('qwQuestion').textContent = q.frage;
+        const optEl = document.getElementById('qwOptions');
+        const answered = localStorage.getItem('kk_quiz_day') === String(dayIndex);
+        optEl.innerHTML = q.optionen.map((opt, i) => `
+          <button class="quiz-widget-opt${answered && i === q.antwort ? ' correct' : ''}${answered && i !== q.antwort ? ' disabled' : ''}" data-i="${i}" ${answered ? 'disabled' : ''}>
+            <span class="opt-letter">${letters[i]}</span> ${opt}
+          </button>`).join('');
+        if (answered) {
+          const res = document.getElementById('qwResult');
+          res.style.display = 'block';
+          res.className = 'quiz-widget-result correct-result';
+          res.textContent = q.info;
+        }
+        optEl.querySelectorAll('.quiz-widget-opt:not([disabled])').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = +btn.dataset.i;
+            const correct = idx === q.antwort;
+            localStorage.setItem('kk_quiz_day', String(dayIndex));
+            optEl.querySelectorAll('.quiz-widget-opt').forEach((b, j) => {
+              b.classList.add('disabled');
+              b.disabled = true;
+              if (j === q.antwort) b.classList.add('correct');
+              else if (j === idx && !correct) b.classList.add('wrong');
+            });
+            const res = document.getElementById('qwResult');
+            res.style.display = 'block';
+            res.className = 'quiz-widget-result ' + (correct ? 'correct-result' : 'wrong-result');
+            res.textContent = correct ? '✓ Richtig! ' + q.info : '✗ Leider falsch. ' + q.info;
+          });
+        });
+      } catch(_) {
+        const s = document.querySelector('.quiz-widget-section');
+        if (s) s.style.display = 'none';
+      }
+    })();
 
     // ── Bingo grid ────────────────────────────────────────────
     (function() {

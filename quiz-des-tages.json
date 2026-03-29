@@ -1,0 +1,128 @@
+[
+  {
+    "frage": "Welches Land hat die meisten Zeitzonen?",
+    "optionen": ["USA", "Russland", "Frankreich", "China"],
+    "antwort": 2,
+    "info": "Frankreich hat durch seine Überseegebiete insgesamt 12 Zeitzonen!"
+  },
+  {
+    "frage": "Welches Tier kann nicht rückwärts laufen?",
+    "optionen": ["Elefant", "Känguru", "Hund", "Katze"],
+    "antwort": 1,
+    "info": "Kängurus können wegen ihres Schwanzes nicht rückwärts laufen."
+  },
+  {
+    "frage": "In welchem Jahr wurde das erste iPhone vorgestellt?",
+    "optionen": ["2005", "2006", "2007", "2008"],
+    "antwort": 2,
+    "info": "Steve Jobs stellte das erste iPhone am 9. Januar 2007 vor."
+  },
+  {
+    "frage": "Welche Stadt wird auch 'Venedig des Nordens' genannt?",
+    "optionen": ["Hamburg", "Amsterdam", "Kopenhagen", "Stockholm"],
+    "antwort": 1,
+    "info": "Amsterdam hat über 160 Grachten und mehr als 1.500 Brücken."
+  },
+  {
+    "frage": "Wie viele Spieler stehen beim Volleyball auf dem Feld?",
+    "optionen": ["5 pro Team", "6 pro Team", "7 pro Team", "8 pro Team"],
+    "antwort": 1,
+    "info": "Jedes Team hat 6 Spieler auf dem Feld."
+  },
+  {
+    "frage": "Welches Element hat das chemische Symbol 'Au'?",
+    "optionen": ["Silber", "Aluminium", "Gold", "Kupfer"],
+    "antwort": 2,
+    "info": "Au kommt vom lateinischen 'Aurum' – Gold."
+  },
+  {
+    "frage": "Wie heißt die Hauptstadt von Australien?",
+    "optionen": ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+    "antwort": 2,
+    "info": "Canberra wurde als Kompromiss zwischen Sydney und Melbourne gewählt."
+  },
+  {
+    "frage": "Welcher Planet unseres Sonnensystems ist der größte?",
+    "optionen": ["Saturn", "Jupiter", "Neptun", "Uranus"],
+    "antwort": 1,
+    "info": "Jupiter hat einen Durchmesser von ca. 143.000 km – über 11x die Erde."
+  },
+  {
+    "frage": "Wie viele Bundesländer hat Deutschland?",
+    "optionen": ["14", "15", "16", "17"],
+    "antwort": 2,
+    "info": "Deutschland hat 16 Bundesländer, davon 3 Stadtstaaten."
+  },
+  {
+    "frage": "Welches Tier gilt als das schnellste der Welt?",
+    "optionen": ["Löwe", "Gepard", "Falke", "Windhund"],
+    "antwort": 2,
+    "info": "Der Wanderfalke erreicht im Sturzflug über 300 km/h – schneller als der Gepard zu Fuß!"
+  },
+  {
+    "frage": "In welchem Land liegt Timbuktu?",
+    "optionen": ["Niger", "Mali", "Senegal", "Burkina Faso"],
+    "antwort": 1,
+    "info": "Timbuktu liegt im westafrikanischen Mali und war ein bedeutendes Handelszentrum."
+  },
+  {
+    "frage": "Welcher Fluss fließt durch Paris?",
+    "optionen": ["Rhône", "Loire", "Seine", "Garonne"],
+    "antwort": 2,
+    "info": "Die Seine ist 777 km lang und fließt mitten durch Paris."
+  },
+  {
+    "frage": "Wie viele Tasten hat ein Standard-Klavier?",
+    "optionen": ["76", "82", "88", "92"],
+    "antwort": 2,
+    "info": "Ein Standard-Klavier hat 88 Tasten: 52 weiße und 36 schwarze."
+  },
+  {
+    "frage": "Welches Land hat die Form eines Stiefels?",
+    "optionen": ["Griechenland", "Kroatien", "Italien", "Portugal"],
+    "antwort": 2,
+    "info": "Italien ist für seine markante Stiefelform weltbekannt."
+  },
+  {
+    "frage": "Wer malte die Mona Lisa?",
+    "optionen": ["Michelangelo", "Leonardo da Vinci", "Raphael", "Rembrandt"],
+    "antwort": 1,
+    "info": "Leonardo da Vinci malte die Mona Lisa zwischen 1503 und 1506."
+  },
+  {
+    "frage": "Was ist die häufigste Blutgruppe in Deutschland?",
+    "optionen": ["A positiv", "0 positiv", "B positiv", "AB positiv"],
+    "antwort": 0,
+    "info": "Blutgruppe A positiv haben ca. 37% aller Deutschen."
+  },
+  {
+    "frage": "Wie heißt das größte Volksfest der Welt?",
+    "optionen": ["Karneval in Rio", "Oktoberfest", "Mardi Gras", "La Tomatina"],
+    "antwort": 1,
+    "info": "Das Münchner Oktoberfest zieht jährlich über 6 Millionen Besucher an."
+  },
+  {
+    "frage": "Welches Organ im menschlichen Körper ist das größte?",
+    "optionen": ["Leber", "Lunge", "Haut", "Darm"],
+    "antwort": 2,
+    "info": "Die Haut ist mit ca. 1,7 m² Fläche das größte Organ des Menschen."
+  },
+  {
+    "frage": "In welchem Jahr fiel die Berliner Mauer?",
+    "optionen": ["1987", "1988", "1989", "1990"],
+    "antwort": 2,
+    "info": "Die Berliner Mauer fiel am 9. November 1989."
+  },
+  {
+    "frage": "Welches Gas macht den größten Teil der Erdatmosphäre aus?",
+    "optionen": ["Sauerstoff", "Stickstoff", "CO2", "Argon"],
+    "antwort": 1,
+    "info": "Stickstoff macht etwa 78% der Erdatmosphäre aus."
+  },
+  {
+    "frage": "Wie viele Herzen hat ein Oktopus?",
+    "optionen": ["1", "2", "3", "4"],
+    "antwort": 2,
+    "info": "Ein Oktopus hat 3 Herzen: eins für den Körper, zwei für die Kiemen."
+  }
+]
