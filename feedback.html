@@ -103,8 +103,19 @@
   <div class="fb-card">
     <div class="fb-logo"><img src="images/logos/logo-blackbg.png" alt="Der Kneipenkönig" /></div>
 
+    <!-- INTRO -->
+    <div id="fbIntro">
+      <div class="fb-title">Deine Meinung zählt!</div>
+      <div class="fb-sub" style="margin-bottom:20px;">Wir möchten den Kneipenkönig für euch noch besser machen. Hast du kurz Zeit, den heutigen Quizabend zu bewerten?</div>
+      <div style="background:rgba(56,182,255,0.06);border:1px solid rgba(56,182,255,0.15);border-radius:10px;padding:14px 16px;margin-bottom:24px;font-size:0.84rem;color:var(--text-secondary);line-height:1.6;">
+        Wir bitten um <strong style="color:#fff;">ehrliches und faires Feedback</strong> – nur so können wir uns verbessern. Deine Bewertung ist anonym und freiwillig.
+      </div>
+      <button class="fb-submit" onclick="document.getElementById('fbIntro').style.display='none';document.getElementById('fbForm').style.display='block';">Ja, Quiz bewerten</button>
+      <a href="index.html" class="fb-home-link" style="margin-top:14px;display:block;text-align:center;">Nein danke, zurück zur Startseite</a>
+    </div>
+
     <!-- FORM -->
-    <div id="fbForm">
+    <div id="fbForm" style="display:none;">
       <div class="fb-title">Wie war's?</div>
       <div class="fb-sub">Bewerte den heutigen Quizabend</div>
       <div class="fb-event-name" id="fbEventName"></div>
