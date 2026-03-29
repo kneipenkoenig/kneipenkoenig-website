@@ -3398,18 +3398,7 @@
       };
       requestAnimationFrame(step);
     }
-    const countObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        const el  = e.target;
-        const tgt = parseInt(el.dataset.target, 10);
-        if (tgt) animateCount(el, tgt);
-        countObs.unobserve(el);
-      });
-    }, { threshold: 0.5 });
-    document.querySelectorAll('.stat-count[data-target]').forEach(el => countObs.observe(el));
-
-    // ── Live-Statistik aus Supabase ──
+    // ── Live-Statistik aus Supabase laden, dann Counter starten ──
     (async function loadLiveStats() {
       const SB = 'https://mqsxgzaliwzyghmgygea.supabase.co/rest/v1';
       const KEY = CO_SB_KEY;
@@ -3424,10 +3413,22 @@
         const teams = parse(rTeams);
         const quizzes = parse(rQuizzes);
         const teilnahmen = parse(rTeilnahmen);
-        if (teams) { const el = document.getElementById('statTeams'); el.dataset.target = teams; }
-        if (quizzes) { const el = document.getElementById('statQuizzes'); el.dataset.target = quizzes; }
-        if (teilnahmen) { const el = document.getElementById('statTeilnahmen'); el.dataset.target = teilnahmen; }
+        if (teams) document.getElementById('statTeams').dataset.target = teams;
+        if (quizzes) document.getElementById('statQuizzes').dataset.target = quizzes;
+        if (teilnahmen) document.getElementById('statTeilnahmen').dataset.target = teilnahmen;
       } catch(_) {}
+
+      // Counter-Animation starten (nach Daten-Laden)
+      const countObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          const el  = e.target;
+          const tgt = parseInt(el.dataset.target, 10);
+          if (tgt) animateCount(el, tgt);
+          countObs.unobserve(el);
+        });
+      }, { threshold: 0.5 });
+      document.querySelectorAll('.stat-count[data-target]').forEach(el => countObs.observe(el));
     })();
 
     // ── Frage des Tages ──
