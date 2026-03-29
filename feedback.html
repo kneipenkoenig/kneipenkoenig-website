@@ -112,7 +112,7 @@
       <div class="fb-error" id="fbError"></div>
 
       <div class="fb-section">
-        <div class="fb-label">Gesamtbewertung</div>
+        <div class="fb-label">Gesamtbewertung <span style="font-weight:400;color:var(--text-muted);text-transform:none;letter-spacing:0;">(optional)</span></div>
         <div class="rating-row" id="ratingRow"></div>
         <div class="rating-labels"><span>Schlecht</span><span>Perfekt</span></div>
       </div>
@@ -250,8 +250,8 @@
   })();
 
   async function submitFeedback() {
-    if (!selectedRating) {
-      showError('Bitte gib eine Bewertung von 1-10 ab.');
+    if (!selectedRating && !Object.keys(roundRatings).length && !document.getElementById('fbComment').value.trim()) {
+      showError('Bitte gib mindestens eine Bewertung oder einen Kommentar ab.');
       return;
     }
 
@@ -261,7 +261,7 @@
 
     const payload = {
       quiz_id: quizId ? parseInt(quizId) : null,
-      rating: selectedRating,
+      rating: selectedRating || null,
       team_id: document.getElementById('fbTeam').value ? parseInt(document.getElementById('fbTeam').value) : null,
       comment: document.getElementById('fbComment').value.trim() || null
     };
