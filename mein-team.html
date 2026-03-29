@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" href="images/logos/logo-blackbg.png" />
+  <meta name="description" content="Mein Team – Finde dein Quiz-Team und sieh dir eure komplette Ergebnishistorie beim Kneipenkönig an." />
+  <title>Mein Team – Der Kneipenkönig</title>
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kneipenkoenig.de/mein-team.html" />
+  <meta property="og:title" content="Mein Team – Der Kneipenkönig" />
+  <meta property="og:description" content="Finde dein Quiz-Team und sieh dir eure Ergebnishistorie an." />
+  <meta property="og:image" content="https://kneipenkoenig.de/hero-bg.jpg" />
+  <link rel="stylesheet" href="fonts/fonts.css" />
+  <style>
+    :root { --blue: #38b6ff; --text-primary: #fff; --text-secondary: rgba(255,255,255,0.55); --text-muted: rgba(255,255,255,0.35); --border: rgba(255,255,255,0.09); --surface: rgba(255,255,255,0.04); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body { font-family: 'Open Sans', sans-serif; color: var(--text-primary); background: #000; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    body::before { content: ''; position: fixed; inset: 0; background: url('hero-bg.jpg') center/cover no-repeat; z-index: -2; }
+    body::after  { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.62); z-index: -1; }
+    a { color: inherit; text-decoration: none; }
+
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 18px 5%; transition: background 0.3s, backdrop-filter 0.3s; }
+    .nav.scrolled { background: rgba(0,0,0,0.85); backdrop-filter: blur(18px); }
+    .nav-logo { font-family: 'Open Sans', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; display: flex; align-items: center; }
+    .nav-logo .der { color: #fff; } .nav-logo .kneipen { color: #38b6ff; }
+    .nav-logo-img { height: 28px; width: auto; mix-blend-mode: screen; margin-right: 8px; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: #38b6ff; }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .nav-toggle span { width: 22px; height: 2px; background: var(--text-primary); border-radius: 2px; display: block; }
+    .mobile-nav { display: none; position: fixed; inset: 0; z-index: 101; background: rgba(0,0,0,0.97); backdrop-filter: blur(24px); flex-direction: column; align-items: center; justify-content: center; gap: 28px; }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; letter-spacing: 0.05em; color: rgba(255,255,255,0.55); text-transform: uppercase; transition: color 0.2s; }
+    .mobile-nav a:hover { color: #38b6ff; }
+    .mobile-nav-close { position: absolute; top: 22px; right: 5%; background: none; border: none; color: rgba(255,255,255,0.5); font-size: 1.8rem; cursor: pointer; }
+    @media (max-width: 768px) { .nav-links { display: none; } .nav-toggle { display: flex; } }
+    @keyframes navLineRun { from { left: -30%; } to { left: 130%; } }
+    .nav-line { position: fixed; top: 80px; left: 0; right: 0; height: 2px; z-index: 99; background: rgba(56,182,255,0.15); overflow: hidden; }
+    .nav-line::after { content: ''; position: absolute; top: 0; width: 30%; height: 100%; background: linear-gradient(90deg, transparent 0%, #38b6ff 35%, #bfefff 50%, #38b6ff 65%, transparent 100%); animation: navLineRun 2.5s linear infinite; }
+
+    .page-wrap { min-height: 100vh; padding: 120px 5% 60px; max-width: 800px; margin: 0 auto; }
+    .section-label { display: inline-flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #38b6ff; margin-bottom: 10px; }
+    .section-label::before { content: ''; display: block; width: 28px; height: 1px; background: #38b6ff; }
+    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 5vw, 4rem); letter-spacing: 0.03em; margin-bottom: 8px; }
+    .page-sub { color: var(--text-secondary); margin-bottom: 32px; font-size: 1rem; line-height: 1.6; }
+
+    /* Search */
+    .search-wrap { position: relative; margin-bottom: 32px; }
+    .search-input { width: 100%; padding: 14px 18px 14px 48px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: #fff; font-size: 1rem; font-family: 'Open Sans', sans-serif; transition: border-color 0.2s; }
+    .search-input:focus { outline: none; border-color: #38b6ff; }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+    .search-results { position: absolute; top: 100%; left: 0; right: 0; z-index: 50; background: rgba(18,18,22,0.97); border: 1px solid var(--border); border-radius: 0 0 12px 12px; max-height: 280px; overflow-y: auto; display: none; }
+    .search-results.open { display: block; }
+    .search-item { padding: 12px 18px; cursor: pointer; font-size: 0.9rem; border-bottom: 1px solid var(--border); transition: background 0.15s; display: flex; justify-content: space-between; align-items: center; }
+    .search-item:hover { background: rgba(56,182,255,0.06); }
+    .search-item:last-child { border-bottom: none; }
+    .search-item-loc { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Team Profile */
+    .team-profile { display: none; }
+    .team-profile.visible { display: block; }
+    .team-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    .team-avatar { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #38b6ff, #1a6fa8); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: #000; flex-shrink: 0; }
+    .team-name { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.02em; }
+    .team-home { font-size: 0.85rem; color: var(--text-muted); }
+
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+    .stat-card-val { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: #38b6ff; line-height: 1; }
+    .stat-card-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+    @media (max-width: 480px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+
+    .history-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.04em; color: var(--text-secondary); margin-bottom: 14px; }
+    .history-table { width: 100%; border-collapse: collapse; }
+    .history-table th { text-align: left; font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .history-table td { padding: 10px 12px; font-size: 0.88rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+    .history-table tr:hover td { color: #fff; }
+    .pos-badge { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; }
+    .pos-1 { background: rgba(234,179,8,0.15); color: #eab308; }
+    .pos-2 { background: rgba(148,163,184,0.15); color: #94a3b8; }
+    .pos-3 { background: rgba(180,83,9,0.15); color: #d97706; }
+    .pos-other { background: var(--surface); color: var(--text-muted); }
+
+    .footer-mini { text-align: center; padding: 32px 5%; color: var(--text-muted); font-size: 0.8rem; }
+    .footer-mini a { color: var(--text-secondary); transition: color 0.2s; }
+    .footer-mini a:hover { color: #38b6ff; }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="navbar">
+    <a href="index.html" class="nav-logo"><img src="images/logos/logo-blackbg.png" class="nav-logo-img" alt="" /><span class="der">DER</span><span class="kneipen">KNEIPENKÖNIG</span></a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html#formate">Der Kneipenkönig</a></li>
+      <li><a href="index.html#events">Kommende Events</a></li>
+      <li><a href="index.html#instagram">Letzte Events</a></li>
+      <li><a href="ergebnisse.html">Ergebnisse</a></li>
+      <li><a href="index.html#kontakt">Kontakt</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileNavClose">&#10005;</button>
+    <a href="index.html#formate" class="mobile-link">Der Kneipenkönig</a>
+    <a href="index.html#events" class="mobile-link">Kommende Events</a>
+    <a href="index.html#instagram" class="mobile-link">Letzte Events</a>
+    <a href="ergebnisse.html" class="mobile-link">Ergebnisse</a>
+    <a href="index.html#kontakt" class="mobile-link">Kontakt</a>
+  </div>
+  <div class="nav-line"></div>
+
+  <div class="page-wrap">
+    <div class="section-label">Dein Team</div>
+    <h1 class="page-title">Mein Team</h1>
+    <p class="page-sub">Such dein Team und sieh dir eure komplette Quiz-Historie an.</p>
+
+    <div class="search-wrap">
+      <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="search-input" id="teamSearch" placeholder="Teamname eingeben..." autocomplete="off" />
+      <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <div class="team-profile" id="teamProfile">
+      <div class="team-header">
+        <div class="team-avatar" id="teamAvatar"></div>
+        <div>
+          <div class="team-name" id="teamName"></div>
+          <div class="team-home" id="teamHome"></div>
+        </div>
+      </div>
+
+      <div class="stats-row" id="statsRow">
+        <div class="stat-card"><div class="stat-card-val" id="spTeilnahmen">0</div><div class="stat-card-label">Teilnahmen</div></div>
+        <div class="stat-card"><div class="stat-card-val" id="spSiege">0</div><div class="stat-card-label">Siege</div></div>
+        <div class="stat-card"><div class="stat-card-val" id="spPodium">0</div><div class="stat-card-label">Podium</div></div>
+        <div class="stat-card"><div class="stat-card-val" id="spSchnitt">0</div><div class="stat-card-label">&#8709; Platz</div></div>
+      </div>
+
+      <div class="history-title">Ergebnishistorie</div>
+      <table class="history-table">
+        <thead><tr><th>Datum</th><th>Location</th><th>Platz</th><th>Punkte</th></tr></thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer-mini">
+    <p>© 2026 Der Kneipenkönig &middot; <a href="datenschutz.html">Datenschutz</a> &middot; <a href="impressum.html">Impressum</a></p>
+  </div>
+
+  <script>
+    // Nav
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 30));
+    const navToggleBtn = document.getElementById('navToggle');
+    const mobileNav = document.getElementById('mobileNav');
+    document.getElementById('mobileNavClose').addEventListener('click', () => { mobileNav.classList.remove('open'); document.body.style.overflow=''; });
+    navToggleBtn.addEventListener('click', () => { mobileNav.classList.add('open'); document.body.style.overflow='hidden'; });
+    document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => { mobileNav.classList.remove('open'); document.body.style.overflow=''; }));
+
+    // Supabase
+    const SB_URL = 'https://mqsxgzaliwzyghmgygea.supabase.co/rest/v1';
+    const SB_KEY = 'sb_publishable_n7-e_4YSOdzhdRPc6mKOgg_EF3jJqG6';
+    const sbH = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+
+    let allTeams = [];
+    let locations = {};
+
+    async function init() {
+      const [teamsRes, locsRes] = await Promise.all([
+        fetch(SB_URL + '/teams?select=team_id,team_name,location_id&order=team_name', { headers: sbH }),
+        fetch(SB_URL + '/locations?select=location_id,location_name', { headers: sbH })
+      ]);
+      allTeams = await teamsRes.json();
+      const locs = await locsRes.json();
+      locs.forEach(l => locations[l.location_id] = l.location_name);
+
+      // URL-Parameter: ?team=123
+      const params = new URLSearchParams(window.location.search);
+      const tid = params.get('team');
+      if (tid) {
+        const t = allTeams.find(t => t.team_id === +tid);
+        if (t) loadTeam(t);
+      }
+    }
+
+    const searchInput = document.getElementById('teamSearch');
+    const searchResults = document.getElementById('searchResults');
+
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      if (q.length < 2) { searchResults.classList.remove('open'); return; }
+      const matches = allTeams.filter(t => t.team_name.toLowerCase().includes(q)).slice(0, 15);
+      if (!matches.length) { searchResults.classList.remove('open'); return; }
+      searchResults.innerHTML = matches.map(t =>
+        `<div class="search-item" data-id="${t.team_id}">
+          <span>${t.team_name}</span>
+          <span class="search-item-loc">${locations[t.location_id] || ''}</span>
+        </div>`
+      ).join('');
+      searchResults.classList.add('open');
+      searchResults.querySelectorAll('.search-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const team = allTeams.find(t => t.team_id === +item.dataset.id);
+          if (team) loadTeam(team);
+          searchResults.classList.remove('open');
+          searchInput.value = team.team_name;
+        });
+      });
+    });
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.search-wrap')) searchResults.classList.remove('open');
+    });
+
+    async function loadTeam(team) {
+      // Update URL
+      history.replaceState(null, '', '?team=' + team.team_id);
+
+      // Header
+      const initials = team.team_name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+      document.getElementById('teamAvatar').textContent = initials;
+      document.getElementById('teamName').textContent = team.team_name;
+      document.getElementById('teamHome').textContent = locations[team.location_id] ? 'Heimat: ' + locations[team.location_id] : '';
+
+      // Load results
+      const res = await fetch(SB_URL + '/quiz_teams?select=position,point,iq_point,winning_point,quiz_id,quizes(quiz_date,quiz_name,location_id)&team_id=eq.' + team.team_id + '&order=quiz_id.desc', { headers: sbH });
+      const results = await res.json();
+
+      // Stats
+      const teilnahmen = results.length;
+      const siege = results.filter(r => r.position === 1).length;
+      const podium = results.filter(r => r.position <= 3).length;
+      const avgPos = teilnahmen ? (results.reduce((s, r) => s + r.position, 0) / teilnahmen).toFixed(1) : '-';
+
+      document.getElementById('spTeilnahmen').textContent = teilnahmen;
+      document.getElementById('spSiege').textContent = siege;
+      document.getElementById('spPodium').textContent = podium;
+      document.getElementById('spSchnitt').textContent = avgPos;
+
+      // History table
+      const tbody = document.getElementById('historyBody');
+      tbody.innerHTML = results.map(r => {
+        const date = r.quizes?.quiz_date || '-';
+        const loc = locations[r.quizes?.location_id] || '-';
+        const pos = r.position;
+        const posClass = pos === 1 ? 'pos-1' : pos === 2 ? 'pos-2' : pos === 3 ? 'pos-3' : 'pos-other';
+        const dateFormatted = date !== '-' ? new Date(date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-';
+        return `<tr>
+          <td>${dateFormatted}</td>
+          <td>${loc}</td>
+          <td><span class="pos-badge ${posClass}">${pos}</span></td>
+          <td>${r.point || 0}</td>
+        </tr>`;
+      }).join('');
+
+      document.getElementById('teamProfile').classList.add('visible');
+    }
+
+    init();
+  </script>
+</body>
+</html>

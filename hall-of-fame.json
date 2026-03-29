@@ -19,5 +19,12 @@
     "description": "Finde den perfekten Spieler- oder Teamnamen fürs Quiz",
     "icon": "🎲",
     "link": "namensfinder.html"
+  },
+  {
+    "id": "hof4",
+    "name": "Mein Team",
+    "description": "Deine komplette Quiz-Historie – alle Platzierungen & Punkte",
+    "icon": "👤",
+    "link": "mein-team.html"
   }
 ]
