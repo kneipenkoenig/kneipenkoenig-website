@@ -86,6 +86,12 @@
   </url>
 
   <url>
+    <loc>https://kneipenkoenig.de/namensfinder.html</loc>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
     <loc>https://kneipenkoenig.de/faq.html</loc>
     <priority>0.6</priority>
     <changefreq>monthly</changefreq>

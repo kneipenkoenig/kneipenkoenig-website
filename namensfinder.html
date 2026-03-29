@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" href="images/logos/logo-blackbg.png" />
+  <meta name="description" content="Namensfinder – Finde den perfekten Spieler- oder Teamnamen für dein nächstes Pub Quiz beim Kneipenkönig." />
+  <title>Namensfinder – Der Kneipenkönig</title>
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kneipenkoenig.de/namensfinder.html" />
+  <meta property="og:title" content="Namensfinder – Der Kneipenkönig" />
+  <meta property="og:description" content="Finde den perfekten Spieler- oder Teamnamen für dein nächstes Pub Quiz." />
+  <meta property="og:image" content="https://kneipenkoenig.de/hero-bg.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="fonts/fonts.css" />
+  <style>
+    :root { --blue: #38b6ff; --amber: #f59e0b; --text-primary: #fff; --text-secondary: rgba(255,255,255,0.55); --text-muted: rgba(255,255,255,0.35); --border: rgba(255,255,255,0.09); --surface: rgba(255,255,255,0.04); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body { font-family: 'Open Sans', sans-serif; color: var(--text-primary); background: #000; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    body::before { content: ''; position: fixed; inset: 0; background: url('hero-bg.jpg') center/cover no-repeat; z-index: -2; }
+    body::after  { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.62); z-index: -1; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAV ── */
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 18px 5%; transition: background 0.3s, backdrop-filter 0.3s; }
+    .nav.scrolled { background: rgba(0,0,0,0.85); backdrop-filter: blur(18px); }
+    .nav-logo { font-family: 'Open Sans', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none; display: flex; align-items: center; }
+    .nav-logo .der { color: #fff; } .nav-logo .kneipen { color: #38b6ff; }
+    .nav-logo-img { height: 28px; width: auto; mix-blend-mode: screen; margin-right: 8px; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: #38b6ff; }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .nav-toggle span { width: 22px; height: 2px; background: var(--text-primary); border-radius: 2px; display: block; }
+    .mobile-nav { display: none; position: fixed; inset: 0; z-index: 101; background: rgba(0,0,0,0.97); backdrop-filter: blur(24px); flex-direction: column; align-items: center; justify-content: center; gap: 28px; }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; letter-spacing: 0.05em; color: rgba(255,255,255,0.55); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+    .mobile-nav a:hover { color: #38b6ff; }
+    .mobile-nav-close { position: absolute; top: 22px; right: 5%; background: none; border: none; color: rgba(255,255,255,0.5); font-size: 1.8rem; cursor: pointer; }
+    @media (max-width: 768px) { .nav-links { display: none; } .nav-toggle { display: flex; } }
+    @keyframes navLineRun { from { left: -30%; } to { left: 130%; } }
+    .nav-line { position: fixed; top: 80px; left: 0; right: 0; height: 2px; z-index: 99; background: rgba(56,182,255,0.15); overflow: hidden; }
+    .nav-line::after { content: ''; position: absolute; top: 0; width: 30%; height: 100%; background: linear-gradient(90deg, transparent 0%, #38b6ff 35%, #bfefff 50%, #38b6ff 65%, transparent 100%); animation: navLineRun 2.5s linear infinite; }
+
+    /* ── PAGE ── */
+    .page-wrap { min-height: 100vh; padding: 120px 5% 60px; max-width: 700px; margin: 0 auto; }
+    .section-label { display: inline-flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+    .section-label::before { content: ''; display: block; width: 28px; height: 1px; background: var(--amber); }
+    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 5vw, 4rem); letter-spacing: 0.03em; margin-bottom: 8px; }
+    .page-sub { color: var(--text-secondary); margin-bottom: 40px; font-size: 1rem; line-height: 1.6; }
+
+    /* ── TOGGLE ── */
+    .mode-toggle { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 32px; }
+    .mode-label { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); transition: color 0.3s; cursor: pointer; }
+    .mode-label.active { color: var(--amber); }
+    .toggle-track { position: relative; width: 52px; height: 28px; background: rgba(255,255,255,0.1); border: 1px solid var(--border); border-radius: 100px; cursor: pointer; transition: background 0.3s; }
+    .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: var(--amber); border-radius: 50%; transition: transform 0.3s cubic-bezier(0.16,1,0.3,1); }
+    .toggle-track.team .toggle-thumb { transform: translateX(24px); }
+
+    /* ── DICE BUTTON ── */
+    .dice-wrap { text-align: center; margin-bottom: 36px; }
+    .dice-btn { width: 80px; height: 80px; border-radius: 18px; border: 2px solid rgba(245,158,11,0.3); background: rgba(245,158,11,0.08); color: var(--amber); font-size: 2.4rem; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; }
+    .dice-btn:hover { background: rgba(245,158,11,0.15); border-color: var(--amber); transform: scale(1.05); }
+    .dice-btn:active { transform: scale(0.95); }
+    .dice-btn.rolling { animation: diceRoll 0.5s ease; }
+    @keyframes diceRoll { 0% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(90deg) scale(1.1); } 50% { transform: rotate(180deg) scale(1); } 75% { transform: rotate(270deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1); } }
+    .dice-hint { color: var(--text-muted); font-size: 0.82rem; margin-top: 10px; }
+
+    /* ── RESULTS ── */
+    .results { display: grid; gap: 10px; }
+    .result-item { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; backdrop-filter: blur(10px); opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s, border-color 0.2s, background 0.2s; cursor: pointer; }
+    .result-item.show { opacity: 1; transform: translateY(0); }
+    .result-item:hover { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.05); }
+    .result-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--amber); min-width: 28px; text-align: center; }
+    .result-name { font-size: 1rem; font-weight: 600; flex: 1; }
+    .result-copy { padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.05em; }
+    .result-copy:hover { border-color: var(--amber); color: var(--amber); }
+    .result-copy.copied { border-color: #22c55e; color: #22c55e; }
+
+    .empty-state { text-align: center; padding: 48px 20px; color: var(--text-muted); font-size: 0.95rem; }
+    .empty-state .dice-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.4; }
+
+    .footer-mini { text-align: center; padding: 32px 5%; color: var(--text-muted); font-size: 0.8rem; }
+    .footer-mini a { color: var(--text-secondary); transition: color 0.2s; }
+    .footer-mini a:hover { color: #38b6ff; }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="navbar" aria-label="Hauptnavigation">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logos/logo-blackbg.png" class="nav-logo-img" alt="" /><span class="der">DER</span><span class="kneipen">KNEIPENKÖNIG</span>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html#formate">Der Kneipenkönig</a></li>
+      <li><a href="index.html#events">Kommende Events</a></li>
+      <li><a href="index.html#instagram">Letzte Events</a></li>
+      <li><a href="ergebnisse.html">Ergebnisse</a></li>
+      <li><a href="index.html#kontakt">Kontakt</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-nav" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Menü schließen">&#10005;</button>
+    <a href="index.html#formate"   class="mobile-link">Der Kneipenkönig</a>
+    <a href="index.html#events"    class="mobile-link">Kommende Events</a>
+    <a href="index.html#instagram" class="mobile-link">Letzte Events</a>
+    <a href="ergebnisse.html"      class="mobile-link">Ergebnisse</a>
+    <a href="index.html#kontakt"   class="mobile-link">Kontakt</a>
+  </div>
+  <div class="nav-line" aria-hidden="true"></div>
+
+  <div class="page-wrap">
+    <div class="section-label">Tool</div>
+    <h1 class="page-title">Namensfinder</h1>
+    <p class="page-sub">Dir fehlt ein kreativer Name fürs Quiz? Wirf den Würfel und lass dich inspirieren!</p>
+
+    <div class="mode-toggle">
+      <span class="mode-label active" id="labelPlayer" onclick="setMode('player')">Spielername</span>
+      <div class="toggle-track" id="toggleTrack" onclick="toggleMode()">
+        <div class="toggle-thumb"></div>
+      </div>
+      <span class="mode-label" id="labelTeam" onclick="setMode('team')">Teamname</span>
+    </div>
+
+    <div class="dice-wrap">
+      <button class="dice-btn" id="diceBtn" aria-label="Würfeln" onclick="rollNames()">&#127922;</button>
+      <div class="dice-hint">Klick auf den Würfel!</div>
+    </div>
+
+    <div id="resultsArea">
+      <div class="empty-state">
+        <div class="dice-icon">&#127922;</div>
+        Wirf den Würfel und entdecke 10 kreative Namensvorschläge.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-mini">
+    <p>© 2026 Der Kneipenkönig &middot; <a href="datenschutz.html">Datenschutz</a> &middot; <a href="impressum.html">Impressum</a></p>
+  </div>
+
+  <script>
+    // Nav
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 30); });
+    const navToggleBtn = document.getElementById('navToggle');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileNavClose');
+    navToggleBtn.addEventListener('click', () => { mobileNav.classList.add('open'); navToggleBtn.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; });
+    function closeMobileNav() { mobileNav.classList.remove('open'); navToggleBtn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
+    mobileClose.addEventListener('click', closeMobileNav);
+    document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMobileNav));
+
+    // ── Name Generator ──
+    let mode = 'player'; // 'player' or 'team'
+
+    const playerParts = {
+      adjektive: [
+        'Schlauer', 'Flinker', 'Wilder', 'Cooler', 'Stiller', 'Listiger', 'Mutiger', 'Lockerer',
+        'Schneller', 'Cleverer', 'Wacher', 'Kühner', 'Gerissener', 'Scharfer', 'Fixer',
+        'Rasender', 'Chilliger', 'Pfiffiger', 'Smarter', 'Taktischer', 'Gelassener', 'Knallharter',
+        'Blitzschneller', 'Genialer', 'Unschlagbarer', 'Mysteriöser', 'Epischer', 'Legendärer',
+        'Furchtloser', 'Eleganter', 'Eiskalter', 'Heißblütiger', 'Donnernder', 'Goldener', 'Silberner'
+      ],
+      tiere: [
+        'Fuchs', 'Wolf', 'Adler', 'Bär', 'Dachs', 'Luchs', 'Falke', 'Otter',
+        'Hirsch', 'Marder', 'Habicht', 'Panther', 'Biber', 'Rabe', 'Löwe',
+        'Tiger', 'Uhu', 'Igel', 'Elch', 'Storch', 'Panda', 'Kolibri', 'Gecko'
+      ],
+      titel: [
+        'der Weise', 'der Schnelle', 'der Listige', 'der Kühne', 'der Tapfere',
+        'der Unbesiegbare', 'ohne Gnade', 'der Denker', 'der Stratege',
+        'mit dem Plan', 'der Rätselknacker', 'der Quizkönig', 'der Besserwisser',
+        'der Grübler', 'vom Tresen', 'der Antwortmaschine', 'der Bluffer'
+      ],
+      vornamen: [
+        'Captain', 'Professor', 'Agent', 'Doktor', 'Sir', 'Lord', 'Meister',
+        'Graf', 'König', 'Ritter', 'Prinz', 'Baron', 'Guru', 'Chef', 'Boss'
+      ],
+      nachnamen: [
+        'Quizbert', 'Denkfried', 'Grübelstein', 'Klugmann', 'Ratewitz',
+        'Hirnschmalz', 'Besserwiss', 'Schnelldenk', 'Kopfnuss', 'Faktenheld',
+        'Antwortblitz', 'Wissensdurst', 'Punktejäger', 'Buzzerking', 'Tippgenie',
+        'Fragenhammer', 'Logikfürst', 'Rätsellöser', 'Wortakrobat', 'Denksport'
+      ]
+    };
+
+    const teamParts = {
+      adjektive: [
+        'Die wilden', 'Die schlauen', 'Die lustigen', 'Die coolen', 'Die flotten',
+        'Die rasenden', 'Die mutigen', 'Die listigen', 'Die kühnen', 'Die cleveren',
+        'Die scharfen', 'Die frechen', 'Die lockeren', 'Die heißen', 'Die eiskalten',
+        'Die legendären', 'Die furchtlosen', 'Die unschlagbaren', 'Die genialen',
+        'Die pfiffigen', 'Die smarten', 'Die charmanten', 'Die knallharten'
+      ],
+      substantive: [
+        'Grübler', 'Denker', 'Füchse', 'Bluffer', 'Rätselratten', 'Besserwisser',
+        'Quiznasen', 'Kopfnüsse', 'Hirnakrobaten', 'Faktenchecker',
+        'Antwortjäger', 'Wissenslücken', 'Punktesammler', 'Tresenhelden',
+        'Buzzerdrücker', 'Biertischstrategen', 'Kneipengelehrten', 'Stammtischprofis',
+        'Ratekönige', 'Fragenhagel', 'Grübelgruppe', 'Denkfabrik',
+        'Quizraketen', 'Wissensdurstigen', 'Hirnzellen', 'Gehirnjogging-Profis'
+      ],
+      muster: [
+        'Team {ort}', 'Die {ort}er', '{adj} {subst}', '{subst} aus {ort}',
+        '{adj} {subst}', '{subst} United', '{subst} FC', 'Quiz {subst}',
+        '{adj} {subst}', '{subst} Crew', '{subst} Squad'
+      ],
+      orte: [
+        'Coesfeld', 'Haltern', 'Marl', 'Dingden', 'Reken', 'Lüdinghausen', 'Datteln',
+        'Kneipe', 'Stammtisch', 'Tresen', 'Theke', 'Hinterzimmer', 'Eckbank'
+      ]
+    };
+
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    function generatePlayerName() {
+      const type = Math.random();
+      if (type < 0.35) {
+        return pick(playerParts.adjektive) + ' ' + pick(playerParts.tiere);
+      } else if (type < 0.6) {
+        return pick(playerParts.vornamen) + ' ' + pick(playerParts.nachnamen);
+      } else if (type < 0.8) {
+        return pick(playerParts.tiere) + ' ' + pick(playerParts.titel);
+      } else {
+        return pick(playerParts.adjektive) + ' ' + pick(playerParts.nachnamen);
+      }
+    }
+
+    function generateTeamName() {
+      const type = Math.random();
+      if (type < 0.45) {
+        return pick(teamParts.adjektive) + ' ' + pick(teamParts.substantive);
+      } else if (type < 0.7) {
+        return pick(teamParts.substantive) + ' aus ' + pick(teamParts.orte);
+      } else if (type < 0.85) {
+        return pick(teamParts.substantive) + ' ' + pick(['United', 'FC', 'Crew', 'Squad', 'Gang', 'Bande', 'Truppe', 'Klub']);
+      } else {
+        return 'Team ' + pick(teamParts.substantive);
+      }
+    }
+
+    function rollNames() {
+      const btn = document.getElementById('diceBtn');
+      btn.classList.add('rolling');
+      setTimeout(() => btn.classList.remove('rolling'), 500);
+
+      const names = [];
+      const seen = new Set();
+      while (names.length < 10) {
+        const name = mode === 'player' ? generatePlayerName() : generateTeamName();
+        if (!seen.has(name)) {
+          seen.add(name);
+          names.push(name);
+        }
+      }
+
+      const area = document.getElementById('resultsArea');
+      area.innerHTML = '<div class="results">' + names.map((name, i) =>
+        `<div class="result-item" style="transition-delay:${i * 50}ms">
+          <span class="result-num">${i + 1}</span>
+          <span class="result-name">${name}</span>
+          <button class="result-copy" onclick="copyName(this, '${name.replace(/'/g, "\\'")}')">Kopieren</button>
+        </div>`
+      ).join('') + '</div>';
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          area.querySelectorAll('.result-item').forEach(el => el.classList.add('show'));
+        });
+      });
+    }
+
+    function copyName(btn, name) {
+      navigator.clipboard.writeText(name).then(() => {
+        btn.textContent = 'Kopiert!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Kopieren'; btn.classList.remove('copied'); }, 1500);
+      });
+    }
+
+    function setMode(m) {
+      mode = m;
+      document.getElementById('toggleTrack').classList.toggle('team', m === 'team');
+      document.getElementById('labelPlayer').classList.toggle('active', m === 'player');
+      document.getElementById('labelTeam').classList.toggle('active', m === 'team');
+    }
+
+    function toggleMode() {
+      setMode(mode === 'player' ? 'team' : 'player');
+    }
+  </script>
+</body>
+</html>
