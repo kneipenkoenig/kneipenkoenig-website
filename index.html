@@ -3404,15 +3404,23 @@
       const KEY = CO_SB_KEY;
       const h = { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY, 'Prefer': 'count=exact' };
       try {
-        const [rTeams, rQuizzes, rTeilnahmen] = await Promise.all([
-          fetch(SB + '/teams?select=team_id&limit=0', { headers: h }),
-          fetch(SB + '/quizes?select=quiz_id&limit=0', { headers: h }),
-          fetch(SB + '/quiz_teams?select=quiz_team_id&limit=0', { headers: h })
+        const hj = { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY };
+        // Zähle Einträge: lade pages von je 1000 IDs
+        async function countTable(table, col) {
+          let total = 0, offset = 0;
+          while (true) {
+            const d = await fetch(SB + '/' + table + '?select=' + col + '&offset=' + offset + '&limit=1000', { headers: hj }).then(r => r.json());
+            total += d.length;
+            if (d.length < 1000) break;
+            offset += 1000;
+          }
+          return total;
+        }
+        const [teams, quizzes, teilnahmen] = await Promise.all([
+          countTable('teams', 'team_id'),
+          countTable('quizes', 'quiz_id'),
+          countTable('quiz_teams', 'quiz_team_id')
         ]);
-        const parse = r => { const cr = r.headers.get('content-range'); return cr ? parseInt(cr.split('/')[1]) : 0; };
-        const teams = parse(rTeams);
-        const quizzes = parse(rQuizzes);
-        const teilnahmen = parse(rTeilnahmen);
         if (teams) document.getElementById('statTeams').dataset.target = teams;
         if (quizzes) document.getElementById('statQuizzes').dataset.target = quizzes;
         if (teilnahmen) document.getElementById('statTeilnahmen').dataset.target = teilnahmen;
