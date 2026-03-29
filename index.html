@@ -2349,15 +2349,15 @@
     <div class="container">
       <div class="stats-grid" role="list">
         <div class="stat-item reveal" role="listitem">
-          <div class="stat-number"><span class="stat-suffix">&gt;</span><span class="stat-count" id="statTeams" data-target="1400">0</span></div>
+          <div class="stat-number"><span class="stat-suffix">&gt;</span><span class="stat-count" data-target="1400">0</span></div>
           <div class="stat-label">Teams insgesamt</div>
         </div>
         <div class="stat-item reveal reveal-delay-1" role="listitem">
-          <div class="stat-number"><span class="stat-suffix">&gt;</span><span class="stat-count" id="statQuizzes" data-target="150">0</span></div>
+          <div class="stat-number"><span class="stat-suffix">&gt;</span><span class="stat-count" data-target="150">0</span></div>
           <div class="stat-label">Quiz-Abende</div>
         </div>
         <div class="stat-item reveal reveal-delay-2" role="listitem">
-          <div class="stat-number"><span class="stat-suffix">&gt;</span><span class="stat-count" id="statTeilnahmen" data-target="2400">0</span></div>
+          <div class="stat-number"><span class="stat-suffix">&gt;</span><span class="stat-count" data-target="2400">0</span></div>
           <div class="stat-label">Teilnahmen</div>
         </div>
         <div class="stat-item reveal reveal-delay-3" role="listitem">
@@ -3398,54 +3398,17 @@
       };
       requestAnimationFrame(step);
     }
-    // ── Live-Statistik aus Supabase laden, dann Counter starten ──
-    (async function loadLiveStats() {
-      const SB = 'https://mqsxgzaliwzyghmgygea.supabase.co/rest/v1';
-      const KEY = CO_SB_KEY;
-      const h = { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY, 'Prefer': 'count=exact' };
-      try {
-        const hj = { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY };
-        // Zähle Einträge: lade pages von je 1000 IDs
-        async function countTable(table, col) {
-          let total = 0, offset = 0;
-          while (true) {
-            const d = await fetch(SB + '/' + table + '?select=' + col + '&offset=' + offset + '&limit=1000', { headers: hj }).then(r => r.json());
-            total += d.length;
-            if (d.length < 1000) break;
-            offset += 1000;
-          }
-          return total;
-        }
-        const [teams, quizzes, teilnahmen] = await Promise.all([
-          countTable('teams', 'team_id'),
-          countTable('quizes', 'quiz_id'),
-          countTable('quiz_teams', 'quiz_team_id')
-        ]);
-        function setLiveStat(id, val) {
-          if (!val) return;
-          const el = document.getElementById(id);
-          el.dataset.target = val;
-          // ">" Prefix entfernen wenn echte Daten da sind
-          const prev = el.previousElementSibling;
-          if (prev && prev.classList.contains('stat-suffix')) prev.remove();
-        }
-        setLiveStat('statTeams', teams);
-        setLiveStat('statQuizzes', quizzes);
-        setLiveStat('statTeilnahmen', teilnahmen);
-      } catch(e) { console.warn('Stats-Laden fehlgeschlagen:', e); }
-
-      // Counter-Animation starten (nach Daten-Laden)
-      const countObs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (!e.isIntersecting) return;
-          const el  = e.target;
-          const tgt = parseInt(el.dataset.target, 10);
-          if (tgt) animateCount(el, tgt);
-          countObs.unobserve(el);
-        });
-      }, { threshold: 0.5 });
-      document.querySelectorAll('.stat-count[data-target]').forEach(el => countObs.observe(el));
-    })();
+    // Counter-Animation
+    const countObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el  = e.target;
+        const tgt = parseInt(el.dataset.target, 10);
+        if (tgt) animateCount(el, tgt);
+        countObs.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-count[data-target]').forEach(el => countObs.observe(el));
 
     // ── Frage des Tages ──
     (async function loadQuizWidget() {
