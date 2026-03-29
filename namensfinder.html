@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="stylesheet" href="fonts/fonts.css" />
   <style>
-    :root { --blue: #38b6ff; --amber: #f59e0b; --text-primary: #fff; --text-secondary: rgba(255,255,255,0.55); --text-muted: rgba(255,255,255,0.35); --border: rgba(255,255,255,0.09); --surface: rgba(255,255,255,0.04); }
+    :root { --blue: #38b6ff; --amber: #38b6ff; --text-primary: #fff; --text-secondary: rgba(255,255,255,0.55); --text-muted: rgba(255,255,255,0.35); --border: rgba(255,255,255,0.09); --surface: rgba(255,255,255,0.04); }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; overflow-x: hidden; }
     body { font-family: 'Open Sans', sans-serif; color: var(--text-primary); background: #000; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
@@ -46,23 +46,23 @@
 
     /* ── PAGE ── */
     .page-wrap { min-height: 100vh; padding: 120px 5% 60px; max-width: 700px; margin: 0 auto; }
-    .section-label { display: inline-flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
-    .section-label::before { content: ''; display: block; width: 28px; height: 1px; background: var(--amber); }
+    .section-label { display: inline-flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
+    .section-label::before { content: ''; display: block; width: 28px; height: 1px; background: var(--blue); }
     .page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 5vw, 4rem); letter-spacing: 0.03em; margin-bottom: 8px; }
     .page-sub { color: var(--text-secondary); margin-bottom: 40px; font-size: 1rem; line-height: 1.6; }
 
     /* ── TOGGLE ── */
     .mode-toggle { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 32px; }
     .mode-label { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); transition: color 0.3s; cursor: pointer; }
-    .mode-label.active { color: var(--amber); }
+    .mode-label.active { color: var(--blue); }
     .toggle-track { position: relative; width: 52px; height: 28px; background: rgba(255,255,255,0.1); border: 1px solid var(--border); border-radius: 100px; cursor: pointer; transition: background 0.3s; }
-    .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: var(--amber); border-radius: 50%; transition: transform 0.3s cubic-bezier(0.16,1,0.3,1); }
+    .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: var(--blue); border-radius: 50%; transition: transform 0.3s cubic-bezier(0.16,1,0.3,1); }
     .toggle-track.team .toggle-thumb { transform: translateX(24px); }
 
     /* ── DICE BUTTON ── */
     .dice-wrap { text-align: center; margin-bottom: 36px; }
-    .dice-btn { width: 80px; height: 80px; border-radius: 18px; border: 2px solid rgba(245,158,11,0.3); background: rgba(245,158,11,0.08); color: var(--amber); font-size: 2.4rem; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; }
-    .dice-btn:hover { background: rgba(245,158,11,0.15); border-color: var(--amber); transform: scale(1.05); }
+    .dice-btn { width: 80px; height: 80px; border-radius: 18px; border: 2px solid rgba(56,182,255,0.3); background: rgba(56,182,255,0.08); color: var(--blue); font-size: 2.4rem; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; }
+    .dice-btn:hover { background: rgba(56,182,255,0.15); border-color: var(--blue); transform: scale(1.05); }
     .dice-btn:active { transform: scale(0.95); }
     .dice-btn.rolling { animation: diceRoll 0.5s ease; }
     @keyframes diceRoll { 0% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(90deg) scale(1.1); } 50% { transform: rotate(180deg) scale(1); } 75% { transform: rotate(270deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1); } }
@@ -72,11 +72,11 @@
     .results { display: grid; gap: 10px; }
     .result-item { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; backdrop-filter: blur(10px); opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s, border-color 0.2s, background 0.2s; cursor: pointer; }
     .result-item.show { opacity: 1; transform: translateY(0); }
-    .result-item:hover { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.05); }
-    .result-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--amber); min-width: 28px; text-align: center; }
+    .result-item:hover { border-color: rgba(56,182,255,0.3); background: rgba(56,182,255,0.05); }
+    .result-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--blue); min-width: 28px; text-align: center; }
     .result-name { font-size: 1rem; font-weight: 600; flex: 1; }
     .result-copy { padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.05em; }
-    .result-copy:hover { border-color: var(--amber); color: var(--amber); }
+    .result-copy:hover { border-color: var(--blue); color: var(--blue); }
     .result-copy.copied { border-color: #22c55e; color: #22c55e; }
 
     .empty-state { text-align: center; padding: 48px 20px; color: var(--text-muted); font-size: 0.95rem; }
