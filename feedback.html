@@ -82,6 +82,18 @@
     .fb-home-link { display: block; margin-top: 16px; color: var(--text-muted); font-size: 0.82rem; transition: color 0.2s; }
     .fb-home-link:hover { color: #38b6ff; }
 
+    /* Round ratings */
+    .round-rate { margin-bottom: 14px; }
+    .round-rate-name { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600; }
+    .round-rate-row { display: flex; gap: 4px; }
+    .round-rate-btn {
+      flex: 1; height: 34px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text-muted); font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem; cursor: pointer; transition: all 0.2s; max-width: 38px;
+    }
+    .round-rate-btn:hover { border-color: rgba(56,182,255,0.3); color: #fff; }
+    .round-rate-btn.selected { background: rgba(56,182,255,0.2); color: #38b6ff; border-color: rgba(56,182,255,0.4); }
+
     .fb-error { display: none; padding: 12px; border-radius: 8px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #fca5a5; font-size: 0.85rem; margin-bottom: 16px; text-align: center; }
   </style>
 </head>
@@ -103,6 +115,11 @@
         <div class="fb-label">Gesamtbewertung</div>
         <div class="rating-row" id="ratingRow"></div>
         <div class="rating-labels"><span>Schlecht</span><span>Perfekt</span></div>
+      </div>
+
+      <div id="roundsSection" style="display:none;">
+        <div class="fb-label" style="margin-bottom:12px;">Runden bewerten <span style="font-weight:400;color:var(--text-muted);text-transform:none;letter-spacing:0;">(optional)</span></div>
+        <div id="roundsContainer"></div>
       </div>
 
       <div class="fb-section">
@@ -141,6 +158,8 @@
   const params = new URLSearchParams(window.location.search);
   const quizId = params.get('event') || params.get('quiz');
   let selectedRating = 0;
+  let roundRatings = {};
+  let roundNames = [];
 
   // Rating buttons 1-10
   const ratingRow = document.getElementById('ratingRow');
@@ -186,6 +205,40 @@
           select.appendChild(opt);
         }
       });
+
+      // Runden laden über quiz_plays → quiz_lists
+      const playsRes = await fetch(SB_URL + '/quiz_plays?select=quiz_lists(round_1,round_2,round_3,round_4,round_5)&quiz_id=eq.' + quizId + '&limit=1', { headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY } });
+      const playsData = await playsRes.json();
+      if (playsData.length && playsData[0].quiz_lists) {
+        const ql = playsData[0].quiz_lists;
+        const container = document.getElementById('roundsContainer');
+        let hasRounds = false;
+        for (let i = 1; i <= 5; i++) {
+          const name = ql['round_' + i];
+          if (!name) continue;
+          hasRounds = true;
+          roundNames.push({ idx: i, name });
+          const div = document.createElement('div');
+          div.className = 'round-rate';
+          div.innerHTML = `
+            <div class="round-rate-name">${i}. ${name}</div>
+            <div class="round-rate-row" id="roundRate${i}"></div>`;
+          container.appendChild(div);
+          const row = div.querySelector('.round-rate-row');
+          for (let v = 1; v <= 10; v++) {
+            const btn = document.createElement('button');
+            btn.className = 'round-rate-btn';
+            btn.textContent = v;
+            btn.type = 'button';
+            btn.addEventListener('click', () => {
+              roundRatings[i] = v;
+              row.querySelectorAll('.round-rate-btn').forEach((b, j) => b.classList.toggle('selected', j < v));
+            });
+            row.appendChild(btn);
+          }
+        }
+        if (hasRounds) document.getElementById('roundsSection').style.display = 'block';
+      }
     } catch(_) {}
 
     // Check if already submitted
@@ -212,6 +265,10 @@
       team_id: document.getElementById('fbTeam').value ? parseInt(document.getElementById('fbTeam').value) : null,
       comment: document.getElementById('fbComment').value.trim() || null
     };
+    // Runden-Ratings hinzufügen (nur wenn bewertet)
+    for (let i = 1; i <= 5; i++) {
+      if (roundRatings[i]) payload['round_' + i] = roundRatings[i];
+    }
 
     try {
       const res = await fetch(SB_URL + '/feedback', {
