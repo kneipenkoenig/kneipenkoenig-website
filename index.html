@@ -3448,7 +3448,8 @@
             res.textContent = correct ? '✓ Richtig! ' + q.info : '✗ Leider falsch. ' + q.info;
           });
         });
-      } catch(_) {
+      } catch(e) {
+        console.warn('Quiz-Widget Fehler:', e);
         const s = document.querySelector('.quiz-widget-section');
         if (s) s.style.display = 'none';
       }
