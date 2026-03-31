@@ -2684,7 +2684,7 @@
     }
 
     function startCountdown(events) {
-      const next = events.find(ev => ev.date && ev.available !== false);
+      const next = events.find(ev => ev.date);
       if (!next) return;
       const cd = document.getElementById('eventCountdown');
       const target = new Date(next.date + 'T' + (next.time || '19:00'));
