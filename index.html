@@ -2733,8 +2733,9 @@
       const container = document.getElementById('eventsContainer');
       const errorBox  = document.getElementById('eventsError');
 
-      // Sofort statische Daten anzeigen (immer zuverlässig)
-      renderEvents(TT_STATIC_EVENTS);
+      // Sofort statische Daten anzeigen – vergangene rausfiltern
+      const today = new Date().toISOString().split('T')[0];
+      renderEvents(TT_STATIC_EVENTS.filter(ev => ev.date >= today));
 
       // Im Hintergrund versuchen, frische API-Daten zu laden
       // (funktioniert wenn die Seite auf einem Webserver läuft)
