@@ -3415,7 +3415,8 @@
     })();
 
     // ── Contact form ──────────────────────────────────────────
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
+    var contactForm = document.getElementById('contactForm');
+    if (contactForm) contactForm.addEventListener('submit', function(e) {
       e.preventDefault();
       const btn = this.querySelector('.form-submit');
       btn.textContent = '✓ Anfrage gesendet!';
