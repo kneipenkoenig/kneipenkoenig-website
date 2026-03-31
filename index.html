@@ -2677,6 +2677,8 @@
         return;
       }
       container.innerHTML = events.map((ev, i) => buildEventCard(ev, i)).join('');
+      // reveal-Klasse sofort auflösen (Observer ist noch nicht registriert)
+      container.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
       injectEventJsonLd(events);
       startCountdown(events);
     }
