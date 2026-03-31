@@ -2677,7 +2677,7 @@
         return;
       }
       container.innerHTML = events.map((ev, i) => buildEventCard(ev, i)).join('');
-      container.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+      if (typeof revealObs !== 'undefined') container.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
       injectEventJsonLd(events);
       startCountdown(events);
     }
@@ -3071,7 +3071,7 @@
           </div>`;
         }).join('');
         container.insertAdjacentHTML('afterbegin', html);
-        container.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+        if (typeof revealObs !== 'undefined') container.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
       } catch {}
     }
     loadOwnEvents();
@@ -3328,6 +3328,7 @@
     // ── Hero canvas: particles ────────────────────────────────
     (function() {
       const canvas = document.getElementById('heroCanvas');
+      if (!canvas) return;
       const ctx = canvas.getContext('2d');
       let W, H, pts = [];
 
