@@ -310,9 +310,9 @@
     <div class="hero-content">
       <div class="hero-badge">🎯 Bingo-Event</div>
       <h1 class="hero-title">Bingo<em>könig</em></h1>
-      <div class="hero-next">📅 Nächster Termin: <strong>26. März 2026 · Manhattan Marl</strong></div>
+      <div class="hero-next" id="heroNextBingo" style="display:none;"></div>
       <p class="hero-sub">Zahlen-Bingo, Musik-Bingo und Quiz-Bingo – die perfekte Mischung für einen unvergesslichen Abend. Spannung, Spaß und das berühmte „BINGO!" für alle.</p>
-      <a href="index.html#events" class="hero-cta">Tickets sichern</a>
+      <a href="https://www.tickettailor.com/events/derkneipenknig?srch=bingo" target="_blank" rel="noopener" class="hero-cta">Tickets sichern</a>
     </div>
   </section>
 
@@ -484,6 +484,27 @@
     document.getElementById('imgModalClose').addEventListener('click', closeModal);
     modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── Nächster Bingo-Termin im Hero ──
+    (async function() {
+      try {
+        var SB = 'https://mqsxgzaliwzyghmgygea.supabase.co/rest/v1';
+        var KEY = 'sb_publishable_n7-e_4YSOdzhdRPc6mKOgg_EF3jJqG6';
+        var now = new Date().toISOString();
+        var res = await fetch(SB + '/events?select=title,start_date,venue_name&status=eq.published&start_date=gte.' + now + '&title=ilike.*bingo*&order=start_date&limit=1', {
+          headers: { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY }
+        });
+        var events = await res.json();
+        if (events.length) {
+          var ev = events[0];
+          var d = new Date(ev.start_date);
+          var datum = d.toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });
+          var el = document.getElementById('heroNextBingo');
+          el.innerHTML = '📅 Nächster Termin: <strong>' + datum + ' · ' + (ev.venue_name || '') + '</strong>';
+          el.style.display = '';
+        }
+      } catch(e) {}
+    })();
 
     // ── Bingo-Termine laden ──
     (async function() {
