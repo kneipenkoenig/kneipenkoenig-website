@@ -2735,7 +2735,7 @@
         const events = (json.data || [])
           .filter(ev => ev.start && ev.start.unix >= nowUnix)
           .sort((a, b) => a.start.unix - b.start.unix)
-          .slice(0, 5)
+          .slice(0, 7)
           .map(ev => {
             const apiAvail   = ev.tickets_available === true || ev.tickets_available === 'true';
             const staticEv   = staticUrlMap[ev.checkout_url];
