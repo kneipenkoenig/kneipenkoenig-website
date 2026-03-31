@@ -2677,7 +2677,6 @@
         return;
       }
       container.innerHTML = events.map((ev, i) => buildEventCard(ev, i)).join('');
-      if (typeof revealObs !== 'undefined') container.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
       injectEventJsonLd(events);
       startCountdown(events);
     }
@@ -3071,7 +3070,6 @@
           </div>`;
         }).join('');
         container.insertAdjacentHTML('afterbegin', html);
-        if (typeof revealObs !== 'undefined') container.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
       } catch {}
     }
     loadOwnEvents();
