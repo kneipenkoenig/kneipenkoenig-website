@@ -2737,17 +2737,15 @@
       const today = new Date().toISOString().split('T')[0];
       renderEvents(TT_STATIC_EVENTS.filter(ev => ev.date >= today));
 
-      // Im Hintergrund versuchen, frische API-Daten zu laden
-      // (funktioniert wenn die Seite auf einem Webserver läuft)
-      if (window.location.protocol === 'file:') return; // lokale Datei → API nicht erreichbar
+      // Im Hintergrund frische API-Daten laden (über Cloudflare Worker Proxy)
+      if (window.location.protocol === 'file:') return;
 
       try {
         const nowUnix = Math.floor(Date.now() / 1000);
-        const auth    = btoa(TT_API_KEY + ':');
-        const apiUrl  = `https://api.tickettailor.com/v1/events?limit=100&ending_before=2147483647`;
+        const apiUrl  = `https://tickettailor-proxy-kkmanager.tiny-heart-35f1.workers.dev/v1/events?limit=100&ending_before=2147483647`;
 
         const res = await fetch(apiUrl, {
-          headers: { 'Authorization': `Basic ${auth}`, 'Accept': 'application/json' }
+          headers: { 'Accept': 'application/json' }
         });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
