@@ -438,14 +438,16 @@
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- CTA + TERMINE -->
   <section class="cta-section">
     <div class="container">
-      <span class="section-label">Mitmachen</span>
-      <h2 class="section-title">Bereit für dein BINGO?</h2>
-      <p class="section-desc">Der nächste Bingokönig-Abend findet am <strong style="color:var(--green)">26. März 2026 im Manhattan Marl</strong> statt. Plätze sind limitiert!</p>
+      <span class="section-label">Termine</span>
+      <h2 class="section-title">Nächste Bingo-Abende</h2>
+      <div id="bingoTermine" style="margin:24px auto 28px;max-width:560px;">
+        <p class="section-desc" style="color:var(--text-muted);">Termine werden geladen...</p>
+      </div>
       <div class="cta-buttons">
-        <a href="index.html#events" class="btn-primary">Tickets jetzt sichern</a>
+        <a href="index.html#events" class="btn-primary">Alle Events ansehen</a>
         <a href="index.html" class="btn-outline">← Zurück zur Startseite</a>
       </div>
     </div>
@@ -482,6 +484,35 @@
     document.getElementById('imgModalClose').addEventListener('click', closeModal);
     modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── Bingo-Termine laden ──
+    (async function() {
+      var SB = 'https://mqsxgzaliwzyghmgygea.supabase.co/rest/v1';
+      var KEY = 'sb_publishable_n7-e_4YSOdzhdRPc6mKOgg_EF3jJqG6';
+      var container = document.getElementById('bingoTermine');
+      try {
+        var now = new Date().toISOString();
+        var res = await fetch(SB + '/events?select=title,start_date,venue_name&status=eq.published&start_date=gte.' + now + '&title=ilike.*bingo*&order=start_date&limit=5', {
+          headers: { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY }
+        });
+        var events = await res.json();
+        if (!events.length) {
+          container.innerHTML = '<p class="section-desc" style="color:var(--text-muted);">Aktuell keine Bingoabende geplant.</p>';
+          return;
+        }
+        container.innerHTML = events.map(function(ev) {
+          var d = new Date(ev.start_date);
+          var tag = d.toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+          var zeit = d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+          return '<div style="display:flex;align-items:center;gap:16px;padding:14px 18px;background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.2);border-radius:12px;margin-bottom:10px;text-align:left;">' +
+            '<div style="font-family:Bebas Neue,sans-serif;font-size:2rem;color:var(--green);line-height:1;min-width:44px;text-align:center;">' + d.getDate() + '<div style="font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">' + d.toLocaleDateString('de-DE',{month:'short'}) + '</div></div>' +
+            '<div><div style="font-weight:700;font-size:0.9rem;">' + ev.title + '</div>' +
+            '<div style="font-size:0.78rem;color:var(--text-muted);">' + (ev.venue_name || '') + ' · ' + zeit + '</div></div></div>';
+        }).join('');
+      } catch(e) {
+        container.innerHTML = '<p class="section-desc" style="color:var(--text-muted);">Aktuell keine Bingoabende geplant.</p>';
+      }
+    })();
 
     // ── Nav scroll + Mobile Nav ─────────────────────────────
     window.addEventListener('scroll', () => {
