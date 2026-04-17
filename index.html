@@ -2353,15 +2353,15 @@
     <div class="container">
       <div class="stats-grid" role="list">
         <div class="stat-item reveal" role="listitem">
-          <div class="stat-number"><span class="stat-suffix">&gt;</span><span class="stat-count" data-target="1400">1400</span></div>
+          <div class="stat-number"><span class="stat-suffix" id="statTeamsPrefix">&gt;</span><span class="stat-count" id="statTeams" data-target="1400">1400</span></div>
           <div class="stat-label">Teams insgesamt</div>
         </div>
         <div class="stat-item reveal reveal-delay-1" role="listitem">
-          <div class="stat-number"><span class="stat-suffix">&gt;</span><span class="stat-count" data-target="150">150</span></div>
+          <div class="stat-number"><span class="stat-suffix" id="statQuizzesPrefix">&gt;</span><span class="stat-count" id="statQuizzes" data-target="150">150</span></div>
           <div class="stat-label">Quiz-Abende</div>
         </div>
         <div class="stat-item reveal reveal-delay-2" role="listitem">
-          <div class="stat-number"><span class="stat-suffix">&gt;</span><span class="stat-count" data-target="2400">2400</span></div>
+          <div class="stat-number"><span class="stat-suffix" id="statTeilnahmenPrefix">&gt;</span><span class="stat-count" id="statTeilnahmen" data-target="2400">2400</span></div>
           <div class="stat-label">Teilnahmen</div>
         </div>
         <div class="stat-item reveal reveal-delay-3" role="listitem">
@@ -3377,17 +3377,31 @@
       };
       requestAnimationFrame(step);
     }
-    // Counter-Animation
-    const countObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        const el  = e.target;
-        const tgt = parseInt(el.dataset.target, 10);
-        if (tgt) animateCount(el, tgt);
-        countObs.unobserve(el);
-      });
-    }, { threshold: 0.5 });
-    document.querySelectorAll('.stat-count[data-target]').forEach(el => countObs.observe(el));
+    // Live-Stats aus Supabase laden, dann Counter starten
+    (async function() {
+      try {
+        var r = await fetch('https://mqsxgzaliwzyghmgygea.supabase.co/rest/v1/rpc/get_website_stats', {
+          method: 'POST',
+          headers: { 'apikey': CO_SB_KEY, 'Authorization': 'Bearer ' + CO_SB_KEY, 'Content-Type': 'application/json' },
+          body: '{}'
+        });
+        var d = await r.json();
+        if (d.teams) { document.getElementById('statTeams').dataset.target = d.teams; var p = document.getElementById('statTeamsPrefix'); if (p) p.remove(); }
+        if (d.quizzes) { document.getElementById('statQuizzes').dataset.target = d.quizzes; var p = document.getElementById('statQuizzesPrefix'); if (p) p.remove(); }
+        if (d.teilnahmen) { document.getElementById('statTeilnahmen').dataset.target = d.teilnahmen; var p = document.getElementById('statTeilnahmenPrefix'); if (p) p.remove(); }
+      } catch(e) {}
+      // Counter-Animation starten
+      const countObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          const el  = e.target;
+          const tgt = parseInt(el.dataset.target, 10);
+          if (tgt) animateCount(el, tgt);
+          countObs.unobserve(el);
+        });
+      }, { threshold: 0.5 });
+      document.querySelectorAll('.stat-count[data-target]').forEach(el => countObs.observe(el));
+    })();
 
     // Frage des Tages → eigenes Script-Tag (siehe unten)
 
