@@ -87,16 +87,13 @@
 
     /* ── LOCATIONS GRID ── */
     .locations-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
+      flex-wrap: wrap;
       gap: 16px;
       max-width: 1020px;
       margin: 0 auto;
+      justify-content: center;
     }
-
-    /* Letzte Reihe (2 Items): mittig ausrichten */
-    .loc-item:nth-child(7) { grid-column: 1 / 2; justify-self: end; max-width: 340px; width: 100%; }
-    .loc-item:nth-child(8) { grid-column: 2 / 3; justify-self: start; max-width: 340px; width: 100%; }
 
     @keyframes locGlow {
       0%, 100% { box-shadow: 0 0 0 2px rgba(56,182,255,0.4), 0 0 16px rgba(56,182,255,0.1); }
@@ -113,6 +110,8 @@
       aspect-ratio: 4 / 3;
       animation: locGlow 3s ease-in-out infinite;
       background: #0a1e30;
+      flex: 0 0 calc(33.333% - 11px);
+      min-width: 200px;
     }
     .loc-item:hover {
       animation: none;
@@ -170,13 +169,11 @@
     }
 
     @media (max-width: 680px) {
-      .locations-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      .loc-item:nth-child(7) { grid-column: auto; max-width: 100%; justify-self: stretch; }
-      .loc-item:nth-child(8) { grid-column: auto; max-width: 100%; justify-self: stretch; }
+      .locations-grid { gap: 12px; }
+      .loc-item { flex: 0 0 calc(50% - 6px); min-width: 0; }
     }
     @media (max-width: 420px) {
-      .locations-grid { grid-template-columns: 1fr; }
-      .loc-item:nth-child(7), .loc-item:nth-child(8) { grid-column: auto; max-width: 100%; }
+      .loc-item { flex: 0 0 100%; }
     }
 
     /* ── HALL OF FAME ── */
@@ -325,18 +322,7 @@
       </div>
     </div>
 
-    <div class="locations-grid">
-
-      <a href="location8.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location8" src="hero-bg.jpg" alt="Coesfeld" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Coesfeld</div><div class="loc-sub">Gleisdrei, Burghof</div></div></a>
-      <a href="location10.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location10" src="hero-bg.jpg" alt="Haltern am See" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Haltern am See</div><div class="loc-sub">Lakeside Inn</div></div></a>
-      <a href="location5.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location5" src="hero-bg.jpg" alt="Marl" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Marl</div><div class="loc-sub">Manhattan</div></div></a>
-      <a href="location4.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location4" src="hero-bg.jpg" alt="Dingden" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Dingden</div></div></a>
-      <a href="location6.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location6" src="hero-bg.jpg" alt="Reken" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Reken</div></div></a>
-      <a href="location2.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location2" src="hero-bg.jpg" alt="Lüdinghausen" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Lüdinghausen</div></div></a>
-      <a href="location11.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location11" src="hero-bg.jpg" alt="Datteln" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Datteln</div></div></a>
-      <a href="location13.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location13" src="hero-bg.jpg" alt="Coesfeld" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Coesfeld</div><div class="loc-sub">Brauhaus Stephanus</div></div></a>
-
-    </div>
+    <div class="locations-grid" id="locationsGrid"></div>
   </div>
 
   <script>
@@ -367,54 +353,25 @@
           </a>`).join('');
       }).catch(() => {});
 
-    // Bilder + Beschriftungen aus locations.json laden
+    // Locations aus locations.json dynamisch rendern
     fetch('locations.json?t=' + Date.now())
       .then(r => r.ok ? r.json() : {})
       .then(data => {
-        Object.keys(data).forEach(id => {
-          const d = data[id];
-          if (!d) return;
-          const item = document.querySelector(`a[href="${id}.html"]`);
-          if (!item) return;
-          if (d.img) {
-            const img = document.getElementById('loc-img-' + id);
-            if (img) img.src = d.img;
-          }
-          if (d.name !== undefined) {
-            const el = item.querySelector('.loc-name');
-            if (el) el.textContent = d.name;
-          }
-          if (d.sub !== undefined) {
-            let el = item.querySelector('.loc-sub');
-            if (!el) {
-              el = document.createElement('div');
-              el.className = 'loc-sub';
-              const txt = item.querySelector('.loc-text');
-              if (txt) txt.appendChild(el);
-            }
-            if (el) el.textContent = d.sub;
-          }
-          // Zwei Icon-Buttons nebeneinander oben rechts
-          const icons = [];
-          if (d.linkInstagram) icons.push({ href: d.linkInstagram, label: 'Instagram', svg: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>` });
-          if (d.linkHomepage) icons.push({ href: d.linkHomepage, label: 'Homepage', svg: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>` });
-          if (icons.length) {
-            const wrap = document.createElement('div');
-            wrap.style.cssText = 'position:absolute;top:10px;right:10px;z-index:3;display:flex;gap:6px;';
-            icons.forEach(ic => {
-              const btn = document.createElement('a');
-              btn.href = ic.href;
-              btn.target = '_blank';
-              btn.rel = 'noopener noreferrer';
-              btn.className = 'loc-link-btn';
-              btn.setAttribute('aria-label', ic.label);
-              btn.innerHTML = ic.svg;
-              btn.addEventListener('click', e => e.stopPropagation());
-              wrap.appendChild(btn);
-            });
-            item.appendChild(wrap);
-          }
-        });
+        const grid = document.getElementById('locationsGrid');
+        const IG_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>';
+        const HOME_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>';
+        const tiles = Object.entries(data)
+          .filter(([, d]) => d.visible !== false)
+          .map(([id, d]) => {
+            const icons = [];
+            if (d.linkInstagram) icons.push('<a href="' + d.linkInstagram + '" target="_blank" rel="noopener noreferrer" class="loc-link-btn" aria-label="Instagram" onclick="event.stopPropagation()">' + IG_SVG + '</a>');
+            if (d.linkHomepage)  icons.push('<a href="' + d.linkHomepage  + '" target="_blank" rel="noopener noreferrer" class="loc-link-btn" aria-label="Homepage" onclick="event.stopPropagation()">' + HOME_SVG + '</a>');
+            const iconsDiv = icons.length ? '<div style="position:absolute;top:10px;right:10px;z-index:3;display:flex;gap:6px;">' + icons.join('') + '</div>' : '';
+            const subHtml  = d.sub  ? '<div class="loc-sub">'  + d.sub  + '</div>' : '';
+            const imgSrc   = d.img  || 'hero-bg.jpg';
+            return '<a href="' + id + '.html" class="loc-item"><div class="loc-clip"><img src="' + imgSrc + '" alt="' + (d.name || id) + '" /></div><div class="loc-overlay"></div>' + iconsDiv + '<div class="loc-text"><div class="loc-name">' + (d.name || id) + '</div>' + subHtml + '</div></a>';
+          });
+        if (tiles.length) grid.innerHTML = tiles.join('');
       })
       .catch(() => {});
   </script>

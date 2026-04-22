@@ -4,51 +4,59 @@
     "sub": "Haus Zumbült",
     "img": "images/locations/location01-1774305091423.jpg",
     "linkHomepage": "https://www.xn--haus-zumblt-1hb.de/",
-    "linkInstagram": "https://www.instagram.com/hauszumbuelt/"
+    "linkInstagram": "https://www.instagram.com/hauszumbuelt/",
+    "visible": true
   },
   "location10": {
     "name": "Haltern am See",
     "sub": "Lakeside Inn",
     "linkHomepage": "https://lakesideinn.de/",
     "img": "images/locations/location02-1774305438034.jpg",
-    "linkInstagram": "https://www.instagram.com/lakesideinnhaltern/"
+    "linkInstagram": "https://www.instagram.com/lakesideinnhaltern/",
+    "visible": true
   },
   "location5": {
     "name": "Marl",
     "sub": "Manhattan Sportsbar",
     "img": "images/locations/location03-1774306072552.jpg",
     "linkHomepage": "https://www.manhattan-marl.de/",
-    "linkInstagram": "https://www.instagram.com/manhattan_marl/"
+    "linkInstagram": "https://www.instagram.com/manhattan_marl/",
+    "visible": true
   },
   "location4": {
     "name": "Dingden",
     "sub": "Gasthof Küpper",
     "linkHomepage": "https://www.gasthof-kuepper.de/",
-    "img": "images/locations/location04-1774295374459.jpg"
+    "img": "images/locations/location04-1774295374459.jpg",
+    "visible": true
   },
   "location6": {
     "name": "Reken",
     "sub": "Zum Moetken",
     "linkHomepage": "https://zum-moetken.de/",
-    "img": "images/locations/location05-1774306012526.jpg"
+    "img": "images/locations/location05-1774306012526.jpg",
+    "visible": true
   },
   "location2": {
     "name": "Lüdinghausen",
     "sub": "Burghof / GleisDrei",
     "linkInstagram": "https://www.instagram.com/burghof.luedinghausen/",
     "img": "images/locations/location06-1774305701461.jpg",
-    "linkHomepage": "https://burghof-luedinghausen.de/"
+    "linkHomepage": "https://burghof-luedinghausen.de/",
+    "visible": true
   },
   "location11": {
     "name": "Datteln",
     "sub": "Johnny Canone",
     "linkHomepage": "https://www.johnny-canone.de/",
-    "img": "images/locations/location07-1774305863553.jpg"
+    "img": "images/locations/location07-1774305863553.jpg",
+    "visible": true
   },
   "location13": {
     "name": "Coesfeld",
     "sub": "Brauhaus Stephanus",
     "linkHomepage": "https://brauhaus-stephanus.de/",
-    "img": "hero-bg.jpg"
+    "img": "hero-bg.jpg",
+    "visible": true
   }
 }

@@ -1565,13 +1565,55 @@ function renderLocations() {
   const form = document.getElementById('locationsForm');
   const spinner = document.getElementById('locSpinner');
   if (spinner) spinner.style.display = 'none';
-  form.innerHTML = `<div style="background:rgba(56,182,255,0.07);border:1px solid rgba(56,182,255,0.2);border-radius:10px;padding:12px 16px;font-size:0.82rem;color:var(--blue);margin-bottom:4px;">
+
+  // Merge LOCATIONS_DEF + any extra entries from locData not yet in the list
+  const defIds = LOCATIONS_DEF.map(d => d.id);
+  const extraIds = Object.keys(locData).filter(id => !defIds.includes(id));
+  const allLocs = [
+    ...LOCATIONS_DEF,
+    ...extraIds.map(id => ({ id, name: locData[id].name || id, sub: locData[id].sub || '' }))
+  ];
+
+  form.innerHTML = `<div style="background:rgba(56,182,255,0.07);border:1px solid rgba(56,182,255,0.2);border-radius:10px;padding:12px 16px;font-size:0.82rem;color:var(--blue);margin-bottom:12px;">
     📐 Empfohlene Bildauflösung: <strong>1280 × 720 px</strong> (16:9) · JPG oder PNG
-  </div>` + LOCATIONS_DEF.map(loc => {
+  </div>
+  <div id="newLocPanel" style="display:none;background:var(--surface);border:2px dashed rgba(56,182,255,0.4);border-radius:14px;padding:20px;margin-bottom:16px;">
+    <div style="font-weight:700;font-size:0.95rem;margin-bottom:14px;color:var(--blue);">Neue Location anlegen</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div>
+        <label class="form-label">Location-ID <small style="color:var(--muted)">(z.B. location14)</small></label>
+        <input id="newLocId" class="caption-input" style="width:100%;" placeholder="locationXX" />
+      </div>
+      <div>
+        <label class="form-label">Ort <span style="color:#f87171">*</span></label>
+        <input id="newLocCity" class="caption-input" style="width:100%;" placeholder="z.B. Coesfeld" />
+      </div>
+      <div>
+        <label class="form-label">Location-Name</label>
+        <input id="newLocSub" class="caption-input" style="width:100%;" placeholder="z.B. Brauhaus Stephanus" />
+      </div>
+      <div>
+        <label class="form-label">Link Homepage</label>
+        <input id="newLocHomepage" class="caption-input" style="width:100%;" placeholder="https://example.com" />
+      </div>
+      <div>
+        <label class="form-label">Link Instagram</label>
+        <input id="newLocInstagram" class="caption-input" style="width:100%;" placeholder="https://instagram.com/…" />
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-primary btn-sm" onclick="createLocation()">Anlegen</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('newLocPanel').style.display='none'">Abbrechen</button>
+    </div>
+  </div>
+  <button class="btn btn-ghost btn-sm" style="margin-bottom:12px;width:100%;border:1px dashed rgba(255,255,255,0.2);" onclick="const p=document.getElementById('newLocPanel');p.style.display=p.style.display==='none'?'block':'none'">
+    + Neue Location anlegen
+  </button>` + allLocs.map(loc => {
     const d = locData[loc.id] || {};
     const imgSrc = d.img ? `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${d.img}` : '';
     const nameVal = (d.name !== undefined ? d.name : loc.name).replace(/"/g,'&quot;');
     const subVal  = (d.sub  !== undefined ? d.sub  : loc.sub ).replace(/"/g,'&quot;');
+    const isVisible = d.visible !== false;
     return `
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:grid;grid-template-columns:160px 1fr;gap:16px;align-items:start;">
       <div style="display:flex;flex-direction:column;gap:8px;">
@@ -1597,6 +1639,10 @@ function renderLocations() {
         <input class="caption-input" style="width:100%;" placeholder="https://instagram.com/…" value="${(d.linkInstagram||'').replace(/"/g,'&quot;')}" oninput="if(!locData['${loc.id}'])locData['${loc.id}']={};locData['${loc.id}'].linkInstagram=this.value" />
         <label class="form-label">iframe URL</label>
         <input class="caption-input" style="width:100%;" placeholder="iframe src URL (leer = Platzhalter)" value="${(d.iframe||'').replace(/"/g,'&quot;')}" oninput="if(!locData['${loc.id}'])locData['${loc.id}']={};locData['${loc.id}'].iframe=this.value" />
+        <label style="display:flex;align-items:center;gap:8px;margin-top:4px;cursor:pointer;user-select:none;">
+          <input type="checkbox" ${isVisible ? 'checked' : ''} style="width:16px;height:16px;accent-color:#38b6ff;cursor:pointer;" onchange="if(!locData['${loc.id}'])locData['${loc.id}']={};locData['${loc.id}'].visible=this.checked" />
+          <span style="font-size:0.82rem;color:var(--text);">Auf Website anzeigen</span>
+        </label>
       </div>
     </div>`;
   }).join('');
@@ -1632,6 +1678,191 @@ async function saveLocations(silent = false) {
     locSha = res.content.sha;
     if (!silent) toast('Locations gespeichert ✓', 'ok');
   } catch(e) { toast('Fehler: ' + e.message, 'err'); }
+}
+
+async function createLocation() {
+  if (!getToken()) { toast('Bitte erst Token einrichten', 'err'); return; }
+  const id       = (document.getElementById('newLocId').value       || '').trim();
+  const city     = (document.getElementById('newLocCity').value     || '').trim();
+  const sub      = (document.getElementById('newLocSub').value      || '').trim();
+  const homepage = (document.getElementById('newLocHomepage').value || '').trim();
+  const instagram= (document.getElementById('newLocInstagram').value|| '').trim();
+
+  if (!id)   { toast('Location-ID ist Pflichtfeld', 'err'); return; }
+  if (!/^location\d+$/.test(id)) { toast('ID muss Format "locationXX" haben (z.B. location14)', 'err'); return; }
+  if (!city) { toast('Ortsname ist Pflichtfeld', 'err'); return; }
+  if (locData[id] || LOCATIONS_DEF.find(d => d.id === id)) { toast(id + ' existiert bereits', 'err'); return; }
+
+  const num = id.replace('location', '');
+  toast('Lege Location an…', 'ok');
+  try {
+    locData[id] = { name: city, sub, visible: true };
+    if (homepage)  locData[id].linkHomepage  = homepage;
+    if (instagram) locData[id].linkInstagram = instagram;
+
+    await saveLocations(true);
+    const html = buildLocationPageHtml(id, num, city, sub, homepage, instagram);
+    await ghPut(id + '.html', html, 'Location ' + id + ': ' + city + ' angelegt', null);
+
+    try {
+      const sm = await ghGet('sitemap.xml');
+      let xml = decodeURIComponent(escape(atob(sm.content.replace(/\n/g,''))));
+      const entry = '\n  <url>\n    <loc>https://kneipenkoenig.de/' + id + '.html</loc>\n    <priority>0.7</priority>\n    <changefreq>weekly</changefreq>\n  </url>\n';
+      xml = xml.replace('</urlset>', entry + '</urlset>');
+      await ghPut('sitemap.xml', xml, 'Sitemap: ' + id + ' hinzugefügt', sm.sha);
+    } catch(e) { console.warn('Sitemap:', e); }
+
+    toast(id + ' (' + city + ') angelegt ✓', 'ok');
+    document.getElementById('newLocPanel').style.display = 'none';
+    ['newLocId','newLocCity','newLocSub','newLocHomepage','newLocInstagram'].forEach(k => { document.getElementById(k).value = ''; });
+    renderLocations();
+  } catch(e) { toast('Fehler: ' + e.message, 'err'); }
+}
+
+function buildLocationPageHtml(locId, num, city, sub, homepage, instagram) {
+  const homeSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/><\/svg>';
+  const igSvg   = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/><\/svg>';
+  const homepageLink  = homepage  ? '<a href="' + homepage  + '" target="_blank" rel="noopener" class="loc-ext-link" title="Website">'  + homeSvg + '</a>' : '';
+  const instagramLink = instagram ? '<a href="' + instagram + '" target="_blank" rel="noopener" class="loc-ext-link" title="Instagram">' + igSvg   + '</a>' : '';
+  const extLinks = (homepageLink || instagramLink) ? '\n    <div class="loc-ext-links">' + homepageLink + instagramLink + '</div>' : '';
+  const subHtml  = sub ? '\n      <p class="page-sub">' + sub + '</p>' : '';
+  return '<!DOCTYPE html>\n' +
+'<html lang="de" class="dark">\n' +
+'<head>\n' +
+'  <meta charset="UTF-8" />\n' +
+'  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n' +
+'  <link rel="icon" type="image/svg+xml" href="favicon.svg" />\n' +
+'  <link rel="icon" type="image/png" href="images/logos/logo-blackbg.png" />\n' +
+'  <title>Ergebnisse ' + city + ' – Der Kneipenkönig</title>\n' +
+'  <meta property="og:type" content="website" />\n' +
+'  <meta property="og:url" content="https://kneipenkoenig.de/' + locId + '.html" />\n' +
+'  <meta property="og:title" content="Ergebnisse ' + city + ' – Der Kneipenkönig" />\n' +
+'  <meta property="og:description" content="Quiz-Ergebnisse und Ranglisten vom Kneipenkönig in ' + city + '." />\n' +
+'  <meta property="og:image" content="https://kneipenkoenig.de/hero-bg.jpg" />\n' +
+'  <meta name="twitter:card" content="summary_large_image" />\n' +
+'  <link rel="stylesheet" href="fonts/fonts.css" />\n' +
+'  <style>\n' +
+'    :root{--blue:#38b6ff;--text-primary:#fff;--text-secondary:rgba(255,255,255,0.55)}\n' +
+'    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}\n' +
+'    html{scroll-behavior:smooth;overflow-x:hidden}\n' +
+'    body{font-family:"Open Sans",sans-serif;color:var(--text-primary);background:#000;overflow-x:hidden;-webkit-font-smoothing:antialiased}\n' +
+'    body::before{content:"";position:fixed;inset:0;background:url("hero-bg.jpg") center/cover no-repeat;z-index:-2}\n' +
+'    body::after{content:"";position:fixed;inset:0;background:rgba(0,0,0,0.62);z-index:-1}\n' +
+'    a{color:inherit;text-decoration:none}\n' +
+'    .nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 5%;transition:background 0.3s}\n' +
+'    .nav.scrolled{background:rgba(0,0,0,0.85);backdrop-filter:blur(18px)}\n' +
+'    .nav-logo{font-family:"Open Sans",sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;display:flex;align-items:center}\n' +
+'    .nav-logo .der{color:#fff}.nav-logo .kneipen{color:#38b6ff}\n' +
+'    .nav-logo-img{height:28px;width:auto;mix-blend-mode:screen;margin-right:8px}\n' +
+'    .nav-links{display:flex;align-items:center;gap:32px;list-style:none}\n' +
+'    .nav-links a{color:var(--text-secondary);font-size:0.85rem;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;transition:color 0.2s}\n' +
+'    .nav-links a:hover,.nav-links a.active{color:#38b6ff}\n' +
+'    .nav-cta{padding:9px 20px;background:#38b6ff;color:#000;border-radius:8px;font-weight:700;font-size:0.82rem;letter-spacing:0.05em;text-transform:uppercase;transition:background 0.2s,transform 0.15s}\n' +
+'    .nav-cta:hover{background:#7dd3fc;transform:translateY(-1px)}\n' +
+'    .nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}\n' +
+'    .nav-toggle span{width:22px;height:2px;background:#fff;border-radius:2px;display:block}\n' +
+'    .mobile-nav{display:none;position:fixed;inset:0;z-index:101;background:rgba(0,0,0,0.97);backdrop-filter:blur(24px);flex-direction:column;align-items:center;justify-content:center;gap:28px}\n' +
+'    .mobile-nav.open{display:flex}\n' +
+'    .mobile-nav a{font-family:"Bebas Neue",sans-serif;font-size:2.8rem;letter-spacing:0.05em;color:rgba(255,255,255,0.55);text-transform:uppercase;transition:color 0.2s}\n' +
+'    .mobile-nav a:hover{color:#38b6ff}\n' +
+'    .mobile-nav-close{position:absolute;top:22px;right:5%;background:none;border:none;color:rgba(255,255,255,0.5);font-size:1.8rem;cursor:pointer}\n' +
+'    @media(max-width:768px){.nav-links,.nav-cta{display:none}.nav-toggle{display:flex}}\n' +
+'    @keyframes navLineRun{from{left:-30%}to{left:130%}}\n' +
+'    .nav-line{position:fixed;top:80px;left:0;right:0;height:2px;z-index:99;background:rgba(56,182,255,0.15);overflow:hidden}\n' +
+'    .nav-line::after{content:"";position:absolute;top:0;width:30%;height:100%;background:linear-gradient(90deg,transparent 0%,#38b6ff 35%,#bfefff 50%,#38b6ff 65%,transparent 100%);animation:navLineRun 2.5s linear infinite}\n' +
+'    .page-wrap{min-height:100vh;padding:120px 5% 60px}\n' +
+'    .back-link{display:inline-flex;align-items:center;gap:8px;color:var(--text-secondary);font-size:0.85rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:32px;transition:color 0.2s}\n' +
+'    .back-link:hover{color:#38b6ff}\n' +
+'    .page-header{margin-bottom:40px}\n' +
+'    .section-label{display:inline-flex;align-items:center;gap:10px;font-size:0.75rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#38b6ff;margin-bottom:10px}\n' +
+'    .section-label::before{content:"";display:block;width:28px;height:1px;background:#38b6ff}\n' +
+'    .page-title{font-family:"Bebas Neue",sans-serif;font-size:clamp(2.4rem,5vw,4rem);letter-spacing:0.03em}\n' +
+'    .page-sub{color:var(--text-secondary);margin-top:6px;font-size:1rem}\n' +
+'    .results-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}\n' +
+'    .results-iframe-wrap{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:16px;overflow:hidden;backdrop-filter:blur(8px)}\n' +
+'    .results-iframe-wrap iframe{width:100%;height:760px;border:none;display:block}\n' +
+'    .mobile-tabs{display:none}.mobile-panel{display:none}\n' +
+'    @media(max-width:700px){.results-grid{display:none}.results-alltime{display:none}\n' +
+'      .mobile-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}\n' +
+'      .mobile-tab{flex:1;min-width:0;padding:10px 8px;border-radius:10px;cursor:pointer;font-size:0.8rem;font-weight:700;text-align:center;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);transition:all 0.15s;white-space:nowrap}\n' +
+'      .mobile-tab.active{background:rgba(56,182,255,0.15);border-color:rgba(56,182,255,0.4);color:#38b6ff}\n' +
+'      .mobile-panel{display:none}.mobile-panel.active{display:block}\n' +
+'      .mobile-panel .results-iframe-wrap{display:block}.mobile-panel .results-iframe-wrap iframe{height:760px}}\n' +
+'    .loc-ext-links{display:flex;gap:10px;margin-top:14px}\n' +
+'    .loc-ext-link{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:rgba(255,255,255,0.55);transition:color 0.2s,background 0.2s,border-color 0.2s;text-decoration:none}\n' +
+'    .loc-ext-link:hover{color:#38b6ff;background:rgba(56,182,255,0.1);border-color:rgba(56,182,255,0.35)}\n' +
+'    .next-quiz-badge{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:8px 14px;background:rgba(56,182,255,0.08);border:1px solid rgba(56,182,255,0.25);border-radius:8px;font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.7)}\n' +
+'    .next-quiz-badge .nq-dot{width:7px;height:7px;border-radius:50%;background:#38b6ff;flex-shrink:0;animation:nqPulse 1.8s ease-in-out infinite}\n' +
+'    .next-quiz-badge .nq-label{color:#38b6ff;font-weight:700}\n' +
+'    @keyframes nqPulse{0%,100%{opacity:1}50%{opacity:0.3}}\n' +
+'  </style>\n' +
+'</head>\n' +
+'<body>\n' +
+'  <nav class="nav" id="navbar">\n' +
+'    <a href="index.html" class="nav-logo"><img src="images/logos/logo-blackbg.png" class="nav-logo-img" alt="" /><span class="der">DER</span><span class="kneipen">KNEIPENKÖNIG</span></a>\n' +
+'    <ul class="nav-links" role="list">\n' +
+'      <li><a href="index.html#formate">Der Kneipenkönig</a></li>\n' +
+'      <li><a href="index.html#events">Kommende Events</a></li>\n' +
+'      <li><a href="index.html#instagram">Letzte Events</a></li>\n' +
+'      <li><a href="ergebnisse.html" class="active">Ergebnisse</a></li>\n' +
+'      <li><a href="https://www.tickettailor.com/events/derkneipenknig" target="_blank" rel="noopener">Tickets</a></li>\n' +
+'      <li><a href="index.html#kontakt">Kontakt</a></li>\n' +
+'    </ul>\n' +
+'    <button class="nav-toggle" id="navToggle" aria-expanded="false"><span></span><span></span><span></span></button>\n' +
+'  </nav>\n' +
+'  <div class="mobile-nav" id="mobileNav">\n' +
+'    <button class="mobile-nav-close" id="mobileNavClose">✕</button>\n' +
+'    <a href="index.html#formate" class="mobile-link">Der Kneipenkönig</a>\n' +
+'    <a href="index.html#events" class="mobile-link">Kommende Events</a>\n' +
+'    <a href="index.html#instagram" class="mobile-link">Letzte Events</a>\n' +
+'    <a href="ergebnisse.html" class="mobile-link">Ergebnisse</a>\n' +
+'    <a href="https://www.tickettailor.com/events/derkneipenknig" target="_blank" rel="noopener" class="mobile-link">Tickets</a>\n' +
+'    <a href="index.html#kontakt" class="mobile-link">Kontakt</a>\n' +
+'  </div>\n' +
+'  <div class="nav-line" aria-hidden="true"></div>\n' +
+'  <div class="page-wrap">\n' +
+'    <a href="ergebnisse.html" class="back-link">← Alle Locations</a>\n' +
+'    <div class="page-header">\n' +
+'      <div class="section-label">Ergebnisse</div>\n' +
+'      <h1 class="page-title">' + city + '</h1>' + subHtml + extLinks + '\n' +
+'    </div>\n' +
+'    <div id="next-quiz-badge" class="next-quiz-badge" style="display:none">\n' +
+'      <span class="nq-dot"></span>\n' +
+'      <span>Nächstes Quiz: <span class="nq-label" id="next-quiz-date">...</span></span>\n' +
+'    </div>\n' +
+'    <div class="mobile-tabs">\n' +
+'      <button class="mobile-tab active" onclick="showTab(0,this)">Letztes Quiz</button>\n' +
+'      <button class="mobile-tab" onclick="showTab(1,this)">Jahrestabelle</button>\n' +
+'      <button class="mobile-tab" onclick="showTab(2,this)">Ewige Tabelle</button>\n' +
+'    </div>\n' +
+'    <div class="mobile-panel active"><div class="results-iframe-wrap"><iframe src="https://scoremaster.kneipenkoenig.de/embed/results.html?location=' + num + '" style="width:100%;border:none;border-radius:8px;min-height:400px;display:block;" loading="lazy" allowfullscreen></iframe></div></div>\n' +
+'    <div class="mobile-panel"><div class="results-iframe-wrap"><iframe src="https://scoremaster.kneipenkoenig.de/embed/ranking.html?location=' + num + '" style="width:100%;border:none;border-radius:8px;min-height:400px;display:block;" loading="lazy" allowfullscreen></iframe></div></div>\n' +
+'    <div class="mobile-panel"><div class="results-iframe-wrap"><iframe src="https://scoremaster.kneipenkoenig.de/embed/ranking.html?location=' + num + '&alltime=1" style="width:100%;border:none;border-radius:8px;min-height:400px;display:block;" loading="lazy" allowfullscreen></iframe></div></div>\n' +
+'    <div class="results-grid">\n' +
+'      <div class="results-iframe-wrap"><iframe src="https://scoremaster.kneipenkoenig.de/embed/results.html?location=' + num + '" style="width:100%;border:none;border-radius:8px;min-height:400px;display:block;" loading="lazy" allowfullscreen></iframe></div>\n' +
+'      <div class="results-iframe-wrap"><iframe src="https://scoremaster.kneipenkoenig.de/embed/ranking.html?location=' + num + '" style="width:100%;border:none;border-radius:8px;min-height:400px;display:block;" loading="lazy" allowfullscreen></iframe></div>\n' +
+'    </div>\n' +
+'    <div class="results-iframe-wrap results-alltime" style="margin-top:20px;"><iframe src="https://scoremaster.kneipenkoenig.de/embed/ranking.html?location=' + num + '&alltime=1" style="width:100%;border:none;border-radius:8px;min-height:400px;display:block;" loading="lazy" allowfullscreen></iframe></div>\n' +
+'  </div>\n' +
+'  <script>\n' +
+'    const navbar=document.getElementById("navbar");\n' +
+'    window.addEventListener("scroll",()=>{navbar.classList.toggle("scrolled",window.scrollY>30)});\n' +
+'    const navToggleBtn=document.getElementById("navToggle"),mobileNav=document.getElementById("mobileNav"),mobileClose=document.getElementById("mobileNavClose");\n' +
+'    navToggleBtn.addEventListener("click",()=>{mobileNav.classList.add("open");navToggleBtn.setAttribute("aria-expanded","true");document.body.style.overflow="hidden"});\n' +
+'    function closeMobileNav(){mobileNav.classList.remove("open");navToggleBtn.setAttribute("aria-expanded","false");document.body.style.overflow=""}\n' +
+'    mobileClose.addEventListener("click",closeMobileNav);\n' +
+'    document.querySelectorAll(".mobile-link").forEach(l=>l.addEventListener("click",closeMobileNav));\n' +
+'    function showTab(index,btn){document.querySelectorAll(".mobile-tab").forEach(t=>t.classList.remove("active"));document.querySelectorAll(".mobile-panel").forEach(p=>p.classList.remove("active"));btn.classList.add("active");document.querySelectorAll(".mobile-panel")[index].classList.add("active")}\n' +
+'    (function(){\n' +
+'      const today=new Date().toISOString().split("T")[0];\n' +
+'      fetch("https://mqsxgzaliwzyghmgygea.supabase.co/rest/v1/quizes?location_id=eq.' + num + '&quiz_date=gte."+today+"&order=quiz_date.asc&limit=1&select=quiz_date",{\n' +
+'        headers:{"apikey":"sb_publishable_n7-e_4YSOdzhdRPc6mKOgg_EF3jJqG6","Authorization":"Bearer sb_publishable_n7-e_4YSOdzhdRPc6mKOgg_EF3jJqG6"}\n' +
+'      }).then(r=>r.json()).then(data=>{if(data&&data.length>0){const d=new Date(data[0].quiz_date);document.getElementById("next-quiz-date").textContent=d.toLocaleDateString("de-DE",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});document.getElementById("next-quiz-badge").style.display="inline-flex"}}).catch(()=>{});\n' +
+'    })();\n' +
+'  <\/script>\n' +
+'  <script>window.addEventListener("message",function(e){if(e.data&&e.data.type==="kk-embed-resize"){document.querySelectorAll("iframe").forEach(function(f){if(f.contentWindow===e.source)f.style.height=e.data.height+"px"})}})<\/script>\n' +
+'</body>\n' +
+'</html>';
 }
 
 // ═══════════════════════════════════════════════════
