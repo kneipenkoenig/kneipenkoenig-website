@@ -94,8 +94,9 @@
       margin: 0 auto;
     }
 
-    /* 7th item: mittlere Spalte (zentriert) */
-    .loc-item:nth-child(7) { grid-column: 2 / 3; }
+    /* Letzte Reihe (2 Items): mittig ausrichten */
+    .loc-item:nth-child(7) { grid-column: 1 / 2; justify-self: end; max-width: 340px; width: 100%; }
+    .loc-item:nth-child(8) { grid-column: 2 / 3; justify-self: start; max-width: 340px; width: 100%; }
 
     @keyframes locGlow {
       0%, 100% { box-shadow: 0 0 0 2px rgba(56,182,255,0.4), 0 0 16px rgba(56,182,255,0.1); }
@@ -170,11 +171,12 @@
 
     @media (max-width: 680px) {
       .locations-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      .loc-item:nth-child(7) { grid-column: 1 / -1; max-width: 50%; justify-self: center; }
+      .loc-item:nth-child(7) { grid-column: auto; max-width: 100%; justify-self: stretch; }
+      .loc-item:nth-child(8) { grid-column: auto; max-width: 100%; justify-self: stretch; }
     }
     @media (max-width: 420px) {
       .locations-grid { grid-template-columns: 1fr; }
-      .loc-item:nth-child(7) { grid-column: auto; max-width: 100%; }
+      .loc-item:nth-child(7), .loc-item:nth-child(8) { grid-column: auto; max-width: 100%; }
     }
 
     /* ── HALL OF FAME ── */
@@ -332,6 +334,7 @@
       <a href="location6.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location6" src="hero-bg.jpg" alt="Reken" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Reken</div></div></a>
       <a href="location2.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location2" src="hero-bg.jpg" alt="Lüdinghausen" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Lüdinghausen</div></div></a>
       <a href="location11.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location11" src="hero-bg.jpg" alt="Datteln" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Datteln</div></div></a>
+      <a href="location13.html" class="loc-item"><div class="loc-clip"><img id="loc-img-location13" src="hero-bg.jpg" alt="Coesfeld" /></div><div class="loc-overlay"></div><div class="loc-text"><div class="loc-name">Coesfeld</div><div class="loc-sub">Brauhaus Stephanus</div></div></a>
 
     </div>
   </div>

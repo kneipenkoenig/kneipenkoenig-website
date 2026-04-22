@@ -44,5 +44,11 @@
     "sub": "Johnny Canone",
     "linkHomepage": "https://www.johnny-canone.de/",
     "img": "images/locations/location07-1774305863553.jpg"
+  },
+  "location13": {
+    "name": "Coesfeld",
+    "sub": "Brauhaus Stephanus",
+    "linkHomepage": "https://brauhaus-stephanus.de/",
+    "img": "hero-bg.jpg"
   }
 }
