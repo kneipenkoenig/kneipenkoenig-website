@@ -14,7 +14,9 @@ export default {
     }
 
     const url = new URL(request.url);
-    const days = Math.min(parseInt(url.searchParams.get('days') || '7', 10), 90);
+    // Free-Plan: max 7 Tage Daten verfügbar
+    const MAX_DAYS = 7;
+    const days = Math.min(parseInt(url.searchParams.get('days') || '7', 10), MAX_DAYS);
 
     const CF_API_TOKEN = env.CF_API_TOKEN;
     const CF_ZONE_ID = env.CF_ZONE_ID;
@@ -25,31 +27,35 @@ export default {
 
     try {
       const now = new Date();
-      // Tages-Ranges für aktuelle Periode
+      // Tages-Ranges für aktuelle Periode (max 7 Tage)
       const curRanges = buildDayRanges(now, days);
-      // Tages-Ranges für Vorperiode
-      const prevRanges = buildDayRanges(new Date(now - days * 86400000), days);
 
-      // Alle Tages-Abfragen parallel (Summary + TopPages für aktuelle, Summary für Vorperiode)
+      // Alle Tages-Abfragen parallel (Summary + TopPages)
       const curSummaryPromises = curRanges.map(r =>
-        cfQueryDay(CF_API_TOKEN, CF_ZONE_ID, r.start, r.end, 'summary')
-      );
-      const prevSummaryPromises = prevRanges.map(r =>
         cfQueryDay(CF_API_TOKEN, CF_ZONE_ID, r.start, r.end, 'summary')
       );
       const curTopPagesPromises = curRanges.map(r =>
         cfQueryDay(CF_API_TOKEN, CF_ZONE_ID, r.start, r.end, 'topPages')
       );
 
-      const [curSummaries, prevSummaries, curTopPages] = await Promise.all([
+      // Vorperiode nur wenn sie im erlaubten Zeitfenster liegt (days <= 3)
+      let prevSummaryPromises = [];
+      if (days <= 3) {
+        const prevRanges = buildDayRanges(new Date(now - days * 86400000), days);
+        prevSummaryPromises = prevRanges.map(r =>
+          cfQueryDay(CF_API_TOKEN, CF_ZONE_ID, r.start, r.end, 'summary')
+        );
+      }
+
+      const [curSummaries, curTopPages, prevSummaries] = await Promise.all([
         Promise.all(curSummaryPromises),
-        Promise.all(prevSummaryPromises),
         Promise.all(curTopPagesPromises),
+        Promise.all(prevSummaryPromises),
       ]);
 
       // Aggregiere Summary
       const current = aggregateSummary(curSummaries);
-      const previous = aggregateSummary(prevSummaries);
+      const previous = prevSummaries.length ? aggregateSummary(prevSummaries) : null;
 
       // Timeline aus täglichen Summaries
       const timeline = curSummaries.map((s, i) => ({
