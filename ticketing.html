@@ -413,6 +413,7 @@
       const data = await res.json();
       if (!res.ok) { alert(data.error || 'Fehler'); btn.disabled = false; btn.textContent = 'Jetzt buchen'; return; }
       if (data.checkout_url) { window.location.href = data.checkout_url; return; }
+      if (data.paypal_order_id) { window.location.href = `https://www.paypal.com/checkoutnow?token=${encodeURIComponent(data.paypal_order_id)}`; return; }
       window.location.href = `buchung-bestaetigt.html?order=${data.order_number}`;
     } catch { alert('Verbindungsfehler.'); btn.disabled = false; btn.textContent = 'Jetzt buchen'; }
   });

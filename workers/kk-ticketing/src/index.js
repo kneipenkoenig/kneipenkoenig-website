@@ -326,6 +326,7 @@ async function handleCheckout(env, request) {
       total_amount: totalAmount,
       payment_method: 'paypal',
       paypal_order_id: ppOrder.id,
+      checkout_url: ppOrder.links?.find(link => link.rel === 'approve')?.href,
     });
   }
 
