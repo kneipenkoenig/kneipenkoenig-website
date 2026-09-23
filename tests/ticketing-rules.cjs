@@ -1,0 +1,23 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+(async()=>{
+ const r=await import('data:text/javascript;base64,'+Buffer.from(fs.readFileSync('prototypes/ticketing/rules.js','utf8')).toString('base64'));
+ const ev={id:'e',date:'2026-10-15',start:'19:00',capacity:3,settings:{...r.defaults},groups:[{ticketIds:['four','six'],capacity:2}]};
+ const db={events:[ev],orders:[{id:'a',eventId:'e',typeId:'four',team:'Team 01'},{id:'b',eventId:'e',typeId:'six',team:''}]};
+ assert.equal(r.remaining(db,ev,{id:'six',capacity:10}),0,'Shared group caps aggregate ticket types');
+ assert.equal(r.startTime(ev),Date.parse('2026-10-15T17:00:00Z'),'Berlin summer time');
+ assert.equal(r.startTime({...ev,date:'2026-11-15'}),Date.parse('2026-11-15T18:00:00Z'),'Berlin winter time');
+ assert.equal(r.assignFallbacks(db,r.cutoff(ev)-1),false,'Do not assign before cutoff');
+ assert.equal(r.assignFallbacks(db,r.cutoff(ev)),true);assert.equal(db.orders[1].team,'Team 02');
+ assert.equal(r.assignFallbacks(db,r.cutoff(ev)+1000),false,'Fallback assignment is idempotent');
+ assert.throws(()=>r.validateName(db,'e',' TEAM   01 '),/bereits vergeben/);
+ assert.equal(r.validateName(db,'other','Team 01'),'Team 01','Same name allowed across events');
+ assert.equal(r.validateName(db,'e',''),'', 'Blank name allowed');
+ assert.throws(()=>r.validateSettings({...r.defaults,reminderHours:24}),/vor Ablauf/);
+ assert.equal(r.canJoin(ev,{checked:false,payment:'confirmed'}),false);
+ assert.equal(r.canJoin(ev,{checked:true,payment:'cash-open'}),true,'Cash status does not gate check-in or quiz');
+ assert.equal(r.canJoin({...ev,settings:{...ev.settings,checkin:false}},{checked:false}),true);
+ assert.equal(r.whatsappLink('01701234567',''),null);
+ assert.equal(r.whatsappLink('+49 170 1234567','Hallo & Team'),'https://wa.me/491701234567?text=Hallo%20%26%20Team');
+ console.log('PASS rules: shared stock, Berlin timezone, cutoff boundary, idempotent fallback, name scope, reminder ordering, quiz gate, WhatsApp');
+})().catch(e=>{console.error(e);process.exit(1);});
