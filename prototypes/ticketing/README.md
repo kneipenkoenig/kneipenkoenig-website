@@ -52,6 +52,9 @@ Zusätzlicher Regeltest: `node tests/ticketing-rules.cjs` prüft gemeinsame Kont
 
 ## Manager-Erweiterungen vom 24.09.2026
 
+- E-Mail-Bibliothek mit vier bearbeitbaren Textvorlagen: Einlass-Erinnerung, Teamnamen-Erinnerung, Danke-Mail und freie Nachricht.
+- Live-Vorschau mit realistischen Platzhalterwerten und auswählbarem E-Mail-Design; der Testversand öffnet eine fertig formulierte Mail im lokalen Mailprogramm.
+
 - Zeiten für Einlass, Beginn und Ende stehen nur in 15-Minuten-Schritten zur Auswahl.
 - Der Verkauf beginnt standardmäßig mit der Veröffentlichung. Ein optionales Datumsfenster verwendet als Start den heutigen Tag und als Ende den Eventtag.
 - „Tische insgesamt“ ist das maßgebliche gemeinsame Limit. Ein 4er- oder 6er-Ticket verbraucht jeweils einen Tisch. Eigene Typ-Limits sind nur für Locations mit fest vorgegebenen Tischtypen sinnvoll.
