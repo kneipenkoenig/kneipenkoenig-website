@@ -1,5 +1,6 @@
 // Shared rules for the LOCAL preview. Production must enforce these in transactions.
 export const defaults = Object.freeze({maxTickets:5, checkin:true, nameCutoff:24, nameReminder:true, reminderHours:48, waitPriority:false, waitBroadcast:false, offerHours:24});
+export const fifteenMinuteTimes=()=>Array.from({length:96},(_,n)=>`${String(Math.floor(n/4)).padStart(2,'0')}:${String((n%4)*15).padStart(2,'0')}`);
 export const normalName = value => String(value || '').normalize('NFKC').trim().replace(/\s+/g,' ').toLocaleLowerCase('de-DE');
 export function validateSettings(s) {
   for (const key of ['maxTickets','nameCutoff','reminderHours','offerHours']) {
@@ -33,6 +34,10 @@ export function assignFallbacks(db,now=Date.now()) {
   return changed;
 }
 export function remaining(db,ev,t) {
+  const all=db.orders.filter(o=>o.eventId===ev.id);
+  return Math.max(0,Math.min(ev.capacity-Number(ev.heldTables||0)-all.length,t.capacity-all.filter(o=>o.typeId===t.id).length,...ev.groups.filter(g=>g.ticketIds.includes(t.id)).map(g=>g.capacity-all.filter(o=>g.ticketIds.includes(o.typeId)).length)));
+}
+export function remainingAdmin(db,ev,t) {
   const all=db.orders.filter(o=>o.eventId===ev.id);
   return Math.max(0,Math.min(ev.capacity-all.length,t.capacity-all.filter(o=>o.typeId===t.id).length,...ev.groups.filter(g=>g.ticketIds.includes(t.id)).map(g=>g.capacity-all.filter(o=>g.ticketIds.includes(o.typeId)).length)));
 }

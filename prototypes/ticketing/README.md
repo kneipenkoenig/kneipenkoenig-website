@@ -49,3 +49,14 @@ Kein produktives Backend, keine echte Quizsession, keine Zahlungen, keine versen
 Verifikation: `node tests/ticketing-manager.cjs` und `node tests/ticketing-prototype.cjs`, jeweils Desktop (1440px) und Mobil (390px).
 
 Zusätzlicher Regeltest: `node tests/ticketing-rules.cjs` prüft gemeinsame Kontingente, Berliner Sommer-/Winterzeit, Fristgrenzen, idempotente Ersatznamen, Namenseindeutigkeit, Quiz-Zugang und WhatsApp-Linkbildung.
+
+## Manager-Erweiterungen vom 24.09.2026
+
+- Zeiten für Einlass, Beginn und Ende stehen nur in 15-Minuten-Schritten zur Auswahl.
+- Der Verkauf beginnt standardmäßig mit der Veröffentlichung. Ein optionales Datumsfenster verwendet als Start den heutigen Tag und als Ende den Eventtag.
+- „Tische insgesamt“ ist das maßgebliche gemeinsame Limit. Ein 4er- oder 6er-Ticket verbraucht jeweils einen Tisch. Eigene Typ-Limits sind nur für Locations mit fest vorgegebenen Tischtypen sinnvoll.
+- Tische können zurückgehalten werden. Sie sind im öffentlichen Verkauf nicht verfügbar, können aber im Manager persönlich oder für Wartelisten-Teams vergeben werden. Die Gesamtzahl der Tische bleibt dabei zwingend begrenzt.
+- Interne Bestellungen können mit global gepflegten Zahlungskennzeichen wie „Abendkasse“ offen erfasst werden. Einlass und Zahlung bleiben getrennt.
+- „A4 Teamliste / PDF“ erstellt eine kompakte Druckansicht mit maximal 30 Teams je Seite; der Browser speichert sie über den Druckdialog als PDF.
+- Globale Ticketvorlagen lassen sich bei einzelnen Events auswählen und danach eventbezogen anpassen.
+- Für Bestätigung, Ticket, Reminder und Nachfassmails stehen drei CI-konforme E-Mail-Designs zur Auswahl: Quiztheke, Papierticket und Lichterabend. Sie sind global voreinstellbar und pro Event überschreibbar.

@@ -6,7 +6,17 @@ export function seed(){const other=structuredClone(base);Object.assign(other,{id
 export function loadDB(){
  let db;try{db=JSON.parse(localStorage.getItem(KEY))||seed();}catch{db=seed();}
  db.settings={...defaults,...db.settings};
- for(const ev of db.events){ev.settings={...defaults,...ev.settings};ev.fields=ev.fields.filter(f=>f.id!=='size');ev.fields.forEach(f=>{if(f.id==='team'){f.required=false;f.locked=true;}});}
+ db.settings.paymentFlags??=[{id:'cashdesk',label:'Abendkasse'}];
+ db.settings.emailDesign??='counter';
+ db.ticketCatalog??=[{id:'four',name:'4er Teamtisch',description:'Ein Tisch für bis zu 4 Spieler inklusive Tablet.',price:4000,players:4,min:1,max:5},{id:'six',name:'6er Teamtisch',description:'Ein Tisch für bis zu 6 Spieler inklusive Tablet.',price:4800,players:6,min:1,max:5}];
+ for(const ev of db.events){
+   ev.settings={...defaults,...ev.settings};
+   ev.heldTables??=0;
+   // Legacy demo events become publication-driven; an explicit new window remains intact.
+   ev.saleMode??='published';
+   ev.fields=ev.fields.filter(f=>f.id!=='size');
+   ev.fields.forEach(f=>{if(f.id==='team'){f.required=false;f.locked=true;}});
+ }
  for(const o of db.orders){const ev=db.events.find(e=>e.id===o.eventId);o.ticketCapacity ??= ev?.tickets.find(t=>t.id===o.typeId)?.players||6;delete o.size;o.editToken??=crypto.randomUUID();o.code??=o.id;o.payment??='confirmed';}
  db.waiters.forEach(w=>{w.id??=crypto.randomUUID();w.email??='chris@example.invalid';w.whatsapp??='';w.ticketCapacity??=w.size||4;delete w.size;});
  assignFallbacks(db);return db;
