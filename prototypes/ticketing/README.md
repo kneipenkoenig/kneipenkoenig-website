@@ -54,6 +54,8 @@ Zusätzlicher Regeltest: `node tests/ticketing-rules.cjs` prüft gemeinsame Kont
 
 - E-Mail-Bibliothek mit vier bearbeitbaren Textvorlagen: Einlass-Erinnerung, Teamnamen-Erinnerung, Danke-Mail und freie Nachricht.
 - Live-Vorschau mit realistischen Platzhalterwerten und auswählbarem E-Mail-Design; der Testversand öffnet eine fertig formulierte Mail im lokalen Mailprogramm.
+- Rich-Text-Werkzeugleiste, Vorlagenwechsel im Editor sowie Variablen für Käufer, Team, Event, Datum, Einlass, Location und Eventlink.
+- Änderbarer Eventstatus und ein eigener teilbarer Eventlink mit Kopier-, WhatsApp- und System-Teilen-Aktion.
 
 - Zeiten für Einlass, Beginn und Ende stehen nur in 15-Minuten-Schritten zur Auswahl.
 - Der Verkauf beginnt standardmäßig mit der Veröffentlichung. Ein optionales Datumsfenster verwendet als Start den heutigen Tag und als Ende den Eventtag.
