@@ -7,7 +7,7 @@ try { ({chromium} = require('playwright')); } catch {
 }
 const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:8765';
 const own = [{id:'test-event',title:'Testquiz Coesfeld',venue_name:'Coesfeld',start_date:'2027-10-02T17:00:00Z'}];
-const tailor = {data:[{name:'Testquiz Marl',checkout_url:'https://www.tickettailor.com/test-event',start:{unix:1822582800,date:'2027-10-03',time:'19:00'},venue:{name:'Marl'},tickets_available:true}]};
+const tailor = {data:[{name:'Testquiz Marl',checkout_url:'https://www.tickettailor.com/test-event',start:{unix:1822582800,date:'2027-11-03',time:'19:00'},venue:{name:'Marl'},tickets_available:true}]};
 (async () => {
  const browser = await chromium.launch({headless:true,channel:process.env.TEST_BROWSER || 'msedge'});
  try {
@@ -33,6 +33,20 @@ const tailor = {data:[{name:'Testquiz Marl',checkout_url:'https://www.tickettail
    await page.goto(base+'/index.html');
    await page.waitForFunction(()=>document.querySelectorAll('#eventsContainer .event-card').length===2);
    assert.deepEqual(await page.locator('#eventsContainer .event-title').allTextContents(),['Testquiz Coesfeld','Testquiz Marl']);
+   await page.locator('#heroTrial summary').click();
+   assert.equal(await page.locator('#trialNext').isVisible(),false);
+   await page.locator('.trial-options button[data-answer="2005"]').click();
+   assert.match(await page.locator('#trialResult').innerText(),/richtig ist 2007/);
+   assert.equal(await page.locator('.trial-options button:disabled').count(),4);
+   assert.equal(await page.locator('#trialNext').isVisible(),true);
+   await page.selectOption('#eventMonth','2027-10');
+   assert.equal(await page.locator('#eventsContainer .event-card').count(),1);
+   await page.selectOption('#eventVenue','Marl');
+   assert.match(await page.locator('.events-empty').innerText(),/Für diese Auswahl/);
+   await page.locator('#eventReset').click();
+   assert.equal(await page.locator('#eventsContainer .event-card').count(),2);
+   assert.equal(await page.locator('#eventReset').isDisabled(),true);
+   await page.locator('#heroTrial summary').click();
    await page.selectOption('#eventVenue','Marl');
    assert.equal(await page.locator('#eventsContainer .event-card').count(),1);
    await page.selectOption('#eventVenue','');
