@@ -6,8 +6,8 @@ try { ({chromium} = require('playwright')); } catch {
   ({chromium} = require(path.join(process.env.USERPROFILE, '.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright')));
 }
 const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:8765';
-const own = [{id:'test-event',title:'Testquiz Coesfeld',venue_name:'Coesfeld',start_date:'2027-10-02T17:00:00Z'}];
-const tailor = {data:[{name:'Testquiz Marl',checkout_url:'https://www.tickettailor.com/test-event',start:{unix:1822582800,date:'2027-11-03',time:'19:00'},venue:{name:'Marl'},tickets_available:true}]};
+const own = [{id:'test-event',title:'Testquiz Coesfeld',venue_name:'Coesfeld',venue_address:'48653 Coesfeld, Teststraße 1',start_date:'2027-10-02T17:00:00Z'}];
+const tailor = {data:[{name:'Testquiz Marl',checkout_url:'https://www.tickettailor.com/test-event',start:{unix:1822582800,date:'2027-11-03',time:'19:00'},venue:{name:'Manhattan',postal_code:'45770 Marl, Bergstr.18'},tickets_available:true}]};
 (async () => {
  const browser = await chromium.launch({headless:true,channel:process.env.TEST_BROWSER || 'msedge'});
  try {
@@ -33,6 +33,8 @@ const tailor = {data:[{name:'Testquiz Marl',checkout_url:'https://www.tickettail
    await page.goto(base+'/index.html');
    await page.waitForFunction(()=>document.querySelectorAll('#eventsContainer .event-card').length===2);
    assert.deepEqual(await page.locator('#eventsContainer .event-title').allTextContents(),['Testquiz Coesfeld','Testquiz Marl']);
+   assert.equal(await page.locator('#eventVenue option[value="Manhattan"]').innerText(),'Manhattan · Marl');
+   assert.equal(await page.locator('#eventVenue option[value="Coesfeld"]').innerText(),'Coesfeld');
    await page.locator('#heroTrial summary').click();
    assert.equal(await page.locator('#trialNext').isVisible(),false);
    await page.locator('.trial-options button[data-answer="2005"]').click();
@@ -41,13 +43,13 @@ const tailor = {data:[{name:'Testquiz Marl',checkout_url:'https://www.tickettail
    assert.equal(await page.locator('#trialNext').isVisible(),true);
    await page.selectOption('#eventMonth','2027-10');
    assert.equal(await page.locator('#eventsContainer .event-card').count(),1);
-   await page.selectOption('#eventVenue','Marl');
+   await page.selectOption('#eventVenue','Manhattan');
    assert.match(await page.locator('.events-empty').innerText(),/Für diese Auswahl/);
    await page.locator('#eventReset').click();
    assert.equal(await page.locator('#eventsContainer .event-card').count(),2);
    assert.equal(await page.locator('#eventReset').isDisabled(),true);
    await page.locator('#heroTrial summary').click();
-   await page.selectOption('#eventVenue','Marl');
+   await page.selectOption('#eventVenue','Manhattan');
    assert.equal(await page.locator('#eventsContainer .event-card').count(),1);
    await page.selectOption('#eventVenue','');
    await page.locator('[data-event-id]').click();

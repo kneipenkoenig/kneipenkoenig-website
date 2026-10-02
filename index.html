@@ -2831,6 +2831,10 @@
     }
 
     const eventSources = { tailor: [], own: [] };
+    function eventCity(address) {
+      // The event sources provide German postal addresses in either order.
+      return String(address || '').match(/\b\d{5}\s+([^,;\n]+)/)?.[1].trim() || '';
+    }
     let countdownTimer;
     function renderEvents(events, source = 'tailor') {
       eventSources[source] = events;
@@ -2838,7 +2842,13 @@
       const select = document.getElementById('eventVenue');
       const selected = select.value;
       const venues = [...new Set(all.map(e => e.venue).filter(Boolean))].sort();
-      select.innerHTML = '<option value="">Alle Locations</option>' + venues.map(v => `<option value="${coEsc(v).replace(/"/g, '&quot;')}">${coEsc(v)}</option>`).join('');
+      select.replaceChildren(new Option('Alle Locations', ''));
+      venues.forEach(venue => {
+        const city = all.find(event => event.venue === venue && event.city)?.city;
+        const label = city && !venue.toLocaleLowerCase('de').includes(city.toLocaleLowerCase('de'))
+          ? `${venue} · ${city}` : venue;
+        select.add(new Option(label, venue));
+      });
       select.value = venues.includes(selected) ? selected : '';
       const month = document.getElementById('eventMonth');
       const selectedMonth = month.value;
@@ -2943,6 +2953,7 @@
               date:      ev.start.date,
               time:      ev.start.time,
               venue:     ev.venue?.name || '',
+              city:      eventCity(ev.venue?.postal_code),
               available: available,
               remaining: typeof ev.tickets_remaining === 'number' ? ev.tickets_remaining : null,
             };
@@ -3268,6 +3279,7 @@
         renderEvents(events.map(ev => {
           const date = new Date(ev.start_date);
           return { ownId: ev.id, name: ev.title, venue: ev.venue_name || '',
+            city: eventCity(ev.venue_address),
             date: date.toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' }),
             time: date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' }) };
         }), 'own');
